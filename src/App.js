@@ -3,6 +3,7 @@ import logo from './logo.svg';
 import './App.css';
 import Anime from './Anime';
 import Node from "./Node";
+import {Link } from 'react-router-dom';
 
 // function as component
 class App extends React.Component {
@@ -35,11 +36,12 @@ class App extends React.Component {
             Learn React
         </a>
           <br></br>
-          <a href="./anime" target="_self">
-          Go to Anime
-          </a>
+          <Link to="./anime" target="_self">Go to Anime</Link><br></br>
+          <Link to="./anime/search" target="_self">Go to Search</Link>
+
+          
+
           <Car />
-          <Node />
           <Anime />
         </header>
       </div>

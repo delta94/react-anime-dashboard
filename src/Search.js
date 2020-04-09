@@ -6,6 +6,11 @@ function Search() {
     let match = useRouteMatch();
     console.log(match);
 
+    function click() {
+        var key = document.getElementById('search').value;
+        window.location.href = match.url + "/" + key;
+    }
+
     return (
     <div>
         <h1>My Router Test...</h1>
@@ -18,12 +23,15 @@ function Search() {
                     <Link to={`${match.url}/components`}>Components</Link>
                 </li>
                 <li>
-                    <Link to={`${match.url}/props-v-state`}>
-                        Props v. State
-          </Link>
+                    <Link to={`${match.url}/na`}>na</Link>
+                </li>
+                <li>
+                    <Link to={`${match.url}/shana`}>shana</Link>
                 </li>
             </ul>
-        <hr></hr>
+            <hr></hr>
+            <input type="text" placeholder="enter" id="search"></input>
+            <button type="button" onClick={click}>search</button>
         <Switch>
             <Route path={`${match.path}/:id`}>
                 <Result />
@@ -50,6 +58,7 @@ function Result() {
         <div>
             <h3>Requested search ID: {id}</h3>
             <h3>Requested url: {match.url}</h3>
+            <h3>Requested path: {match.path}</h3>
             <DisplayResult id={id}/>
         </div>
     );
