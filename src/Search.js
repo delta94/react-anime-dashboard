@@ -9,6 +9,7 @@ function Search() {
     function click() {
         var key = document.getElementById('search').value;
         window.location.href = match.url + "/" + key;
+        
     }
 
     return (

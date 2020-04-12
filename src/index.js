@@ -2,9 +2,12 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, HashRouter } from 'react-router-dom';
 import './index.css';
-import App from './App';
+import './App.css';
+import "semantic-ui-css/semantic.min.css";
+
 import Main from './Main';
 import * as serviceWorker from './serviceWorker';
+// import $ from 'jquery';
 
 ReactDOM.render(<BrowserRouter basename="/my-react-app/build"><Main /></BrowserRouter>, document.getElementById('root'));
 

@@ -22,38 +22,6 @@ query ($id: Int) {
 }
 `;
 
-var searchquery = `
-        query ($key: String) {
-            Page(perPage: 10, page: 1) {
-                pageInfo {
-                total
-                perPage
-                currentPage
-                lastPage
-                hasNextPage
-                }
-                media (type: ANIME, search: $key) {
-                    id
-                    title {
-                        romaji
-                        english
-                        native
-                    }
-                    bannerImage
-                    coverImage {
-                        extraLarge
-                        large
-                        medium
-                        color
-                    }
-                }
-            }
-        }`;
-
-var searchvariables = {
-    key: "na"
-};
-
 
 var all_anime = `
 {
@@ -162,8 +130,7 @@ class Anime extends React.Component {
             apiRes: "",
             src: "",
             title: "",
-            coverImg: "",
-            result: []
+            coverImg: ""
         };
     }
 
@@ -182,26 +149,13 @@ class Anime extends React.Component {
     handleData = (res) => {
         
         console.log(res);
-        // console.log(data.data.Page.media[1].description);
-        // console.log(data.data.Page.media[1].title.native);
+        // console.log(res.data.Page.media[1].description);
+        // console.log(res.data.Page.media[1].title.native);
         this.setState({
             apiRes: JSON.stringify(res),
             src: res.data.Media.bannerImage,
             title: res.data.Media.title.native,
             coverImg: res.data.Media.coverImage.extraLarge
-        });
-    }
-
-    handleSearchData = (res) => {
-        console.log(res);
-        const result = [];
-        var list = res.data.Page.media;
-        list.forEach(element => {
-            result.push(<span><img src={element.coverImage.large}></img><br></br><p>{element.title.native}</p></span>);
-        });
-        console.log(result);
-        this.setState({
-            result: result
         });
     }
 
@@ -211,6 +165,7 @@ class Anime extends React.Component {
     }
 
 
+    // execute this function before call render
     componentWillMount() {
         this.callAPI();
     }
@@ -228,6 +183,5 @@ class Anime extends React.Component {
         );
     }
 }
-
 
 export default Anime;
