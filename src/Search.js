@@ -156,7 +156,7 @@ function searchResult(searchKey) {
         const result = [];
         var list = res.data.Page.media;
         list.forEach(element => {
-            result.push(<span style={{display: "inline-block", margin: "10px", width: "20%"}}><img src={element.coverImage.large} style={{width: "220px", height: "300px"}}></img><br></br><p>{element.title.native}</p></span>);
+            result.push(<span id={element.id} style={{display: "inline-block", margin: "10px", width: "20%"}}><img src={element.coverImage.large} style={{width: "220px", height: "300px"}}></img><br></br><p>{element.title.native}</p></span>);
         });
         console.log(result);
         return result;

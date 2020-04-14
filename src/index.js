@@ -1,13 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter, HashRouter } from 'react-router-dom';
-import './index.css';
+import { BrowserRouter, HashRouter, Switch, Route } from 'react-router-dom';
+import "semantic-ui-css/semantic.min.css"; // semantic-ui
 import './App.css';
-import "semantic-ui-css/semantic.min.css";
 
-import Main from './Main';
+// import main components
+import Anime from './Anime';
+import App from './App';
+import Error from './Error';
+import Search from './Search';
+
 import * as serviceWorker from './serviceWorker';
 // import $ from 'jquery';
+
+
+// Main app component, set different main components for different routing paths.
+const Main = () => {
+    return (
+        <Switch>
+            <Route exact path='/' component={App}></Route>
+            <Route exact path='/anime' component={Anime}></Route>
+            <Route exact path='/manga' component={Anime}></Route>
+            <Route path='/search' component={Search}></Route>
+            <Route component={Error}></Route>
+        </Switch>
+    );
+}
 
 ReactDOM.render(<BrowserRouter basename="/my-react-app/build"><Main /></BrowserRouter>, document.getElementById('root'));
 

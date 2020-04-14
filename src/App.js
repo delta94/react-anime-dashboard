@@ -53,7 +53,7 @@ class App extends React.Component {
         </a>
           <br></br>
           <Link to="./anime" target="_self">Go to Anime</Link><br></br>
-          <Link to="./anime/search" target="_self">Go to Search</Link>
+          <Link to="./search" target="_self">Go to Search</Link>
           <p>my test = {this.state.test}</p>
           
 
