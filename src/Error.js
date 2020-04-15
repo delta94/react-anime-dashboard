@@ -1,5 +1,5 @@
 import React from 'react';
-import { useParams, useRouteMatch, Switch, Route, Link, useLocation} from 'react-router-dom';
+import {useRouteMatch, useLocation} from 'react-router-dom';
 
 const Error = () => {
     let match = useRouteMatch();

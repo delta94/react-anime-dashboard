@@ -6,6 +6,8 @@ import { Link } from 'react-router-dom';
 import $ from 'jquery';
 import { Button, Form, Input } from "semantic-ui-react";
 
+import AnimeQuery from './components/AnimeQuery';
+
 // function as component
 class App extends React.Component {
   constructor(props) {
@@ -27,8 +29,6 @@ class App extends React.Component {
   componentWillUpdate() {
     console.log("state updated before render: componentWillUpdate ");
   }
-
-  
 
   componentWillMount() {
     // $('#root').append("<h1>Hello JQuery!</h1>");

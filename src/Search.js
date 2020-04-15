@@ -1,5 +1,6 @@
 import React from 'react';
 import { useParams, useRouteMatch, Switch, Route, Link } from 'react-router-dom';
+import AnimeQuery from './components/AnimeQuery';
 
 
 function Search() {
@@ -34,7 +35,7 @@ function Search() {
             <input type="text" placeholder="enter" id="search"></input>
             <button type="button" onClick={click}>search</button>
         <Switch>
-            <Route path={`${match.path}/:id`}>
+            <Route path={`${match.path}/:id/:num`}>
                 <Result />
             </Route>
             <Route path={match.path}>
@@ -47,20 +48,21 @@ function Search() {
 }
 
 function Result() {
-    let { id } = useParams();
+    let { id, num } = useParams();
     let match = useRouteMatch();
     var result = null;
     console.log(id);
     // searchResult(id).then(res => console.log(res));
     // console.log(result.data.Page.media[0].title.native);
     console.log(result);
-
+    var n = parseInt(num);
+    console.log("perpage == " + n);
     return (
         <div>
             <h3>Requested search ID: {id}</h3>
             <h3>Requested url: {match.url}</h3>
             <h3>Requested path: {match.path}</h3>
-            <DisplayResult id={id}/>
+            <DisplayResult id={id} num={n}/>
         </div>
     );
 }
@@ -71,103 +73,28 @@ class DisplayResult extends React.Component {
         this.state = {
             id: props.id,
             result: null
-        }
+        };
     }
 
     componentWillMount() {
-        searchResult(this.state.id).then(res => this.setState({result: res}));
+        AnimeQuery.searchAnime(this.state.id, 20, this.props.num)
+            .then(res => {
+                const result = [];
+                var list = res.data.Page.media;
+                list.forEach(element => {
+                    result.push(<div id={element.id} className="anime-block"><img src={element.coverImage.large} className="anime-img"></img><br></br><p className="anime-title">{element.title.native}</p></div>);
+                });
+                this.setState({ result: result });
+            });
     }
 
     render() {
         return (
-            <div>
+            <div className="flex-container">
                 {this.state.result}
             </div>
         );
     }
-}
-
-
-function searchResult(searchKey) {
-    var query = `
-        query ($key: String) {
-            Page(perPage: 12, page: 1) {
-                pageInfo {
-                total
-                perPage
-                currentPage
-                lastPage
-                hasNextPage
-                }
-                media (type: ANIME, search: $key) {
-                    id
-                    title {
-                        romaji
-                        english
-                        native
-                    }
-                    bannerImage
-                    coverImage {
-                        extraLarge
-                        large
-                        medium
-                        color
-                    }
-                }
-            }
-        }`;
-
-    var variables = {
-        key: searchKey
-    };
-
-    var url = 'https://graphql.anilist.co',
-        options = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Accept': 'application/json',
-            },
-            body: JSON.stringify({
-                query: query,
-                variables: variables
-            })
-        };
-    
-    async function callAPI() {
-        try {
-            const response = await fetch(url, options);
-            const res = await handleResponse(response);
-            return handleData(res);
-        }
-        catch (error) {
-            return handleError(error);
-        }
-    }
-
-    function handleResponse(response) {
-        return response.json().then(function (json) {
-            return response.ok ? json : Promise.reject(json);
-        });
-    }
-
-    function handleData(res) {
-        console.log(res);
-        const result = [];
-        var list = res.data.Page.media;
-        list.forEach(element => {
-            result.push(<span id={element.id} style={{display: "inline-block", margin: "10px", width: "20%"}}><img src={element.coverImage.large} style={{width: "220px", height: "300px"}}></img><br></br><p>{element.title.native}</p></span>);
-        });
-        console.log(result);
-        return result;
-    }
-
-    function handleError(error) {
-        alert('Error, check console');
-        console.error(error);
-    }
-
-    return callAPI();
 }
 
 export default Search;
