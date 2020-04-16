@@ -8,33 +8,35 @@ class Anime extends React.Component {
             apiRes: "",
             src: "",
             title: "",
-            coverImg: ""
+            coverImg: "",
+            result: null
         };
     }
 
     // execute this function before call render
     componentWillMount() {
-      AnimeQuery.getAnimeByID(106286)
-        .then(res => {
-          this.setState({
-            apiRes: JSON.stringify(res),
-            src: res.data.Media.bannerImage,
-            title: res.data.Media.title.native,
-            coverImg: res.data.Media.coverImage.extraLarge
-          });
+      AnimeQuery.getAllMedia("anime", 50, 1).then((res) => {
+        const result = [];
+        var list = res.data.Page.media;
+        list.forEach((element) => {
+          result.push(
+            <div id={element.id} key={element.id} className="anime-block">
+              <img src={element.coverImage.large} className="anime-img"></img>
+              <br></br>
+              <p className="anime-title">{element.title.native}</p>
+            </div>
+          );
         });
+        this.setState({ result: result });
+      });
     }
 
     render() {
         return (
-            <div>
-                <p>{this.state.apiRes}</p>
-                <hr></hr>
-                <h2>{this.state.title}</h2>
-                <img src={this.state.src} width="60%"></img>
-                <br></br>
-                <img src={this.state.coverImg}></img>
-            </div>
+          <div>
+            <h1 style={{ textAlign: "center" }}>All Anime</h1>
+            <div className="flex-container">{this.state.result}</div>
+          </div>
         );
     }
 }

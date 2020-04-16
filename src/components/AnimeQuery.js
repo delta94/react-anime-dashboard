@@ -37,34 +37,123 @@ class AnimeQuery {
         return callAPI(query_searchAnime, query_searchAnime_variables);
     }
 
-    static getAnimeByID(id) {
-        var query = `
-            query ($id: Int) { 
-                Media (id: $id, type: ANIME) {
+    static getMediaByID(id) {
+        let query = `
+            query ($id: Int) {
+                Media (id: $id) {
                     id
+                    type
+                    format
+                    source
+                    status
+                    season
+                    seasonYear
+                    seasonInt
+                    updatedAt
+                    nextAiringEpisode {
+                        id
+                    }
+                    externalLinks {
+                        id
+                        url
+                    }
+                    chapters
+                    volumes
+                    favourites
+                    popularity
+                    meanScore
+                    averageScore
+                    trending
+                    rankings {
+                        id
+                        rank
+                        format
+                    }
+                    stats {
+                        scoreDistribution {
+                        score
+                        amount
+                        }
+                        statusDistribution {
+                        status
+                        amount
+                        }
+                    }
+                    siteUrl
+                    genres
                     title {
                         romaji
                         english
                         native
                     }
-                    bannerImage
+                    synonyms
+                    duration
+                    episodes    
+                    isAdult
+                    description(asHtml: true)
+                    trailer {
+                        id
+                        site
+                        thumbnail
+                    }
+                    characters {
+                        pageInfo {
+                        total
+                        perPage
+                        currentPage
+                        lastPage
+                        hasNextPage
+                        }
+                        edges {
+                        id
+                        node {
+                            name {
+                            first
+                            last
+                            full
+                            native
+                            }
+                            image {
+                            large
+                            medium
+                            }
+                        }
+                        role
+                        }
+                    }
+                    startDate {
+                        year
+                        month
+                        day
+                    }
+                    endDate {
+                        year
+                        month
+                        day
+                    }
                     coverImage {
                         extraLarge
                         large
                         medium
                         color
                     }
+                    bannerImage
+                    tags {
+                        id
+                        name
+                    }
                 }
             }`;
-        var variables = {
+        let variables = {
             id: id
         };
         return callAPI(query, variables);
     }
 
-    static getAllAnime(perPage, pageNum) {
-        var all_anime = `
-            query ($perPage: Int, $pageNum: Int) {
+    static getAllMedia(type, perPage, pageNum) {
+        var mytype = type.toUpperCase() === "ANIME" ? TYPE.ANIME : TYPE.MANGA;
+        let all_anime = `
+            query ($perPage: Int, $pageNum: Int, $type: MediaType) {
                 Page(perPage: $perPage, page: $pageNum) {
                     pageInfo {
                         total
@@ -73,59 +162,51 @@ class AnimeQuery {
                         lastPage
                         hasNextPage
                     }
-                    
-                    media(type: ANIME) {
+                    media(type: $type) {
                         id
                         type
-                        format
-                        status
-                        favourites
-                        popularity
                         title {
                             romaji
                             english
                             native
                         }
-                        duration
-                        episodes
                         meanScore
                         averageScore
-                        isAdult
                         description
-                        characters {
-                            pageInfo {
-                                total
-                                perPage
-                                currentPage
-                                lastPage
-                                hasNextPage
-                            }
-                            edges {
-                                id
-                                node {
-                                    name {
-                                        first
-                                        last
-                                        full
-                                        native
-                                    }
-                                    image {
-                                        large
-                                        medium
-                                    }
-                                }
-                                role
-                            }
+                        coverImage {
+                            large
+                            medium
+                            color
                         }
-                        startDate {
-                            year
-                            month
-                            day
-                        }
-                        endDate {
-                            year
-                            month
-                            day
+                    }
+                }
+            }`;
+        let variables = {
+            perPage: perPage,
+            pageNum: pageNum,
+            type: mytype
+        };
+        return callAPI(all_anime, variables);
+    }
+
+    static getMediaByPopularity(type, perPage, pageNum) {
+        var mytype = type.toUpperCase() === "ANIME" ? TYPE.ANIME : TYPE.MANGA;
+        let query = `
+            query ($perPage: Int, $pageNum: Int, $type: MediaType) {
+                Page(perPage: $perPage, page: $pageNum) {
+                    pageInfo {
+                        total
+                        perPage
+                        currentPage
+                        lastPage
+                        hasNextPage
+                    }
+                    media(type: $type, sort: POPULARITY_DESC) {
+                        id
+                        title {
+                            romaji
+                            english
+                            native
                         }
                         coverImage {
                             extraLarge
@@ -133,24 +214,77 @@ class AnimeQuery {
                             medium
                             color
                         }
-                        bannerImage
-                        tags {
-                            id
-                            name
+                    }
+                }
+            }`;
+        let variables = {
+            perPage: perPage,
+            pageNum: pageNum,
+            type: mytype
+        };
+        return callAPI(query, variables);
+    }
+
+
+    static getMediaByLatest(type, perPage, pageNum) {
+        var mytype = type.toUpperCase() === "ANIME" ? TYPE.ANIME : TYPE.MANGA;
+        var today = new Date();
+        var todayStr = today.getFullYear().toString()
+            + (today.getMonth() + 1).toString().padStart(2, '0')
+            + today.getDate().toString().padStart(2, '0');
+        var todayInt = parseInt(todayStr);
+
+        let query = `
+            query ($perPage: Int, $pageNum: Int, $type: MediaType, $today: FuzzyDateInt) {
+                Page(perPage: $perPage, page: $pageNum) {
+                    pageInfo {
+                        total
+                        perPage
+                        currentPage
+                        lastPage
+                        hasNextPage
+                    }
+                    media(type: $type, startDate_lesser: $today, sort: START_DATE_DESC) {
+                        id
+                        title {
+                            romaji
+                            english
+                            native
+                        }
+                        coverImage {
+                            large
+                            medium
+                        }
+                        startDate {
+                            year
+                            month
+                            day
                         }
                     }
                 }
             }`;
-        var variables = {
+        let variables = {
             perPage: perPage,
-            pageNum: pageNum
+            pageNum: pageNum,
+            type: mytype,
+            today: todayInt
         };
-        return callAPI(all_anime, variables);
+        return callAPI(query, variables);
     }
 }
 
+// declare Enum type
+const TYPE = {
+    ANIME: "ANIME",
+    MANGA: "MANGA"
+};
 
 
+/**
+ * Default function to call AniList GraphQL API.
+ * @param {*} query - A GraphQL query
+ * @param {*} variables - query variables
+ */
 function callAPI(query, variables) {
     const anilist_url = 'https://graphql.anilist.co';
     const options = {

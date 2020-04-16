@@ -19,7 +19,7 @@ class App extends React.Component {
     console.log("updated~~ componentDidUpdate, after updated");
   }
 
-
+  
   componentDidMount() {
     console.log("Mount finished!")
     $('.App-header').append("<h1>Hello JQuery!</h1>");
@@ -56,9 +56,7 @@ class App extends React.Component {
           <Link to="./search" target="_self">Go to Search</Link>
           <p>my test = {this.state.test}</p>
           
-
           <Car />
-          <Anime />
           <MyComponent />
         </header>
       </div>

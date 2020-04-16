@@ -44,14 +44,14 @@
 }
 
 .anime-block {
-  width: 220px;
+  width: 180px;
   height: auto;
   margin: 10px;
 }
 
 .anime-img {
-  width: 220px;
-  height: 300px;
+  width: 180px;
+  height: 260px;
   max-width: 100%;
   /* max-width: 220px;
   max-height: 300px;

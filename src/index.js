@@ -9,6 +9,8 @@ import Anime from './Anime';
 import App from './App';
 import Error from './Error';
 import Search from './Search';
+import Latest from './components/Latest';
+import Popular from './components/Popular';
 
 import * as serviceWorker from './serviceWorker';
 // import $ from 'jquery';
@@ -20,6 +22,8 @@ const Main = () => {
         <Switch>
             <Route exact path='/' component={App}></Route>
             <Route exact path='/anime' component={Anime}></Route>
+            <Route exact path='/anime/latest' component={Latest}></Route>
+            <Route exact path='/anime/popular' component={Popular}></Route>
             <Route exact path='/manga' component={Anime}></Route>
             <Route path='/search' component={Search}></Route>
             <Route component={Error}></Route>
