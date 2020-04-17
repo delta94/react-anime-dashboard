@@ -20,7 +20,7 @@ class Navbar extends React.Component {
 
     render() {
         return (
-            <Sidebar.Pushable className={style.push}>
+            <Sidebar.Pushable>
                 <Sidebar
                     as={Menu}
                     animation="overlay"
@@ -29,19 +29,57 @@ class Navbar extends React.Component {
                     onHide={this.handleSidebarHide}
                     vertical
                     visible={this.state.openSidebar}
-                    width="thin"
+                    className={style.mySidebar}
                 >
-                    <Menu.Item as="a">
+                    <Menu.Item
+                        as="a"
+                        href="/"
+                        target="_self"
+                        header
+                        className={style.sidebarHeader}
+                    >
+                        <Image
+                            src={logo}
+                            alt="logo"
+                            className={style.sidebarLogo}
+                        />
+                        <div className={style.sidebarTitle}>
+                            Anime Dashboard
+                        </div>
+                    </Menu.Item>
+                    <Menu.Item>
+                        <Input
+                            icon="search"
+                            placeholder="Search..."
+                            className={style.sidebarSearch}
+                        />
+                    </Menu.Item>
+                    <Menu.Item
+                        as="a"
+                        href="/"
+                        target="_self"
+                        active={this.state.active === "home"}
+                    >
                         <Icon name="home" />
                         Home
                     </Menu.Item>
-                    <Menu.Item as="a">
-                        <Icon name="gamepad" />
-                        Games
+                    <Menu.Item
+                        as="a"
+                        href="/anime"
+                        target="_self"
+                        active={this.state.active === "anime"}
+                    >
+                        <Icon name="film" />
+                        Anime
                     </Menu.Item>
-                    <Menu.Item as="a">
-                        <Icon name="camera" />
-                        Channels
+                    <Menu.Item
+                        as="a"
+                        href="/manga"
+                        target="_self"
+                        active={this.state.active === "manga"}
+                    >
+                        <Icon name="book" />
+                        Manga
                     </Menu.Item>
                 </Sidebar>
 
@@ -63,6 +101,7 @@ class Navbar extends React.Component {
                                 <Image
                                     size="mini"
                                     src={logo}
+                                    alt="logo"
                                     className={style.headerLogo}
                                 />
                                 Anime Dashboard

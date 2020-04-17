@@ -42,14 +42,45 @@
             display: none;
         }
 
-        .header {
-            margin-right: 20px;
+        .menuLink {
+            margin-right: 10px;
             margin-left: auto;
-            order: 1;
         }
+    }
+
+    .mySidebar {
+        width: 250px;
+    }
+
+    .sidebarHeader {
+        margin: 20px auto 0;
+    }
+    .sidebarHeader:hover {
+        background-color: unset;
+    }
+
+    .sidebarLogo {
+        margin: auto;
+        width: 60px;
+        transition: transform 0.5s;
+    }
+    .sidebarLogo:hover {
+        transform: scale(1.25);
+    }
+
+    .sidebarTitle {
+        margin: 10px auto 10px;
+        font-size: 22px;
+        padding: 0;
+    }
+
+    .sidebarSearch {
+        height: unset;
+        font-size: 15px !important;
+        margin-bottom: 0 !important;
     }
 }
 
 .bodyContent {
-    margin-top: 70px;
+    margin-top: 100px;
 }

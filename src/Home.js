@@ -1,16 +1,14 @@
 import React from 'react';
 import logo from './logo.svg';
-// import './App.css';
-import Anime from './Anime';
 import { Link } from 'react-router-dom';
 import $ from 'jquery';
-import { Button, Form, Input, Sidebar } from "semantic-ui-react";
+import { Button, Form, Input } from "semantic-ui-react";
 import Navbar from './components/Navbar';
 
 import AnimeQuery from './components/AnimeQuery';
 
-// function as component
-class App extends React.Component {
+
+class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -125,4 +123,4 @@ class MyComponent extends React.Component {
   }
 }
 
-export default App;
+export default Home;

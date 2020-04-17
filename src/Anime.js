@@ -1,6 +1,7 @@
 import React from 'react';
 import AnimeQuery from './components/AnimeQuery';
 import Navbar from './components/Navbar';
+import { Container } from 'semantic-ui-react';
 
 class Anime extends React.Component {
     constructor(props) {
@@ -21,11 +22,14 @@ class Anime extends React.Component {
         var list = res.data.Page.media;
         list.forEach((element) => {
           result.push(
-            <div id={element.id} key={element.id} className="anime-block">
-              <img src={element.coverImage.large} className="anime-img"></img>
-              <br></br>
-              <p className="anime-title">{element.title.native}</p>
-            </div>
+              <div id={element.id} key={element.id} className="anime-block">
+                  <img
+                      src={element.coverImage.large}
+                      className="anime-img"
+                  ></img>
+                  <div className="anime-title">{element.title.native}</div>
+                  <div className="anime-title">{element.title.english}</div>
+              </div>
           );
         });
         this.setState({ result: result });
@@ -35,10 +39,10 @@ class Anime extends React.Component {
     render() {
         return (
             <Navbar active="anime">
-                <div>
-                    <h1 style={{ textAlign: "center" }}>All Anime</h1>
+                <Container>
+                    <h1 style={{ textAlign: "center", color: "white" }}>All Anime</h1>
                     <div className="flex-container">{this.state.result}</div>
-                </div>
+                </Container>
             </Navbar>
         );
     }
