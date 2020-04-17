@@ -1,17 +1,84 @@
 @import url('https://fonts.googleapis.com/css2?family=Cousine&display=swap');
 
-body {
-  margin: 0;
-  /* font-family: -apple-system, BlinkMacSystemFont, 'Comic', 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif; */
-  font-family: 'Cousine', monospace;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+code {
+    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-  
+.App {
+    text-align: center;
+}
+
+.App-logo {
+    height: 40vmin;
+    pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+    .App-logo {
+        animation: App-logo-spin infinite 20s linear;
+    }
+}
+
+.App-header {
+    /* margin-top: 60px; */
+    background-color: #282c34;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: calc(10px + 2vmin);
+    color: white;
+}
+
+.App-link {
+    color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.anime-block {
+    width: 180px;
+    height: auto;
+    margin: 10px;
+}
+
+.anime-img {
+    width: 180px;
+    height: 260px;
+    max-width: 100%;
+    /* max-width: 220px;
+    max-height: 300px;
+    width: 100%;
+    height: auto; */
+}
+
+.anime-title {
+    font-size: 12px;
+    text-align: center;
+}
+
+.pushable:not(body) {
+    transform: none;
+}
+
+.pushable:not(body) > .ui.sidebar, .pushable:not(body) > .fixed, .pushable:not(body) > .pusher:after {
+    position: fixed;
+}
+
+.dimmed {
+    cursor: pointer;
 }

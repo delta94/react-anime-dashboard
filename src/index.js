@@ -2,7 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter, HashRouter, Switch, Route } from 'react-router-dom';
 import "semantic-ui-css/semantic.min.css"; // semantic-ui
-import './App.css';
+import "./index.css";
 
 // import main components
 import Anime from './Anime';

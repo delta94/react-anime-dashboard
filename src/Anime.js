@@ -1,5 +1,6 @@
 import React from 'react';
 import AnimeQuery from './components/AnimeQuery';
+import Navbar from './components/Navbar';
 
 class Anime extends React.Component {
     constructor(props) {
@@ -33,10 +34,12 @@ class Anime extends React.Component {
 
     render() {
         return (
-          <div>
-            <h1 style={{ textAlign: "center" }}>All Anime</h1>
-            <div className="flex-container">{this.state.result}</div>
-          </div>
+            <Navbar active="anime">
+                <div>
+                    <h1 style={{ textAlign: "center" }}>All Anime</h1>
+                    <div className="flex-container">{this.state.result}</div>
+                </div>
+            </Navbar>
         );
     }
 }

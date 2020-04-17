@@ -1,0 +1,55 @@
+:global(#root) {
+    .search {
+        border-bottom: none;
+    }
+
+    .wholeMenu {
+        border: none;
+    }
+
+    .fixedNav {
+        margin: 0;
+        border-radius: 0;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        left: 0;
+        z-index: 2;
+    }
+
+    .header {
+        padding: 0;
+        font-size: 22px;
+    }
+
+    .headerLogo {
+        margin-right: 1.5em;
+    }
+
+    .menuLink {
+        margin: 0;
+        margin-left: 13px;
+        border-radius: 7px;
+        border: none;
+    }
+    .menuLink:hover {
+        background: rgba(255,255,255,.08);
+        color: #fff;
+    }
+
+    @media (max-width: 900px) {
+        .navMenu {
+            display: none;
+        }
+
+        .header {
+            margin-right: 20px;
+            margin-left: auto;
+            order: 1;
+        }
+    }
+}
+
+.bodyContent {
+    margin-top: 70px;
+}
