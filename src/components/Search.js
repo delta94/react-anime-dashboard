@@ -1,60 +1,40 @@
 import React from 'react';
 import { useParams, useRouteMatch, Switch, Route, Link } from 'react-router-dom';
 import AnimeQuery from './AnimeQuery';
+import Navbar from "./Navbar";
+import MediaList from "./MediaList";
+import { Container } from "semantic-ui-react";
 
 
 function Search() {
     let match = useRouteMatch();
     console.log(match);
 
-    function click() {
-        var key = document.getElementById('search').value;
-        window.location.href = match.url + "/" + key;
-        
-    }
-
     return (
-    <div>
-        <h1>My Router Test...</h1>
-        <h4>match.url = {match.url}</h4>
-        <h4>match.path = {match.path}</h4>
-        {/* <h4>match.params = {match.params}</h4> */}
-        <h4>match.isExact = {match.isExact}</h4>
-            <ul>
-                <li>
-                    <Link to={`${match.url}/components`}>Components</Link>
-                </li>
-                <li>
-                    <Link to={`${match.url}/na`}>na</Link>
-                </li>
-                <li>
-                    <Link to={`${match.url}/shana`}>shana</Link>
-                </li>
-            </ul>
-            <hr></hr>
-            <input type="text" placeholder="enter" id="search"></input>
-            <button type="button" onClick={click}>search</button>
-        <Switch>
-            <Route path={`${match.path}/:id/`}>
-                <Result />
-            </Route>
-            <Route path={match.path}>
-                <h3>Please select a topic.</h3>
-            </Route>
-        </Switch>
-    </div>
-
+        <Navbar>
+            <div>
+                <h1>My Router Test...</h1>
+                <h4>match.url = {match.url}</h4>
+                <h4>match.path = {match.path}</h4>
+                {/* <h4>match.params = {match.params}</h4> */}
+                <h4>match.isExact = {match.isExact}</h4>
+                <hr></hr>
+                <Switch>
+                    <Route path={`${match.path}/:id/`}>
+                        <Result />
+                    </Route>
+                    <Route path={match.path}>
+                    </Route>
+                </Switch>
+            </div>
+        </Navbar>
     );
 }
 
 function Result() {
     let { id } = useParams();
     let match = useRouteMatch();
-    var result = null;
     console.log(id);
-    // searchResult(id).then(res => console.log(res));
-    // console.log(result.data.Page.media[0].title.native);
-    console.log(result);
     return (
         <div>
             <h3>Requested search ID: {id}</h3>
@@ -75,22 +55,12 @@ class DisplayResult extends React.Component {
     }
 
     componentWillMount() {
-        AnimeQuery.searchAnime(this.state.id, 20, 1)
-            .then(res => {
-                const result = [];
-                var list = res.data.Page.media;
-                list.forEach(element => {
-                    result.push(<div id={element.id} className="anime-block"><img src={element.coverImage.large} className="anime-img"></img><br></br><p className="anime-title">{element.title.native}</p></div>);
-                });
-                this.setState({ result: result });
-            });
+        
     }
 
     render() {
         return (
-            <div className="flex-container">
-                {this.state.result}
-            </div>
+            <MediaList type="search" searchKey={this.state.id} />
         );
     }
 }

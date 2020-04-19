@@ -2,7 +2,7 @@
  * AnimeQuery is a helper class to execute all kinds of AniList GraphQL query.
  */
 class AnimeQuery {
-    static searchAnime(searchKey, perPage, pageNum) {
+    static searchMedia(searchKey, perPage, pageNum) {
         let query_searchAnime = `
             query ($key: String, $perPage: Int, $pageNum: Int) {
                 Page(perPage: $perPage, page: $pageNum) {
@@ -13,7 +13,7 @@ class AnimeQuery {
                         lastPage
                         hasNextPage
                     }
-                    media (type: ANIME, search: $key) {
+                    media (search: $key) {
                         id
                         title {
                             romaji
@@ -36,6 +36,7 @@ class AnimeQuery {
         };
         return callAPI(query_searchAnime, query_searchAnime_variables);
     }
+    
 
     static getMediaByID(id) {
         let query = `

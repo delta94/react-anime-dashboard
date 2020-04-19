@@ -18,6 +18,15 @@ class Navbar extends React.Component {
 
     handleToggle = () => this.setState({ openSidebar: true });
 
+    handleSearch = (e) => {
+        if (e.keyCode === 13) {
+            console.log("search for " + e.target.value);
+            if (e.target.value !== "") {
+                window.location.href = "/search/" + e.target.value;
+            }
+        }
+    }
+
     render() {
         return (
             <Sidebar.Pushable>
@@ -52,6 +61,7 @@ class Navbar extends React.Component {
                             icon="search"
                             placeholder="Search..."
                             className={style.sidebarSearch}
+                            onKeyUp={this.handleSearch}
                         />
                     </Menu.Item>
                     <Menu.Item
@@ -144,8 +154,11 @@ class Navbar extends React.Component {
                                 />
                                 <Menu.Item className={style.search}>
                                     <Input
-                                        icon="search"
+                                        loading={false}
+                                        // icon={<Icon name='search' inverted circular link />}
+                                        action={{ icon: "search" }}
                                         placeholder="Search..."
+                                        onKeyUp={this.handleSearch}
                                     />
                                 </Menu.Item>
                             </Menu.Menu>

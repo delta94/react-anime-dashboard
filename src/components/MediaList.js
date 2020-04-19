@@ -1,5 +1,6 @@
 import React from "react";
 import AnimeQuery from "./AnimeQuery";
+import paragraph from '../images/paragraph.png';
 import {
     Container,
     Button,
@@ -7,7 +8,10 @@ import {
     Image,
     Icon,
     Header,
-    Card
+    Card,
+    Loader,
+    Segment,
+    Dimmer,
 } from "semantic-ui-react";
 import style from "./MediaList.module.scss";
 
@@ -44,18 +48,9 @@ class MediaList extends React.Component {
         });
     };
 
-    // execute this function before call render
-    UNSAFE_componentWillMount() {
-        var runQuery;
-        if (this.props.type === "anime")
-            runQuery = AnimeQuery.getAllAnimeByPopularity;
-        else if (this.props.type === "manga")
-            runQuery = AnimeQuery.getAllManga;
-        else
-            runQuery = null;
-
-        if (runQuery) {
-            runQuery(50, 1).then((res) => {
+    handleSearch = (key) => {
+        if (key !== "") {
+            AnimeQuery.searchMedia(key, 50, 1).then((res) => {
                 const result = [];
                 var list = res.data.Page.media;
                 list.forEach((element) => {
@@ -83,9 +78,58 @@ class MediaList extends React.Component {
                     current: res.data.Page.pageInfo.currentPage,
                     hasNext: res.data.Page.pageInfo.hasNextPage,
                     loadmore: <LoadMore addComponent={this.addComponent} />,
-                    runQuery: runQuery,
                 });
             });
+        }
+    }
+
+    // execute this function before call render
+    UNSAFE_componentWillMount() {
+        if (this.props.type === "search")
+            this.handleSearch(this.props.searchKey);
+        else {
+            var runQuery;
+            if (this.props.type === "anime")
+                runQuery = AnimeQuery.getAllAnimeByPopularity;
+            else if (this.props.type === "manga")
+                runQuery = AnimeQuery.getAllManga;
+            else runQuery = null;
+
+            if (runQuery) {
+                runQuery(50, 1).then((res) => {
+                    const result = [];
+                    var list = res.data.Page.media;
+                    list.forEach((element) => {
+                        result.push(
+                            <div key={element.id} className="anime-block">
+                                <img
+                                    id={element.id}
+                                    onClick={this.getId}
+                                    src={element.coverImage.large}
+                                    alt={element.title.english}
+                                    className="anime-img"
+                                ></img>
+                                <div className="anime-title">
+                                    {element.title.native}
+                                </div>
+                                <div className="anime-title">
+                                    {element.title.english}
+                                </div>
+                            </div>
+                        );
+                    });
+
+                    this.setState({
+                        content: result,
+                        current: res.data.Page.pageInfo.currentPage,
+                        hasNext: res.data.Page.pageInfo.hasNextPage,
+                        loadmore: (
+                            <LoadMore addComponent={this.addComponent} />
+                        ),
+                        runQuery: runQuery,
+                    });
+                });
+            }
         }
     }
 
@@ -184,6 +228,7 @@ class MediaModal extends React.Component {
         this.state = {
             id: null,
             banner: "",
+            media: null
         };
     }
 
@@ -195,6 +240,7 @@ class MediaModal extends React.Component {
                 this.setState({
                     id: nextProps.id,
                     banner: res.data.Media.bannerImage,
+                    media: res.data.Media
                 });
             });
         }
@@ -203,36 +249,76 @@ class MediaModal extends React.Component {
             this.setState({
                 id: null,
                 banner: "",
+                media: null
             });
         }
     }
 
     render() {
-        return (
-            <Modal
-                open={this.props.open}
-                onClose={this.props.close}
-                closeOnDimmerClick={true}
-                closeIcon
-            >
-                <Modal.Header>
-                    <img
-                        src={this.state.banner}
-                        style={{ width: "100%", height: "250px" }}
-                    ></img>
-                </Modal.Header>
-                <Modal.Content image scrolling>
-                    <Modal.Description>
-                        <Header>{this.state.id}</Header>
-                    </Modal.Description>
-                </Modal.Content>
-                <Modal.Actions>
-                    <Button negative onClick={this.props.close}>
-                        Close <Icon name="chevron right" />
-                    </Button>
-                </Modal.Actions>
-            </Modal>
-        );
+        const { media } = this.state;
+        if (false) {
+            return (
+                <Modal
+                    open={this.props.open}
+                    onClose={this.props.close}
+                    closeOnDimmerClick={true}
+                // closeIcon
+                >
+                    <div className={style.modalBanner}>
+                        <img
+                            src={this.state.banner}
+                            className={style.modalBannerImg}
+                        ></img>
+                    </div>
+                    <Container>
+                        <div className={style.modalTitle}>
+                            <h3>{media.title.native}</h3>
+                            <h5>({media.title.romaji})</h5>
+                            <h3>{media.title.english}</h3>
+                        </div>
+                    </Container>
+                    <Modal.Content image scrolling>
+                        <Modal.Description>
+                            <Header>{this.state.id}</Header>
+                        </Modal.Description>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button negative onClick={this.props.close}>
+                            Close <Icon name="chevron right" />
+                        </Button>
+                    </Modal.Actions>
+                </Modal>
+            );
+        } else {
+            return (
+                <Modal
+                    open={this.props.open}
+                    onClose={this.props.close}
+                    closeOnDimmerClick={true}
+                >
+                    <Modal.Content image scrolling>
+                        <div>
+                            <Dimmer active inverted>
+                                <Loader inverted size="large">
+                                    Loading
+                                </Loader>
+                            </Dimmer>
+
+                            <Image
+                                src={paragraph}
+                                alt="p"
+                                className={style.paragraph}
+                            />
+                        </div>
+                    </Modal.Content>
+                    <Modal.Actions>
+                        <Button negative onClick={this.props.close}>
+                            Close <Icon name="chevron right" />
+                        </Button>
+                    </Modal.Actions>
+                </Modal>
+            );
+        }
     }
 }
 
