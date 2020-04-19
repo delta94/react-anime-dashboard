@@ -1,6 +1,6 @@
 import React from "react";
 import { Menu, Segment, Input, Image, Icon, Sidebar } from "semantic-ui-react";
-import style from './navbar.module.scss';
+import style from './Navbar.module.scss';
 import logo from '../images/angel.png';
 
 class Navbar extends React.Component {

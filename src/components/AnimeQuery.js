@@ -32,7 +32,7 @@ class AnimeQuery {
         let query_searchAnime_variables = {
             key: searchKey,
             perPage: perPage,
-            pageNum: pageNum
+            pageNum: pageNum,
         };
         return callAPI(query_searchAnime, query_searchAnime_variables);
     }
@@ -145,7 +145,7 @@ class AnimeQuery {
                 }
             }`;
         let variables = {
-            id: id
+            id: id,
         };
         return callAPI(query, variables);
     }
@@ -184,9 +184,19 @@ class AnimeQuery {
         let variables = {
             perPage: perPage,
             pageNum: pageNum,
-            type: mytype
+            type: mytype,
         };
         return callAPI(all_anime, variables);
+    }
+
+    // wrapper
+    static getAllAnime(perPage, pageNum) {
+        return AnimeQuery.getAllMedia("ANIME", perPage, pageNum);
+    }
+
+    // wrapper
+    static getAllManga(perPage, pageNum) {
+        return AnimeQuery.getAllMedia("MANGA", perPage, pageNum);
     }
 
     static getMediaByPopularity(type, perPage, pageNum) {
@@ -220,18 +230,28 @@ class AnimeQuery {
         let variables = {
             perPage: perPage,
             pageNum: pageNum,
-            type: mytype
+            type: mytype,
         };
         return callAPI(query, variables);
     }
 
+    // wrapper
+    static getAllAnimeByPopularity(perPage, pageNum) {
+        return AnimeQuery.getMediaByPopularity("ANIME", perPage, pageNum);
+    }
+
+    // wrapper
+    static getAllMangaByPopularity(perPage, pageNum) {
+        return AnimeQuery.getMediaByPopularity("MANGA", perPage, pageNum);
+    }
 
     static getMediaByLatest(type, perPage, pageNum) {
         var mytype = type.toUpperCase() === "ANIME" ? TYPE.ANIME : TYPE.MANGA;
         var today = new Date();
-        var todayStr = today.getFullYear().toString()
-            + (today.getMonth() + 1).toString().padStart(2, '0')
-            + today.getDate().toString().padStart(2, '0');
+        var todayStr =
+            today.getFullYear().toString() +
+            (today.getMonth() + 1).toString().padStart(2, "0") +
+            today.getDate().toString().padStart(2, "0");
         var todayInt = parseInt(todayStr);
 
         let query = `
@@ -267,7 +287,7 @@ class AnimeQuery {
             perPage: perPage,
             pageNum: pageNum,
             type: mytype,
-            today: todayInt
+            today: todayInt,
         };
         return callAPI(query, variables);
     }

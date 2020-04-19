@@ -5,11 +5,11 @@ import "semantic-ui-css/semantic.min.css"; // semantic-ui
 import "./index.css";  // custom global css
 
 // import main components
-import Anime from './Anime';
+import Anime from './components/Anime';
 import Manga from './components/Manga';
 import Home from './Home';
-import Error from './Error';
-import Search from './Search';
+import Error from './components/Error';
+import Search from './components/Search';
 import Latest from './components/Latest';
 import Popular from './components/Popular';
 

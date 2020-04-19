@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, useRouteMatch, Switch, Route, Link } from 'react-router-dom';
-import AnimeQuery from './components/AnimeQuery';
+import AnimeQuery from './AnimeQuery';
 
 
 function Search() {
@@ -35,7 +35,7 @@ function Search() {
             <input type="text" placeholder="enter" id="search"></input>
             <button type="button" onClick={click}>search</button>
         <Switch>
-            <Route path={`${match.path}/:id/:num`}>
+            <Route path={`${match.path}/:id/`}>
                 <Result />
             </Route>
             <Route path={match.path}>
@@ -48,21 +48,19 @@ function Search() {
 }
 
 function Result() {
-    let { id, num } = useParams();
+    let { id } = useParams();
     let match = useRouteMatch();
     var result = null;
     console.log(id);
     // searchResult(id).then(res => console.log(res));
     // console.log(result.data.Page.media[0].title.native);
     console.log(result);
-    var n = parseInt(num);
-    console.log("perpage == " + n);
     return (
         <div>
             <h3>Requested search ID: {id}</h3>
             <h3>Requested url: {match.url}</h3>
             <h3>Requested path: {match.path}</h3>
-            <DisplayResult id={id} num={n}/>
+            <DisplayResult id={id}/>
         </div>
     );
 }
@@ -77,7 +75,7 @@ class DisplayResult extends React.Component {
     }
 
     componentWillMount() {
-        AnimeQuery.searchAnime(this.state.id, 20, this.props.num)
+        AnimeQuery.searchAnime(this.state.id, 20, 1)
             .then(res => {
                 const result = [];
                 var list = res.data.Page.media;

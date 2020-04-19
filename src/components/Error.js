@@ -1,6 +1,7 @@
 import React from 'react';
 import { useRouteMatch, useLocation } from 'react-router-dom';
-import Navbar from "./components/Navbar";
+import Navbar from "./Navbar";
+import { Container } from 'semantic-ui-react';
 
 const Error = () => {
     let match = useRouteMatch();
@@ -8,7 +9,7 @@ const Error = () => {
     console.log(match.url);
     return (
         <Navbar>
-            <div>
+            <Container>
                 <h1>Error! Wrong Page!</h1>
                 <h2>
                     Wrong URL: <code>{match.url}</code>
@@ -16,7 +17,7 @@ const Error = () => {
                 <h2>
                     No match for <code>{location.pathname}</code>
                 </h2>
-            </div>
+            </Container>
         </Navbar>
     );
 }
