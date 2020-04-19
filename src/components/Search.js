@@ -1,6 +1,5 @@
 import React from 'react';
-import { useParams, useRouteMatch, Switch, Route, Link } from 'react-router-dom';
-import AnimeQuery from './AnimeQuery';
+import { useParams, useRouteMatch, Switch, Route } from 'react-router-dom';
 import Navbar from "./Navbar";
 import MediaList from "./MediaList";
 import { Container } from "semantic-ui-react";
@@ -11,23 +10,13 @@ function Search() {
     console.log(match);
 
     return (
-        <Navbar>
-            <div>
-                <h1>My Router Test...</h1>
-                <h4>match.url = {match.url}</h4>
-                <h4>match.path = {match.path}</h4>
-                {/* <h4>match.params = {match.params}</h4> */}
-                <h4>match.isExact = {match.isExact}</h4>
-                <hr></hr>
-                <Switch>
-                    <Route path={`${match.path}/:id/`}>
-                        <Result />
-                    </Route>
-                    <Route path={match.path}>
-                    </Route>
-                </Switch>
-            </div>
-        </Navbar>
+        <Switch>
+            <Route path={`${match.path}/:id/`}>
+                <Result />
+            </Route>
+            <Route path={match.path}>
+            </Route>
+        </Switch>
     );
 }
 
@@ -37,9 +26,9 @@ function Result() {
     console.log(id);
     return (
         <div>
-            <h3>Requested search ID: {id}</h3>
+            {/* <h3>Requested search ID: {id}</h3>
             <h3>Requested url: {match.url}</h3>
-            <h3>Requested path: {match.path}</h3>
+            <h3>Requested path: {match.path}</h3> */}
             <DisplayResult id={id}/>
         </div>
     );
@@ -50,17 +39,16 @@ class DisplayResult extends React.Component {
         super(props);
         this.state = {
             id: props.id,
-            result: null
         };
-    }
-
-    componentWillMount() {
-        
     }
 
     render() {
         return (
-            <MediaList type="search" searchKey={this.state.id} />
+            <Navbar search={this.state.id}>
+                <Container>
+                    <MediaList type="search" searchKey={this.state.id} />
+                </Container>
+            </Navbar>
         );
     }
 }

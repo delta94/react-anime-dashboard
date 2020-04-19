@@ -8,8 +8,59 @@
         font-size: 22px;
         margin-left: 10px;
     }
+}
 
-    
+:global(#modal) {
+    .modalBanner {
+        width: 100%;
+        height: 180px;
+    }
+
+    .modalBannerImg {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        border-radius: inherit;
+    }
+
+    .loadingBox {
+        border: none;
+        box-shadow: none;
+        width: 100%;
+    }
+
+    .modalContent {
+        display: block;
+        width: 100%;
+        font-size: 1em;
+        line-height: 1.4;
+        padding: 10px 15px 10px;
+        background: #fff;
+        max-height: calc(70vh);
+        overflow: auto;
+    }
+
+    .modalTitle {
+        text-align: center;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(204, 204, 204, 0.418);
+    }
+    .modalNative {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 2px;
+    }
+    .modalRomaji {
+        font-size: 15px;
+        font-weight: 500;
+        margin-bottom: 2px;
+    }
+    .modalEnglish {
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+
 }
 
 .loadmoreBlock {
@@ -18,19 +69,10 @@
     text-align: center;
 }
 
-.modalBanner {
-    border-top-left-radius: 3px;
-    border-top-right-radius: 3px;
-    width: 100%;
-    height: auto;
-}
 
-.modalBannerImg {
-    width: 100%;
-    height: auto;
-}
 
 .paragraph {
     width: 100%;
 }
+
 

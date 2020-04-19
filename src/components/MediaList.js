@@ -19,14 +19,16 @@ class MediaList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            content: null,
-            hasNextPage: false,
+            content: [],
+            hasNextPage: true,
             currentPage: 0,
             id: -1,
             open: false,
             reset: false,
             loadmore: null,
-            runQuery: null
+            runQuery: null,
+            ResultNum: 0,
+            searchText: ""
         };
     }
 
@@ -50,44 +52,30 @@ class MediaList extends React.Component {
 
     handleSearch = (key) => {
         if (key !== "") {
-            AnimeQuery.searchMedia(key, 50, 1).then((res) => {
-                const result = [];
-                var list = res.data.Page.media;
-                list.forEach((element) => {
-                    result.push(
-                        <div key={element.id} className="anime-block">
-                            <img
-                                id={element.id}
-                                onClick={this.getId}
-                                src={element.coverImage.large}
-                                alt={element.title.english}
-                                className="anime-img"
-                            ></img>
-                            <div className="anime-title">
-                                {element.title.native}
-                            </div>
-                            <div className="anime-title">
-                                {element.title.english}
-                            </div>
-                        </div>
-                    );
+            if (this.state.hasNextPage) {
+                AnimeQuery.searchMedia(key, 25, this.state.current+1).then((res) => {
+                    this.handleResult(res);
                 });
-
-                this.setState({
-                    content: result,
-                    current: res.data.Page.pageInfo.currentPage,
-                    hasNext: res.data.Page.pageInfo.hasNextPage,
-                    loadmore: <LoadMore addComponent={this.addComponent} />,
-                });
-            });
+            }
         }
     }
 
-    // execute this function before call render
+    // execute before the very beginning render, execute once
     UNSAFE_componentWillMount() {
-        if (this.props.type === "search")
-            this.handleSearch(this.props.searchKey);
-        else {
+        if (this.props.type === "search") {
+            var key = this.props.searchKey;
+            if (key !== "") {
+                AnimeQuery.searchMedia(key, 25, this.state.current+1).then((res) => {
+                    this.handleResult(res);
+                    this.addLoadMore();
+                    this.setState({
+                        searchText: 'for "' + key + '"',
+                        ResultNum: res.data.Page.pageInfo.total
+                    });
+                });
+            }
+
+        } else {
             var runQuery;
             if (this.props.type === "anime")
                 runQuery = AnimeQuery.getAllAnimeByPopularity;
@@ -97,82 +85,75 @@ class MediaList extends React.Component {
 
             if (runQuery) {
                 runQuery(50, 1).then((res) => {
-                    const result = [];
-                    var list = res.data.Page.media;
-                    list.forEach((element) => {
-                        result.push(
-                            <div key={element.id} className="anime-block">
-                                <img
-                                    id={element.id}
-                                    onClick={this.getId}
-                                    src={element.coverImage.large}
-                                    alt={element.title.english}
-                                    className="anime-img"
-                                ></img>
-                                <div className="anime-title">
-                                    {element.title.native}
-                                </div>
-                                <div className="anime-title">
-                                    {element.title.english}
-                                </div>
-                            </div>
-                        );
-                    });
-
+                    this.handleResult(res);
+                    this.addLoadMore();
                     this.setState({
-                        content: result,
-                        current: res.data.Page.pageInfo.currentPage,
-                        hasNext: res.data.Page.pageInfo.hasNextPage,
-                        loadmore: (
-                            <LoadMore addComponent={this.addComponent} />
-                        ),
                         runQuery: runQuery,
+                        ResultNum: res.data.Page.pageInfo.total
                     });
                 });
             }
         }
     }
 
+    handleResult = (res) => {
+        const result = [];
+        var list = res.data.Page.media;
+        list.forEach((element) => {
+            result.push(
+                <div key={element.id} className="anime-block">
+                    <div className="anime-img">
+                        <img
+                            id={element.id}
+                            src={element.coverImage.large}
+                            alt={element.title.english}
+                            onClick={this.getId}
+                        ></img>
+                    </div>
+                    <div className="anime-title">
+                        {element.title.native}
+                    </div>
+                    <div className="anime-title">
+                        {element.title.english}
+                    </div>
+                </div>
+            );
+        });
+
+        this.setState({
+            content: this.state.content.concat(result),
+            current: res.data.Page.pageInfo.currentPage,
+            hasNext: res.data.Page.pageInfo.hasNextPage,
+        });
+    }
+
+    addLoadMore = () => {
+        this.setState({
+            loadmore: (<LoadMore addComponent={this.addComponent} />)
+        });
+    }
 
     addComponent = () => {
         if (this.state.hasNext) {
-            this.state.runQuery(
-                50,
-                this.state.current + 1
-            ).then((res) => {
-                const myresult = [];
-                var list = res.data.Page.media;
-                list.forEach((element) => {
-                    myresult.push(
-                        <div key={element.id} className="anime-block">
-                            <img
-                                id={element.id}
-                                src={element.coverImage.large}
-                                alt={element.title.english}
-                                className="anime-img"
-                                onClick={this.getId}
-                            ></img>
-                            <div className="anime-title">
-                                {element.title.native}
-                            </div>
-                            <div className="anime-title">
-                                {element.title.english}
-                            </div>
-                        </div>
-                    );
+            if (this.props.type === 'search') {
+                this.handleSearch(this.props.searchKey);
+            } else {
+                this.state.runQuery(
+                    50,
+                    this.state.current + 1
+                ).then((res) => {
+                    this.handleResult(res);
                 });
-                this.setState({
-                    content: this.state.content.concat(myresult),
-                    current: res.data.Page.pageInfo.currentPage,
-                    hasNext: res.data.Page.pageInfo.hasNextPage,
-                });
-            });
+            }
+        } else {
+            console.log("The End!");
         }
     };
 
     render() {
         return (
             <div>
+                <h3 style={{color: "white"}}>showing {this.state.ResultNum} results {this.state.searchText}</h3> 
                 <div className="flex-container">{this.state.content}</div>
                 {this.state.loadmore}
                 <MediaModal
@@ -222,6 +203,9 @@ class OneMedia extends React.Component {
 }
 
 
+/**
+ * A single media box for displaying information for a single media
+ */
 class MediaModal extends React.Component {
     constructor(props) {
         super(props);
@@ -256,9 +240,10 @@ class MediaModal extends React.Component {
 
     render() {
         const { media } = this.state;
-        if (false) {
+        if (media) {
             return (
                 <Modal
+                    id="modal"
                     open={this.props.open}
                     onClose={this.props.close}
                     closeOnDimmerClick={true}
@@ -267,21 +252,24 @@ class MediaModal extends React.Component {
                     <div className={style.modalBanner}>
                         <img
                             src={this.state.banner}
+                            alt={media.title.english}
                             className={style.modalBannerImg}
                         ></img>
+                        {/* <div style={{backgroundImage: "url("+this.state.banner+")"}} className={style.modalBannerImg}></div> */}
                     </div>
-                    <Container>
+
+                    <Container className={style.modalContent}>
                         <div className={style.modalTitle}>
-                            <h3>{media.title.native}</h3>
-                            <h5>({media.title.romaji})</h5>
-                            <h3>{media.title.english}</h3>
+                            <div className={style.modalNative}>{media.title.native}</div>
+                            <div className={style.modalRomaji}>({media.title.romaji})</div>
+                            <div className={style.modalEnglish}>{media.title.english}</div>
+                            
                         </div>
+                        
+
+                        <Header>{this.state.id}</Header>
                     </Container>
-                    <Modal.Content image scrolling>
-                        <Modal.Description>
-                            <Header>{this.state.id}</Header>
-                        </Modal.Description>
-                    </Modal.Content>
+
                     <Modal.Actions>
                         <Button negative onClick={this.props.close}>
                             Close <Icon name="chevron right" />
@@ -292,12 +280,13 @@ class MediaModal extends React.Component {
         } else {
             return (
                 <Modal
+                    id="modal"
                     open={this.props.open}
                     onClose={this.props.close}
                     closeOnDimmerClick={true}
                 >
                     <Modal.Content image scrolling>
-                        <div>
+                        <Segment className={style.loadingBox}>
                             <Dimmer active inverted>
                                 <Loader inverted size="large">
                                     Loading
@@ -309,7 +298,7 @@ class MediaModal extends React.Component {
                                 alt="p"
                                 className={style.paragraph}
                             />
-                        </div>
+                        </Segment>
                     </Modal.Content>
                     <Modal.Actions>
                         <Button negative onClick={this.props.close}>
