@@ -91,7 +91,7 @@ class AnimeQuery {
                     duration
                     episodes    
                     isAdult
-                    description(asHtml: true)
+                    description
                     trailer {
                         id
                         site
