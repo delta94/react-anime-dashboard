@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, Segment, Input, Image, Icon, Sidebar } from "semantic-ui-react";
+import { Menu, Segment, Input, Image, Icon, Sidebar, Button } from "semantic-ui-react";
 import style from './Navbar.module.scss';
 import logo from '../images/angel.png';
 
@@ -9,21 +9,31 @@ class Navbar extends React.Component {
         this.state = {
             active: props.active,
             openSidebar: false,
+            searchId: ""
         };
     }
-
-    handleItemClick = (e, { name }) => this.setState({ active: name });
 
     handleSidebarHide = () => this.setState({ openSidebar: false });
 
     handleToggle = () => this.setState({ openSidebar: true });
 
-    handleSearch = (e) => {
+    handleChange = (e) => {
+        this.setState({ searchId: e.target.value });
+    }
+
+    handleEnterSearch = (e) => {
         if (e.keyCode === 13) {
             console.log("search for " + e.target.value);
             if (e.target.value !== "") {
                 window.location.href = "/search/" + e.target.value;
             }
+        }
+    }
+
+    handleClickSearch = (e) => {
+        console.log("click + " + this.state.searchId);
+        if (this.state.searchId !== "") {
+            window.location.href = "/search/" + this.state.searchId;
         }
     }
 
@@ -58,10 +68,11 @@ class Navbar extends React.Component {
                     </Menu.Item>
                     <Menu.Item>
                         <Input
-                            icon="search"
-                            placeholder="Search..."
                             className={style.sidebarSearch}
-                            onKeyUp={this.handleSearch}
+                            icon={<Icon name='search' link onClick={this.handleClickSearch} />}
+                            placeholder="Search..."
+                            onChange={this.handleChange}
+                            onKeyUp={this.handleEnterSearch}
                         />
                     </Menu.Item>
                     <Menu.Item
@@ -154,11 +165,10 @@ class Navbar extends React.Component {
                                 />
                                 <Menu.Item className={style.search}>
                                     <Input
-                                        loading={false}
-                                        // icon={<Icon name='search' inverted circular link />}
-                                        action={{ icon: "search" }}
+                                        icon={<Icon name='search' link onClick={this.handleClickSearch} />}
                                         placeholder="Search..."
-                                        onKeyUp={this.handleSearch}
+                                        onChange={this.handleChange}
+                                        onKeyUp={this.handleEnterSearch}
                                     />
                                 </Menu.Item>
                             </Menu.Menu>
@@ -167,8 +177,48 @@ class Navbar extends React.Component {
                     <div className={style.bodyContent}>
                         {this.props.children}
                     </div>
+                    <ScrollTopBtn />
                 </Sidebar.Pusher>
             </Sidebar.Pushable>
+        );
+    }
+}
+
+
+class ScrollTopBtn extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {visible: false};
+    }
+
+    scrollToTop = () => {
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+    componentDidMount() {
+        document.addEventListener('scroll', (e) => {
+            if (window.pageYOffset > 100) {
+                this.setState({ visible: true });
+            } else {
+                this.setState({ visible: false });
+            }
+        });
+    }
+
+    render() {
+        return (
+            <div id="scroll-top" className={`${style.topBlock} ${this.state.visible ? style.topBlockVisible : ""}`}>
+                <Button
+                    circular
+                    icon="arrow up"
+                    className={style.topBtn}
+                    title="go to top"
+                    onClick={this.scrollToTop}
+                />
+            </div>
         );
     }
 }

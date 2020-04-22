@@ -79,8 +79,29 @@
         font-size: 15px !important;
         margin-bottom: 0 !important;
     }
+
+    .topBlock {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 5;
+        padding: 5px;
+        opacity: 0;
+        -webkit-transition: opacity 0.8s;
+        -moz-transition: opacity 0.8s;
+        transition: opacity 0.8s;
+    }
+
+    .topBlockVisible {
+        opacity: 1;
+    }
+
+    .topBtn {
+        font-size: 17px;
+    }
 }
 
 .bodyContent {
     margin-top: 100px;
 }
+
