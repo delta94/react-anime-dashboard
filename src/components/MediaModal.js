@@ -8,11 +8,13 @@ import {
     Image,
     Icon,
     Header,
+    Label,
     Card,
     Loader,
     Segment,
     Dimmer,
-    Grid
+    Grid,
+    Rating
 } from "semantic-ui-react";
 import style from "./MediaList.module.scss";
 
@@ -54,7 +56,32 @@ class MediaModal extends React.Component {
     render() {
         const { media } = this.state;
         if (media) {
+            // description
             var description = media.description.split('<br><br>');
+
+            // score
+            var score = Math.round(media.meanScore / 100 * 10);
+
+            // tag list
+            var tags = [];
+            media.tags.forEach(tag => {
+                tags.push(
+                    <Label as="a" tag key={tag.name} className={style.tag}>
+                        {tag.name}
+                    </Label>
+                );
+            });
+
+            // genres
+            var color = media.coverImage.color;
+            var genres = [];
+            media.genres.forEach(genre => {
+                genres.push(
+                    <Label as="a" circular color="blue" key={genre} className={style.genre} size="big" >
+                        {genre}
+                    </Label>
+                );
+            })
 
             return (
                 <Modal
@@ -84,7 +111,6 @@ class MediaModal extends React.Component {
                             <div className={style.modalEnglish}>
                                 {media.title.english}
                             </div>
-                            <Header>{this.state.id}</Header>
                         </div>
 
                         <Grid columns={2} divided>
@@ -98,14 +124,35 @@ class MediaModal extends React.Component {
                                             rounded
                                         />
                                     </div>
+                                    <div className={style.rating}>
+                                        <Rating
+                                            maxRating={10}
+                                            defaultRating={score}
+                                            disabled
+                                            icon="star"
+                                            size="large"
+                                            title={
+                                                "Mean Score: " + media.meanScore
+                                            }
+                                            className={style.ratingSize}
+                                        />
+                                    </div>
+                                    <div className={style.genreContainer}>
+                                        {genres}
+                                    </div>
                                 </Grid.Column>
                                 <Grid.Column width={9}>
-                                    <div className={style.description}>
-                                        <p>
-                                            <b>Description:</b>
-                                        </p>
-                                        <p>{description[0]}</p>
-                                        <p>{description[1]}</p>
+                                    <div className={style.flexColumnContainer}>
+                                        <div className={style.description}>
+                                            <p>
+                                                <b>Description:</b>
+                                            </p>
+                                            <p>{description[0]}</p>
+                                            <p>{description[1]}</p>
+                                        </div>
+                                        <div className={style.tagsContainer}>
+                                            {tags}
+                                        </div>
                                     </div>
                                 </Grid.Column>
                             </Grid.Row>

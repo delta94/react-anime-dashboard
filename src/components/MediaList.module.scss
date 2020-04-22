@@ -36,7 +36,7 @@
         line-height: 1.4;
         padding: 10px 15px 10px;
         background: #fff;
-        max-height: calc(70vh);
+        max-height: calc(60vh);
         overflow: auto;
     }
 
@@ -64,19 +64,68 @@
         margin-top: 12px;
     }
 
+    .flexColumnContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+
     .description {
         margin: 15px 12px;
         font-size: 18px;
     }
 
-    @media (max-width: 600px) {
+    .rating {
+        text-align: center;
+        margin: 15px 0;
+    }
+
+    @media (max-width: 550px) {
         .description {
             margin: 12px 8px;
             font-size: 13px;
         }
+
+        .ratingSize {
+            font-size: 9px;
+        }
+        .rating {
+            margin: 4px 0;
+        }
     }
 
+    @media only screen and (max-width: 767px) {
+        .modalContent {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+    }
 
+    .tagsContainer {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin: 10px;
+    }
+
+    .tag {
+        margin: 5px;
+    }
+
+    .genreContainer {
+        width: 100%;
+        margin: 20px 0 15px;
+        text-align: center;
+    }
+
+    .genre {
+        width: 85%;
+        text-align: center;
+        margin: 3px 0;
+    }
+    
 }
 
 .loadmoreBlock {
@@ -84,8 +133,6 @@
     margin: 20px 0;
     text-align: center;
 }
-
-
 
 .paragraph {
     width: 100%;
