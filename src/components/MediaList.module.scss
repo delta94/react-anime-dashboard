@@ -13,14 +13,14 @@
 :global(#modal) {
     .modalBanner {
         width: 100%;
-        height: 180px;
+        // max-height: 250px;
     }
 
     .modalBannerImg {
         width: 100%;
         height: 100%;
         object-fit: fill;
-        border-radius: inherit;
+        // border-radius: 10px;
     }
 
     .loadingBox {
@@ -29,15 +29,19 @@
         width: 100%;
     }
 
-    .modalContent {
+    .myModal {
         display: block;
         width: 100%;
         font-size: 1em;
         line-height: 1.4;
-        padding: 10px 15px 10px;
         background: #fff;
-        max-height: calc(60vh);
-        overflow: auto;
+        max-height: calc(70vh);
+        overflow: scroll;
+        overflow-x: hidden;
+    }
+
+    .modalContent {
+        padding: 10px 15px 10px;
     }
 
     .modalTitle {
@@ -81,20 +85,6 @@
         margin: 15px 0;
     }
 
-    @media (max-width: 550px) {
-        .description {
-            margin: 12px 8px;
-            font-size: 13px;
-        }
-
-        .ratingSize {
-            font-size: 9px;
-        }
-        .rating {
-            margin: 4px 0;
-        }
-    }
-
     @media only screen and (max-width: 767px) {
         .modalContent {
             margin-left: 0 !important;
@@ -124,6 +114,40 @@
         width: 85%;
         text-align: center;
         margin: 3px 0;
+    }
+
+    .informationContainer {
+        width: 95%;
+        text-align: center;
+        margin: 20px auto 10px;
+    }
+
+    .modalBigBtn {
+        width: 100%;
+        text-align: center;
+        font-size: 20px;
+    }
+
+    @media (max-width: 550px) {
+        .description {
+            margin: 12px 8px;
+            font-size: 13px;
+        }
+
+        .ratingSize {
+            font-size: 9px;
+        }
+        .rating {
+            margin: 4px 0;
+        }
+
+        .tag {
+            font-size: 8px;
+        }
+
+        .genre {
+            font-size: smaller;
+        }
     }
     
 }
