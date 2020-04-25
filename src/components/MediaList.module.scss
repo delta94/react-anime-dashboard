@@ -85,6 +85,11 @@
         margin: 15px 0;
     }
 
+    .favorite {
+        text-align: center;
+        margin: 10px;
+    }
+
     @media only screen and (max-width: 767px) {
         .modalContent {
             margin-left: 0 !important;
@@ -128,6 +133,12 @@
         font-size: 20px;
     }
 
+    .modalTable {
+        margin: 20px auto 15px;
+        width: 90%;
+        text-align: center;
+    }
+
     @media (max-width: 550px) {
         .description {
             margin: 12px 8px;
@@ -148,6 +159,14 @@
         .genre {
             font-size: smaller;
         }
+
+        .favoriteText {
+            font-size: smaller;
+        }
+
+        .favoriteLabel {
+            padding: 0.4em 0.6em;
+        }   
     }
     
 }

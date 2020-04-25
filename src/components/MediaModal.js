@@ -14,7 +14,8 @@ import {
     Dimmer,
     Grid,
     Rating,
-    Transition
+    Transition,
+    Table,
 } from "semantic-ui-react";
 import style from "./MediaList.module.scss";
 
@@ -28,6 +29,7 @@ class MediaModal extends React.Component {
             id: null,
             banner: "",
             media: null,
+            error: false,
             informationVisible: false,
             statisticVisible: false,
             characterListVisible: false,
@@ -63,12 +65,19 @@ class MediaModal extends React.Component {
         if (nextProps.open) {
             console.log("current id == " + this.props.id);
             console.log("will receive id == " + nextProps.id);
-            AnimeQuery.getMediaByID(nextProps.id).then((res) => {
-                this.setState({
-                    id: nextProps.id,
-                    media: res.data.Media,
+            AnimeQuery.getMediaByID(nextProps.id)
+                .then((res) => {
+                    this.setState({
+                        id: nextProps.id,
+                        media: res.data.Media,
+                    });
+                })
+                .catch(err => {
+                    console.log('my err: ' + err);
+                    this.setState({
+                        error: true
+                    });
                 });
-            });
         }
 
         // reset all states when modal closed
@@ -76,6 +85,7 @@ class MediaModal extends React.Component {
             this.setState({
                 id: null,
                 media: null,
+                error: false,
                 informationVisible: false,
                 statisticVisible: false,
                 characterListVisible: false,
@@ -123,7 +133,7 @@ class MediaModal extends React.Component {
                         {genre}
                     </Label>
                 );
-            });
+            });            
 
             return (
                 <Modal
@@ -182,6 +192,31 @@ class MediaModal extends React.Component {
                                                 className={style.ratingSize}
                                             />
                                         </div>
+
+                                        <div className={style.favorite}>
+                                            <Label size="medium" className={style.favoriteLabel}>
+                                                <Icon
+                                                    name="heart"
+                                                    color="red"
+                                                />
+                                                <span className={style.favoriteText}>
+                                                    {media.favourites} Favorites
+                                                </span>
+                                            </Label>
+                                        </div>
+
+                                        <div className={style.favorite}>
+                                            <Label size="medium" className={style.favoriteLabel}>
+                                                <Icon
+                                                    name="star"
+                                                    color="yellow"
+                                                />
+                                                <span className={style.favoriteText}>
+                                                    {media.popularity} Pupularity
+                                                </span>
+                                            </Label>
+                                        </div>
+
                                         <div className={style.genreContainer}>
                                             {genres}
                                         </div>
@@ -214,7 +249,9 @@ class MediaModal extends React.Component {
                                 name="Media Information"
                                 color="blue"
                             >
-                                <Image size="large" src={paragraph} />
+                                <Container>
+                                    <InformationTable media={media} />
+                                </Container>
                             </SubSection>
 
                             <SubSection
@@ -223,7 +260,10 @@ class MediaModal extends React.Component {
                                 name="Media Statistic"
                                 color="olive"
                             >
-                                <Image size="large" src={paragraph} />
+                                <Container>
+                                    <InformationTable media={media} />
+                                </Container>
+                                
                             </SubSection>
 
                             <SubSection
@@ -232,7 +272,9 @@ class MediaModal extends React.Component {
                                 name="Character List"
                                 color="violet"
                             >
-                                <Image size="large" src={paragraph} />
+                                <Container>
+                                    <CharacterList />
+                                </Container>
                             </SubSection>
 
                             <SubSection
@@ -262,19 +304,24 @@ class MediaModal extends React.Component {
                     closeOnDimmerClick={true}
                 >
                     <Modal.Content image scrolling>
-                        <Segment className={style.loadingBox}>
-                            <Dimmer active inverted>
-                                <Loader inverted size="large">
-                                    Loading
-                                </Loader>
-                            </Dimmer>
+                        {this.state.error ? 
+                            <h1>Error! Please try again later!</h1>
+                            :
+                            <Segment className={style.loadingBox}>
+                                <Dimmer active inverted>
+                                    <Loader inverted size="large">
+                                        Loading
+                                    </Loader>
+                                </Dimmer>
 
-                            <Image
-                                src={paragraph}
-                                alt="p"
-                                className={style.paragraph}
-                            />
-                        </Segment>
+                                <Image
+                                    src={paragraph}
+                                    alt="p"
+                                    className={style.paragraph}
+                                />
+                            </Segment>
+                        }
+                        
                     </Modal.Content>
                     <Modal.Actions>
                         <Button negative onClick={this.props.close}>
@@ -317,5 +364,185 @@ const SubSection = (props) => {
         </div>
     );
 }
+
+
+const InformationTable = (props) => {
+    const { media } = props;
+    // season
+    var season = "";
+    if (media.season && media.seasonYear)
+        season = media.season + ' ' + media.seasonYear;
+    else
+        season = (media.season ? media.season : media.seasonYear ? media.seasonYear : 'Unknown');
+    
+    // start / end date
+    var startDate = convertDate(media.startDate.year, media.startDate.month, media.startDate.day);
+    var endDate = convertDate(media.endDate.year, media.endDate.month, media.endDate.day);
+
+    // chapter/volume, episode/duration
+    var chapter = (media.chapters ? media.chapters : 'Unknown');
+    var volume = (media.volumes ? media.volumes : 'Unknown');
+    var episode = (media.episodes ? media.episodes : 'Unknown');
+    var duration = convertTime(media.duration);
+    
+    return (
+        <Table
+            celled
+            selectable
+            striped
+            color="blue"
+            className={style.modalTable}
+            unstackable
+        >
+            <Table.Header>
+                <Table.Row>
+                    <Table.HeaderCell colSpan="2">Information</Table.HeaderCell>
+                </Table.Row>
+            </Table.Header>
+
+            <Table.Body>
+                <Table.Row>
+                    <Table.Cell>
+                        <b>Native Name</b>
+                    </Table.Cell>
+                    <Table.Cell>
+                        {media.title.native ? media.title.native : "Unknown"}
+                    </Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                    <Table.Cell>
+                        <b>Romaji Name</b>
+                    </Table.Cell>
+                    <Table.Cell>
+                        {media.title.romaji ? media.title.romaji : "Unknown"}
+                    </Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                    <Table.Cell>
+                        <b>English Name</b>
+                    </Table.Cell>
+                    <Table.Cell>
+                        {media.title.english ? media.title.english : "Unknown"}
+                    </Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                    <Table.Cell>
+                        <b>Type</b>
+                    </Table.Cell>
+                    <Table.Cell>{media.type}</Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                    <Table.Cell>
+                        <b>Format</b>
+                    </Table.Cell>
+                    <Table.Cell>{media.format}</Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                    <Table.Cell>
+                        <b>Status</b>
+                    </Table.Cell>
+                    <Table.Cell>{media.status}</Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                    <Table.Cell>
+                        <b>Season</b>
+                    </Table.Cell>
+                    <Table.Cell>{season}</Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                    <Table.Cell>
+                        <b>Start Date</b>
+                    </Table.Cell>
+                    <Table.Cell>{startDate}</Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                    <Table.Cell>
+                        <b>End Date</b>
+                    </Table.Cell>
+                    <Table.Cell>{endDate}</Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                    <Table.Cell>
+                        <b>{media.type === 'ANIME' ? 'Episodes' : 'Chapters'}</b>
+                    </Table.Cell>
+                    <Table.Cell>{episode || chapter}</Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                    <Table.Cell>
+                        <b>{media.type === 'ANIME' ? 'duration' : 'Volumes'}</b>
+                    </Table.Cell>
+                    <Table.Cell>{duration || volume}</Table.Cell>
+                </Table.Row>
+            </Table.Body>
+        </Table>
+    );
+}
+
+
+class CharacterList extends React.Component {
+    constructor(props) {
+        super(props);
+    }
+
+
+}
+
+const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December",
+];
+
+// convert date into format "Month day, year"
+function convertDate(myear, mmonth, mday) {
+    var date = '';
+    if (myear)
+        date = myear.toString();
+    if (mday)
+        date = mday.toString() + ", " + date;
+    if (mmonth && mday)
+        date = months[mmonth - 1] + " " + date;
+    else if (mmonth)
+        date = months[mmonth - 1] + ", " + date;
+    if (date === "")
+        date = "Unknown";
+    return date;
+}
+
+
+function convertTime(time) {
+    if (time) {
+        if (time < 60)
+            return time.toString() + ' mins';
+        let hour = (time / 60);
+        hour = Math.floor(hour);
+        let min = time - (hour * 60);
+        let hourText = (hour === 1 ? 'hour' : 'hours');
+        let minText = (min === 1 ? 'min' : 'mins');
+        return hour.toString() + ' ' + hourText + ' ' + min + ' ' + minText;
+    } else {
+        return 'Unknown';
+    }
+}
+
 
 export default MediaModal;
