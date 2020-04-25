@@ -1,6 +1,7 @@
 import React from "react";
 import AnimeQuery from "./AnimeQuery";
 import paragraph from "../images/paragraph.png";
+import { getName } from 'country-list';
 import {
     Container,
     Button,
@@ -16,6 +17,7 @@ import {
     Rating,
     Transition,
     Table,
+    Item,
 } from "semantic-ui-react";
 import style from "./MediaList.module.scss";
 
@@ -273,7 +275,7 @@ class MediaModal extends React.Component {
                                 color="violet"
                             >
                                 <Container>
-                                    <CharacterList />
+                                    <CharacterList id={media.id} characters={media.characters} />
                                 </Container>
                             </SubSection>
 
@@ -368,6 +370,9 @@ const SubSection = (props) => {
 
 const InformationTable = (props) => {
     const { media } = props;
+    // origin country
+    var origin = (media.countryOfOrigin ? getName(media.countryOfOrigin) : 'Unknown');
+
     // season
     var season = "";
     if (media.season && media.seasonYear)
@@ -430,6 +435,15 @@ const InformationTable = (props) => {
 
                 <Table.Row>
                     <Table.Cell>
+                        <b>Origin</b>
+                    </Table.Cell>
+                    <Table.Cell>
+                        {origin}
+                    </Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                    <Table.Cell>
                         <b>Type</b>
                     </Table.Cell>
                     <Table.Cell>{media.type}</Table.Cell>
@@ -472,14 +486,16 @@ const InformationTable = (props) => {
 
                 <Table.Row>
                     <Table.Cell>
-                        <b>{media.type === 'ANIME' ? 'Episodes' : 'Chapters'}</b>
+                        <b>
+                            {media.type === "ANIME" ? "Episodes" : "Chapters"}
+                        </b>
                     </Table.Cell>
                     <Table.Cell>{episode || chapter}</Table.Cell>
                 </Table.Row>
 
                 <Table.Row>
                     <Table.Cell>
-                        <b>{media.type === 'ANIME' ? 'duration' : 'Volumes'}</b>
+                        <b>{media.type === "ANIME" ? "duration" : "Volumes"}</b>
                     </Table.Cell>
                     <Table.Cell>{duration || volume}</Table.Cell>
                 </Table.Row>
@@ -492,8 +508,65 @@ const InformationTable = (props) => {
 class CharacterList extends React.Component {
     constructor(props) {
         super(props);
+        this.state = {
+            id : props.id,
+            content: []
+        }
     }
 
+    UNSAFE_componentWillMount() {
+        const { characters } = this.props;
+        const mycontent = [];
+        if (characters) {
+            let charList = characters.edges;
+            charList.forEach(char => {
+                let roleID = char.id;
+                let role = char.role;
+                let fullName = char.node.name.full;
+                let nativeName = char.node.name.native;
+                let img = char.node.image.medium;
+                mycontent.push(
+                    <Grid.Column key={roleID}>
+                        <div className={style.charBox}>
+                            <div>
+                                <Image
+                                    id={roleID}
+                                    src={img}
+                                    className={style.charImg}
+                                />
+                            </div>
+                            <div className={style.charContent}>
+                                <div className={style.charNameBlock}>
+                                    <div className={style.charName}>
+                                        {nativeName}
+                                    </div>
+                                    <div className={style.charName}>
+                                        {fullName}
+                                    </div>
+                                </div>
+
+                                <div className={style.charRole}>{role}</div>
+                            </div>
+                        </div>
+                    </Grid.Column>
+                );
+            });
+
+            this.setState({
+                content: this.state.content.concat(mycontent)
+            });
+        }
+    }
+
+    render() {
+        return (
+            <div className={style.characterContainer}>
+                <Grid doubling columns={3}>
+                    {this.state.content}
+                </Grid>
+            </div>
+        );
+    }
 
 }
 

@@ -51,6 +51,7 @@ class AnimeQuery {
                     seasonYear
                     seasonInt
                     updatedAt
+                    countryOfOrigin
                     nextAiringEpisode {
                         id
                     }
@@ -97,7 +98,7 @@ class AnimeQuery {
                         site
                         thumbnail
                     }
-                    characters {
+                    characters(sort: ROLE, perPage: 12, page: 1) {
                         pageInfo {
                         total
                         perPage
@@ -118,6 +119,7 @@ class AnimeQuery {
                             large
                             medium
                             }
+                            description
                         }
                         role
                         }
@@ -343,8 +345,9 @@ function callAPI(query, variables) {
     }
 
     function handleError(error) {
-        alert('Error, check console');
+        // alert('Error, check console');
         console.error(error);
+        return error;
     }
 
     return call();

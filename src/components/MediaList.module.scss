@@ -135,9 +135,48 @@
 
     .modalTable {
         margin: 20px auto 15px;
-        width: 90%;
+        width: 95%;
         text-align: center;
     }
+
+    .characterContainer {
+        width: 95%;
+        margin: 20px auto 10px;
+    }
+
+    .charBox {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border: 1px solid #6435c92b;
+        border-radius: 10px;
+        background-color: #cccccc23;
+        height: 100%;
+    }
+
+    .charImg {
+        width: 100%;
+        height: 100%;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+    .charContent {
+        text-align: left;
+        font-size: 0.9em;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .charNameBlock {
+        font-weight: bold;
+    }
+
+    .charName {
+        margin-bottom: 10px;
+    }
+
 
     @media (max-width: 550px) {
         .description {
@@ -166,7 +205,11 @@
 
         .favoriteLabel {
             padding: 0.4em 0.6em;
-        }   
+        }
+
+        .charContent {
+            font-size: 0.6em;
+        }
     }
     
 }
