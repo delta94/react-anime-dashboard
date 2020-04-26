@@ -109,8 +109,14 @@ code {
     cursor: pointer;
 }
 
+.ui.modals {
+    padding: 0;
+}
+
 #modal.ui.modal {
     cursor: initial;
-    /* border-radius: 13px; */
+    height: calc(100% - 8vh);
+    margin-top: 4vh;
+    margin-bottom: 4vh;
 }
 

@@ -9,7 +9,6 @@ import {
     Image,
     Icon,
     Label,
-    Card,
     Loader,
     Segment,
     Dimmer,
@@ -17,7 +16,6 @@ import {
     Rating,
     Transition,
     Table,
-    Item,
 } from "semantic-ui-react";
 import style from "./MediaList.module.scss";
 
@@ -32,11 +30,18 @@ class MediaModal extends React.Component {
             banner: "",
             media: null,
             error: false,
+            readMore: false,
             informationVisible: false,
             statisticVisible: false,
             characterListVisible: false,
             watchListVisible: false,
         };
+    }
+
+    handleReadMore = () => {
+        this.setState({
+            readMore: !this.state.readMore
+        });
     }
 
     toggleInformation = () => {
@@ -100,11 +105,14 @@ class MediaModal extends React.Component {
         const { media } = this.state;
         if (media) {
             // description
-            let desList = media.description.split(/<br>*<br>/g);
-            const description = [];
-            for (var i = 0; i < desList.length; ++i) {
-                description.push(<p key={"description" + i}>{desList[i]}</p>);
-            }
+            var description = handleDescription(media.description);
+            var firstDescription = '';
+            var showReadmore = false;
+            if (description.length > 401) {
+                showReadmore = true;
+                firstDescription = description.substring(0, 400);
+            } else
+                firstDescription = description;
 
             // score
             var score = Math.round((media.meanScore / 100) * 10);
@@ -178,6 +186,13 @@ class MediaModal extends React.Component {
                                                 size="medium"
                                                 centered
                                                 rounded
+                                                label={{
+                                                    as: "a",
+                                                    color: "blue",
+                                                    content: "Sample Label",
+                                                    icon: "hotel",
+                                                    ribbon: true,
+                                                }}
                                             />
                                         </div>
                                         <div className={style.rating}>
@@ -196,25 +211,40 @@ class MediaModal extends React.Component {
                                         </div>
 
                                         <div className={style.favorite}>
-                                            <Label size="medium" className={style.favoriteLabel}>
+                                            <Label
+                                                size="medium"
+                                                className={style.favoriteLabel}
+                                            >
                                                 <Icon
                                                     name="heart"
                                                     color="red"
                                                 />
-                                                <span className={style.favoriteText}>
+                                                <span
+                                                    className={
+                                                        style.favoriteText
+                                                    }
+                                                >
                                                     {media.favourites} Favorites
                                                 </span>
                                             </Label>
                                         </div>
 
                                         <div className={style.favorite}>
-                                            <Label size="medium" className={style.favoriteLabel}>
+                                            <Label
+                                                size="medium"
+                                                className={style.favoriteLabel}
+                                            >
                                                 <Icon
                                                     name="star"
                                                     color="yellow"
                                                 />
-                                                <span className={style.favoriteText}>
-                                                    {media.popularity} Pupularity
+                                                <span
+                                                    className={
+                                                        style.favoriteText
+                                                    }
+                                                >
+                                                    {media.popularity}{" "}
+                                                    Pupularity
                                                 </span>
                                             </Label>
                                         </div>
@@ -229,11 +259,40 @@ class MediaModal extends React.Component {
                                                 style.flexColumnContainer
                                             }
                                         >
-                                            <div className={style.description}>
+                                            <div
+                                                className={
+                                                    style.descriptionContainer
+                                                }
+                                            >
                                                 <p>
                                                     <b>Description:</b>
                                                 </p>
-                                                {description}
+                                                <p
+                                                    className={
+                                                        style.description
+                                                    }
+                                                >
+                                                    {this.state.readMore
+                                                        ? description
+                                                        : firstDescription}
+                                                    {showReadmore ? (
+                                                        <a
+                                                            onClick={
+                                                                this
+                                                                    .handleReadMore
+                                                            }
+                                                            className={
+                                                                style.descriptionReadmore
+                                                            }
+                                                        >
+                                                            {this.state.readMore
+                                                                ? "Read Less >>>"
+                                                                : "... Read More >>>"}
+                                                        </a>
+                                                    ) : (
+                                                        ""
+                                                    )}
+                                                </p>
                                             </div>
                                             <div
                                                 className={style.tagsContainer}
@@ -265,7 +324,6 @@ class MediaModal extends React.Component {
                                 <Container>
                                     <InformationTable media={media} />
                                 </Container>
-                                
                             </SubSection>
 
                             <SubSection
@@ -275,7 +333,10 @@ class MediaModal extends React.Component {
                                 color="violet"
                             >
                                 <Container>
-                                    <CharacterList id={media.id} characters={media.characters} />
+                                    <CharacterList
+                                        id={media.id}
+                                        characters={media.characters}
+                                    />
                                 </Container>
                             </SubSection>
 
@@ -285,14 +346,24 @@ class MediaModal extends React.Component {
                                 name="Watch List"
                                 color="teal"
                             >
-                                <Image size="large" src={paragraph} />
+                                <Container>
+                                    <WatchList
+                                        watchList={media.streamingEpisodes}
+                                    />
+                                </Container>
                             </SubSection>
                         </Container>
                     </div>
 
                     <Modal.Actions>
-                        <Button negative onClick={this.props.close}>
-                            Close <Icon name="chevron right" />
+                        <Button
+                            negative
+                            circular
+                            onClick={this.props.close}
+                            icon
+                            labelPosition="right"
+                        >
+                            Close <Icon name="close" />
                         </Button>
                     </Modal.Actions>
                 </Modal>
@@ -305,29 +376,30 @@ class MediaModal extends React.Component {
                     onClose={this.props.close}
                     closeOnDimmerClick={true}
                 >
-                    <Modal.Content image scrolling>
-                        {this.state.error ? 
-                            <h1>Error! Please try again later!</h1>
-                            :
-                            <Segment className={style.loadingBox}>
-                                <Dimmer active inverted>
-                                    <Loader inverted size="large">
-                                        Loading
-                                    </Loader>
-                                </Dimmer>
+                    <div className={style.myModal + " " + style.tempModal}>
+                        <Segment className={style.loadingBox}>
+                            <Dimmer active inverted>
+                                <Loader inverted size="large" >
+                                    Loading
+                                </Loader>
+                            </Dimmer>
 
-                                <Image
-                                    src={paragraph}
-                                    alt="p"
-                                    className={style.paragraph}
-                                />
-                            </Segment>
-                        }
-                        
-                    </Modal.Content>
+                            <Image
+                                src={paragraph}
+                                alt="p"
+                                className={style.paragraph}
+                            />
+                        </Segment>
+                    </div>
                     <Modal.Actions>
-                        <Button negative onClick={this.props.close}>
-                            Close <Icon name="chevron right" />
+                        <Button
+                            negative
+                            circular
+                            onClick={this.props.close}
+                            icon
+                            labelPosition="right"
+                        >
+                            Close <Icon name="close" />
                         </Button>
                     </Modal.Actions>
                 </Modal>
@@ -509,9 +581,9 @@ class CharacterList extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            id : props.id,
+            id: props.id,
             content: []
-        }
+        };
     }
 
     UNSAFE_componentWillMount() {
@@ -526,7 +598,7 @@ class CharacterList extends React.Component {
                 let nativeName = char.node.name.native;
                 let img = char.node.image.medium;
                 mycontent.push(
-                    <Grid.Column key={roleID}>
+                    <Grid.Column key={roleID} className={style.myColumn}>
                         <div className={style.charBox}>
                             <div>
                                 <Image
@@ -567,7 +639,85 @@ class CharacterList extends React.Component {
             </div>
         );
     }
+}
 
+
+class WatchList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            content: [],
+            empty: null
+        };
+    }
+
+    UNSAFE_componentWillMount() {
+        const { watchList } = this.props;
+        const mycontent = [];
+        if (watchList.length > 0) {
+            watchList.forEach(watch => {
+                let title = watch.title;
+                let img = watch.thumbnail;
+                let url = watch.url;
+                mycontent.push(
+                    <Grid.Column key={title} className={style.myColumn}>
+                        <div className={style.watchBox} title={title}>
+                            <a href={url} target="_blank">
+                                <Image
+                                    src={img}
+                                    className={style.watchImg}
+                                />
+                                <div className={style.watchTitle}>{title}</div>
+                            </a>
+                        </div>
+                    </Grid.Column>
+                );
+            });
+
+            this.setState({
+                content: this.state.content.concat(mycontent)
+            });
+        }
+    }
+
+    render() {
+        if (this.props.watchList.length > 0) {
+            return (
+                <div className={style.characterContainer}>
+                    <Grid doubling columns={3}>
+                        {this.state.content}
+                    </Grid>
+                </div>
+            );
+        } else {
+            return (
+                <div className={style.characterContainer}>
+                    <div className={style.emptyWatchBox}>
+                        <div>No watch list</div>
+                    </div>
+                </div>
+            );
+        }
+    }
+}
+
+
+function handleDescription(mediaDescription) {
+    let desList = mediaDescription.split(/<br>(.*|[^.*])<br>/g);
+    var description = "";
+    for (var i = 0; i < desList.length; ++i) {
+        if (desList[i] === "" || desList[i] === "\n")
+            continue;
+        let sub = desList[i].split("\n");
+        for (var j = 0; j < sub.length; ++j) {
+            if (sub[j] === "" || sub[j] === "\n")
+                continue;
+            let subb = sub[j].replace(/\n|\r|\r\n|<br>|<\/br>/gm, "");
+            if (subb !== "")
+                description += subb + "\n\n";
+        }
+    }
+    return description;
 }
 
 const months = [

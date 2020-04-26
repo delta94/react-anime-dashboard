@@ -10,6 +10,7 @@
     }
 }
 
+
 :global(#modal) {
     .modalBanner {
         width: 100%;
@@ -35,9 +36,15 @@
         font-size: 1em;
         line-height: 1.4;
         background: #fff;
-        max-height: calc(70vh);
+        height: calc(100% - 65px);
         overflow: scroll;
         overflow-x: hidden;
+    }
+
+    .tempModal {
+        display: flex;
+        justify-content: center;
+        align-items: center;
     }
 
     .modalContent {
@@ -75,9 +82,17 @@
         height: 100%;
     }
 
-    .description {
+    .descriptionContainer {
         margin: 15px 12px;
         font-size: 18px;
+    }
+
+    .description {
+        white-space: pre-wrap;
+    }
+
+    .descriptionReadmore {
+        cursor: pointer;
     }
 
     .rating {
@@ -177,9 +192,57 @@
         margin-bottom: 10px;
     }
 
+    .watchBox {
+        position: relative;
+        height: 100%;
+    }
+
+    .watchImg {
+        border-radius: 7px;
+        width: 100%;
+        height: 100%;
+    }
+
+    .watchTitle {
+        position: absolute;
+        background-color: rgba(22, 21, 21, 0.658);
+        color: rgba(228, 218, 218, 0.815);
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 10px;
+        border-bottom-right-radius: 7px;
+        border-bottom-left-radius: 7px;
+        transition: opacity 0.5s;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .watchBox:hover > a > .watchTitle {
+        opacity: 0;
+    }
+
+    @media screen and (max-width: 767px) {
+        .watchBox:hover > a > .watchTitle {
+            opacity: 1;
+        }
+    }
+
+    .emptyWatchBox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 25vh;
+        background-color: #cccccc35;
+        color: rgba(0, 128, 128, 0.753);
+        font-size: 1.4em;
+        border-radius: 15px;
+    }
+
 
     @media (max-width: 550px) {
-        .description {
+        .descriptionContainer {
             margin: 12px 8px;
             font-size: 13px;
         }
@@ -210,6 +273,15 @@
         .charContent {
             font-size: 0.6em;
         }
+
+        .watchTitle {
+            padding: 5px;
+            font-size: smaller;
+        }
+
+        .myColumn {
+            padding: 5px;
+        }
     }
     
 }
@@ -223,5 +295,3 @@
 .paragraph {
     width: 100%;
 }
-
-

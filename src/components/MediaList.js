@@ -23,7 +23,8 @@ class MediaList extends React.Component {
             loadmore: null,
             runQuery: null,
             ResultNum: 0,
-            searchText: ""
+            searchText: "",
+            error: false
         };
     }
 
@@ -50,14 +51,16 @@ class MediaList extends React.Component {
         if (this.props.type === "search") {
             var key = this.props.searchKey;
             if (key !== "") {
-                AnimeQuery.searchMedia(key, 25, this.state.current+1).then((res) => {
-                    this.handleResult(res);
-                    this.addLoadMore(true, false);
-                    this.setState({
-                        searchText: 'for "' + key + '"',
-                        ResultNum: res.data.Page.pageInfo.total
-                    });
-                });
+                AnimeQuery.searchMedia(key, 25, this.state.current + 1)
+                    .then((res) => {
+                        this.handleResult(res);
+                        this.addLoadMore(true, false);
+                        this.setState({
+                            searchText: 'for "' + key + '"',
+                            ResultNum: res.data.Page.pageInfo.total,
+                        });
+                    })
+                    .catch((err) => this.handleError(err));
             }
 
         } else {
@@ -69,14 +72,16 @@ class MediaList extends React.Component {
             else runQuery = null;
 
             if (runQuery) {
-                runQuery(50, 1).then((res) => {
-                    this.handleResult(res);
-                    this.addLoadMore(true);
-                    this.setState({
-                        runQuery: runQuery,
-                        ResultNum: res.data.Page.pageInfo.total
-                    });
-                });
+                runQuery(50, 1)
+                    .then((res) => {
+                        this.handleResult(res);
+                        this.addLoadMore(true);
+                        this.setState({
+                            runQuery: runQuery,
+                            ResultNum: res.data.Page.pageInfo.total
+                        });
+                    })
+                    .catch(err => this.handleError(err));
             }
         }
     }
@@ -105,6 +110,10 @@ class MediaList extends React.Component {
         });
     }
 
+    handleError = (err) => {
+        this.setState({ error: true });
+    }
+
     addLoadMore = (status, loading) => {
         this.setState({
             loadmore: (<LoadMore
@@ -125,7 +134,8 @@ class MediaList extends React.Component {
                 ).then((res) => {
                     this.handleResult(res);
                     this.addLoadMore(true, false);
-                });
+                })
+                .catch(err => this.handleError(err));
 
             } else {
                 this.state.runQuery(
@@ -134,7 +144,7 @@ class MediaList extends React.Component {
                 ).then((res) => {
                     this.handleResult(res);
                     this.addLoadMore(true, false);
-                });
+                }).catch(err => this.handleError(err));
             }
         } else {
             this.addLoadMore(false, false);
@@ -163,17 +173,25 @@ const LoadMore = (props) => {
     var loadmoreText;
     if (props.loadmoreYes) {
         loadmoreText = (
-            <Button onClick={props.addComponent} className={style.loadmoreBtn} loading={props.loading}>
+            <Button
+                onClick={props.addComponent}
+                className={style.loadmoreBtn}
+                primary
+                loading={props.loading}
+                circular
+                icon
+                labelPosition="right"
+            >
                 Load More
-                <Icon name="angle double down" className={style.loadmoreIcon}></Icon>
+                <Icon name="angle double down" />
             </Button>
         );
     } else {
         loadmoreText = (
-            <Button className={style.loadmoreBtn}>
+            <Button className={style.loadmoreBtn} primary circular>
                 The End
             </Button>
-        )
+        );
     }
 
     return (

@@ -145,6 +145,12 @@ class AnimeQuery {
                         id
                         name
                     }
+                    streamingEpisodes {
+                        title
+                        thumbnail
+                        url
+                        site
+                    }
                 }
             }`;
         let variables = {
