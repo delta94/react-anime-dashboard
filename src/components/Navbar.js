@@ -69,7 +69,13 @@ class Navbar extends React.Component {
                     <Menu.Item>
                         <Input
                             className={style.sidebarSearch}
-                            icon={<Icon name='search' link onClick={this.handleClickSearch} />}
+                            icon={
+                                <Icon
+                                    name="search"
+                                    link
+                                    onClick={this.handleClickSearch}
+                                />
+                            }
                             placeholder="Search..."
                             onChange={this.handleChange}
                             onKeyUp={this.handleEnterSearch}
@@ -80,6 +86,7 @@ class Navbar extends React.Component {
                         href="/"
                         target="_self"
                         active={this.state.active === "home"}
+                        className={style.mySideItem}
                     >
                         <Icon name="home" />
                         Home
@@ -89,6 +96,7 @@ class Navbar extends React.Component {
                         href="/anime"
                         target="_self"
                         active={this.state.active === "anime"}
+                        className={style.mySideItem}
                     >
                         <Icon name="film" />
                         Anime
@@ -98,6 +106,7 @@ class Navbar extends React.Component {
                         href="/manga"
                         target="_self"
                         active={this.state.active === "manga"}
+                        className={style.mySideItem}
                     >
                         <Icon name="book" />
                         Manga
@@ -146,6 +155,7 @@ class Navbar extends React.Component {
                                     target="_self"
                                     active={this.state.active === "home"}
                                     onClick={this.handleItemClick}
+                                    className={style.mySideItem}
                                 />
                                 <Menu.Item
                                     name="anime"
@@ -154,6 +164,7 @@ class Navbar extends React.Component {
                                     target="_self"
                                     active={this.state.active === "anime"}
                                     onClick={this.handleItemClick}
+                                    className={style.mySideItem}
                                 />
                                 <Menu.Item
                                     name="manga"
@@ -162,10 +173,17 @@ class Navbar extends React.Component {
                                     target="_self"
                                     active={this.state.active === "manga"}
                                     onClick={this.handleItemClick}
+                                    className={style.mySideItem}
                                 />
                                 <Menu.Item className={style.search}>
                                     <Input
-                                        icon={<Icon name='search' link onClick={this.handleClickSearch} />}
+                                        icon={
+                                            <Icon
+                                                name="search"
+                                                link
+                                                onClick={this.handleClickSearch}
+                                            />
+                                        }
                                         placeholder="Search..."
                                         onChange={this.handleChange}
                                         onKeyUp={this.handleEnterSearch}

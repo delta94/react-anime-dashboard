@@ -2,6 +2,9 @@ import React from "react";
 import AnimeQuery from "./AnimeQuery";
 import paragraph from "../images/paragraph.png";
 import { getName } from 'country-list';
+import { Doughnut, Bar, Line, Pie } from 'react-chartjs';
+
+import { Chart } from "react-google-charts";
 import {
     Container,
     Button,
@@ -119,13 +122,15 @@ class MediaModal extends React.Component {
 
             // tag list
             var tags = [];
-            media.tags.forEach((tag) => {
+            var tagNum = (media.tags.length > 12 ? 12 : media.tags.length);
+            for (var i = 0; i < tagNum; ++i) {
+                let tag = media.tags[i];
                 tags.push(
                     <Label as="a" tag key={tag.name} className={style.tag}>
                         {tag.name}
                     </Label>
                 );
-            });
+            }
 
             // genres
             var color = media.coverImage.color;
@@ -186,13 +191,6 @@ class MediaModal extends React.Component {
                                                 size="medium"
                                                 centered
                                                 rounded
-                                                label={{
-                                                    as: "a",
-                                                    color: "blue",
-                                                    content: "Sample Label",
-                                                    icon: "hotel",
-                                                    ribbon: true,
-                                                }}
                                             />
                                         </div>
                                         <div className={style.rating}>
@@ -322,7 +320,7 @@ class MediaModal extends React.Component {
                                 color="olive"
                             >
                                 <Container>
-                                    <InformationTable media={media} />
+                                    <MediaStatistic stats={media.stats} />
                                 </Container>
                             </SubSection>
 
@@ -577,6 +575,186 @@ const InformationTable = (props) => {
 }
 
 
+const load = (
+    <Loader active size="large" />
+);
+
+
+const GooglePie = (props) => {
+    return (
+        <div>
+            <div className={style.statTitle}>{props.title}</div>
+            <Chart
+                width={"100%"}
+                height={"55vh"}
+                chartType="PieChart"
+                loader={load}
+                data={props.data}
+                options={{
+                    // pieSliceText: "label",
+                    chartArea: {
+                        width: '80%',
+                    },
+                    legend: {
+                        position: "top",
+                        textStyle: { fontSize: 12 },
+                        alignment: "start",
+                        maxLines: props.length,
+                    },
+                    pieStartAngle: 50,
+                    pieHole: 0.5,
+                    // is3D: true,
+                    colors: props.colors,
+                    enableInteractivity: true,
+                }}
+            />
+        </div>
+    );
+}
+
+const GoogleBar = (props) => {
+    return (
+        <div>
+            <div className={style.statTitle}>{props.title}</div>
+            <Chart
+                width={"100%"}
+                height={"55vh"}
+                chartType="ColumnChart"
+                loader={load}
+                data={props.data}
+                options={{
+                    chartArea: { width: "80%"},
+                    vAxis: {
+                        // title: "# of people",
+                        format: 'short'
+                    },
+                    hAxis: {
+                        title: 'Scores'
+                    },
+                    legend: {
+                        position: "none",
+                    },
+                    animation: {
+                        duration: 500,
+                        startup: true,
+                    },
+                    dataOpacity: 0.75,
+                    bar: { groupWidth: "70%" },
+                }}
+            />
+        </div>
+    );
+}
+
+const barColors = [
+    "color: red",
+    "color: rgb(204, 57, 57)",
+    "color: rgb(153, 91, 91)",
+    "color: rgb(192, 123, 67)",
+    "color: rgb(202, 196, 111)",
+    "color: rgb(198, 201, 53)",
+    "color: rgb(188, 190, 37)",
+    "color: rgb(189, 204, 55)",
+    "color: rgb(116, 189, 67)",
+    "color: rgb(118, 228, 46)",
+];
+
+
+class MediaStatistic extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            pieData: null,
+            pieLength: null,
+            pieColors: null,
+            pie: null,
+            barData: null,
+            bar: null
+        };
+    }
+
+    UNSAFE_componentWillMount() {
+        if (this.props.stats) {
+            let scoreList = this.props.stats.scoreDistribution;
+            let statusList = this.props.stats.statusDistribution;
+
+            let statusData = [];
+            let statusColor = [];
+            statusData.push(["Status", "Number of People"]);
+            statusList.forEach(status => {
+                statusData.push([status.status, status.amount]);
+                if (status.status === "CURRENT")
+                    statusColor.push("blue");
+                else if (status.status === "COMPLETED")
+                    statusColor.push("#9cc747");
+                else if (status.status === "PLANNING")
+                    statusColor.push("purple");
+                else if (status.status === "DROPPED")
+                    statusColor.push("red");
+                else if (status.status === "PAUSED")
+                    statusColor.push("orange");
+                else // others
+                    statusColor.push("gray");
+            });
+
+            let scoreData = [];
+            scoreData.push([
+                "Scores",
+                "Number of People",
+                { role: 'style' },
+                { role: 'annotation' },
+            ]);
+            let i = 0;
+            scoreList.forEach(score => {
+                scoreData.push([
+                    score.score.toString(),
+                    score.amount,
+                    barColors[i],
+                    score.score.toString(),
+                ]);
+                ++i;
+            });
+            
+            this.setState({
+                pieData: statusData,
+                pieLength: statusList.length,
+                pieColors: statusColor,
+                barData: scoreData,
+            });
+        }
+    }
+    
+    componentDidMount() {
+        if (this.state.pieData && this.state.barData) {
+            console.log("length == " + this.state.pieLength);
+            this.setState({
+                pie: (
+                    <GooglePie
+                        data={this.state.pieData}
+                        length={this.state.pieLength}
+                        title="Status Distribution"
+                        colors={this.state.pieColors}
+                    />
+                ),
+                bar: <GoogleBar data={this.state.barData} title="Score Distribution" />,
+            });
+        }
+        
+    }
+
+    render() {
+        return (
+            <div className={style.StatContainer}>
+                <Grid doubling columns={2} textAlign="center">
+                    <Grid.Column>{this.state.pie}</Grid.Column>
+                    <Grid.Column>{this.state.bar}</Grid.Column>
+                </Grid>
+            </div>
+        );
+    }
+}
+
+
 class CharacterList extends React.Component {
     constructor(props) {
         super(props);
@@ -766,6 +944,8 @@ function convertTime(time) {
         return 'Unknown';
     }
 }
+
+
 
 
 export default MediaModal;

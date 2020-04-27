@@ -240,6 +240,22 @@
         border-radius: 15px;
     }
 
+    .StatContainer {
+        width: 95%;
+        height: 100%;
+        margin: 20px auto 10px;
+    }
+
+    .statTitle {
+        font-size: 22px;
+        font-weight: 600;
+        color: #b5cc18c7;
+        margin: 10px auto;
+    }
+    .statTitle:focus, .statTitle::selection {
+        color: #9cc747c7;
+    }
+
 
     @media (max-width: 550px) {
         .descriptionContainer {

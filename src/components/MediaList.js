@@ -7,6 +7,7 @@ import {
     Icon,
     Card,
     Loader,
+    Grid,
 } from "semantic-ui-react";
 import style from "./MediaList.module.scss";
 
@@ -155,7 +156,10 @@ class MediaList extends React.Component {
     render() {
         return (
             <div>
-                <h3 style={{color: "white"}}>showing {this.state.ResultNum} results {this.state.searchText}</h3> 
+                <h3 style={{ color: "white" }}>
+                    showing {this.state.ResultNum} results{" "}
+                    {this.state.searchText}
+                </h3>
                 <div className="flex-container">{this.state.content}</div>
                 {this.state.loadmore}
                 <MediaModal
@@ -216,12 +220,7 @@ class OneMedia extends React.Component {
         return (
             <div key={id} className="anime-block">
                 <div className="anime-img">
-                    <img
-                        id={id}
-                        src={img}
-                        alt={alt}
-                        onClick={click}
-                    ></img>
+                    <img id={id} src={img} alt={alt} onClick={click}></img>
                 </div>
                 <div className="anime-title">{firstTitle}</div>
                 <div className="anime-title">{secondTitle}</div>
