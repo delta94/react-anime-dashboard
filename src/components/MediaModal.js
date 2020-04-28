@@ -30,7 +30,6 @@ class MediaModal extends React.Component {
         super(props);
         this.state = {
             id: null,
-            banner: "",
             media: null,
             error: false,
             readMore: false,
@@ -96,6 +95,7 @@ class MediaModal extends React.Component {
                 id: null,
                 media: null,
                 error: false,
+                readMore: false,
                 informationVisible: false,
                 statisticVisible: false,
                 characterListVisible: false,
@@ -443,6 +443,17 @@ const InformationTable = (props) => {
     // origin country
     var origin = (media.countryOfOrigin ? getName(media.countryOfOrigin) : 'Unknown');
 
+    // source
+    var source = (media.source ? media.source : 'Unknown');
+
+    // studio
+    var studio = '';
+    if (media.studios.edges.length > 0) {
+        studio = media.studios.edges[0].node.name;
+    } else {
+        studio = 'Unknown';
+    }
+
     // season
     var season = "";
     if (media.season && media.seasonYear)
@@ -507,30 +518,42 @@ const InformationTable = (props) => {
                     <Table.Cell>
                         <b>Origin</b>
                     </Table.Cell>
-                    <Table.Cell>
-                        {origin}
-                    </Table.Cell>
+                    <Table.Cell>{origin}</Table.Cell>
                 </Table.Row>
 
                 <Table.Row>
                     <Table.Cell>
                         <b>Type</b>
                     </Table.Cell>
-                    <Table.Cell>{media.type}</Table.Cell>
+                    <Table.Cell>{media.type ? media.type : 'Unknown'}</Table.Cell>
                 </Table.Row>
 
                 <Table.Row>
                     <Table.Cell>
                         <b>Format</b>
                     </Table.Cell>
-                    <Table.Cell>{media.format}</Table.Cell>
+                    <Table.Cell>{media.format ? media.format : 'Unknown'}</Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                    <Table.Cell>
+                        <b title="Source type the media was adapted from">Source</b>
+                    </Table.Cell>
+                    <Table.Cell>{media.source ? media.source : 'Unknown'}</Table.Cell>
+                </Table.Row>
+
+                <Table.Row>
+                    <Table.Cell>
+                        <b>Main Studio</b>
+                    </Table.Cell>
+                    <Table.Cell>{studio}</Table.Cell>
                 </Table.Row>
 
                 <Table.Row>
                     <Table.Cell>
                         <b>Status</b>
                     </Table.Cell>
-                    <Table.Cell>{media.status}</Table.Cell>
+                    <Table.Cell>{media.status ? media.status : 'Unknown'}</Table.Cell>
                 </Table.Row>
 
                 <Table.Row>
@@ -556,18 +579,22 @@ const InformationTable = (props) => {
 
                 <Table.Row>
                     <Table.Cell>
-                        <b>
-                            {media.type === "ANIME" ? "Episodes" : "Chapters"}
-                        </b>
+                        <b>{media.type === "ANIME" ? "Episodes" : "Volumes"}</b>
                     </Table.Cell>
-                    <Table.Cell>{episode || chapter}</Table.Cell>
+                    <Table.Cell>
+                        {media.type === "ANIME" ? episode : volume}
+                    </Table.Cell>
                 </Table.Row>
 
                 <Table.Row>
                     <Table.Cell>
-                        <b>{media.type === "ANIME" ? "duration" : "Volumes"}</b>
+                        <b>
+                            {media.type === "ANIME" ? "duration" : "Chapters"}
+                        </b>
                     </Table.Cell>
-                    <Table.Cell>{duration || volume}</Table.Cell>
+                    <Table.Cell>
+                        {media.type === "ANIME" ? duration : chapter}
+                    </Table.Cell>
                 </Table.Row>
             </Table.Body>
         </Table>
@@ -576,9 +603,11 @@ const InformationTable = (props) => {
 
 
 const load = (
-    <Loader active size="large" />
+    // <Loader active size="large" />
+    <Dimmer active inverted>
+        <Loader size="large">Loading</Loader>
+    </Dimmer>
 );
-
 
 const GooglePie = (props) => {
     return (
@@ -667,9 +696,11 @@ class MediaStatistic extends React.Component {
             pieData: null,
             pieLength: null,
             pieColors: null,
+            pieError: false,
             pie: null,
             barData: null,
-            bar: null
+            barError: false,
+            bar: null,
         };
     }
 
@@ -680,53 +711,66 @@ class MediaStatistic extends React.Component {
 
             let statusData = [];
             let statusColor = [];
-            statusData.push(["Status", "Number of People"]);
-            statusList.forEach(status => {
-                statusData.push([status.status, status.amount]);
-                if (status.status === "CURRENT")
-                    statusColor.push("blue");
-                else if (status.status === "COMPLETED")
-                    statusColor.push("#9cc747");
-                else if (status.status === "PLANNING")
-                    statusColor.push("purple");
-                else if (status.status === "DROPPED")
-                    statusColor.push("red");
-                else if (status.status === "PAUSED")
-                    statusColor.push("orange");
-                else // others
-                    statusColor.push("gray");
-            });
+            let statusError = false;
+            if (statusList.length !== 0) {
+                statusData.push(["Status", "Number of People"]);
+                statusList.forEach(status => {
+                    statusData.push([status.status, status.amount]);
+                    if (status.status === "CURRENT")
+                        statusColor.push("blue");
+                    else if (status.status === "COMPLETED")
+                        statusColor.push("#9cc747");
+                    else if (status.status === "PLANNING")
+                        statusColor.push("purple");
+                    else if (status.status === "DROPPED")
+                        statusColor.push("red");
+                    else if (status.status === "PAUSED")
+                        statusColor.push("orange");
+                    else if (status.status === 'REPEATING')
+                        statusColor.push("teal");
+                    else // others
+                        statusColor.push("gray");
+                });
+            } else {
+                statusError = true;
+            }
 
             let scoreData = [];
-            scoreData.push([
-                "Scores",
-                "Number of People",
-                { role: 'style' },
-                { role: 'annotation' },
-            ]);
-            let i = 0;
-            scoreList.forEach(score => {
+            let scoreError = false;
+            if (scoreList.length !== 0) {
                 scoreData.push([
-                    score.score.toString(),
-                    score.amount,
-                    barColors[i],
-                    score.score.toString(),
+                    "Scores",
+                    "Number of People",
+                    { role: 'style' },
+                    { role: 'annotation' },
                 ]);
-                ++i;
-            });
-            
+                let i = 0;
+                scoreList.forEach(score => {
+                    scoreData.push([
+                        score.score.toString(),
+                        score.amount,
+                        barColors[i],
+                        score.score.toString(),
+                    ]);
+                    ++i;
+                });
+            } else {
+                scoreError = true;
+            }
+
             this.setState({
                 pieData: statusData,
                 pieLength: statusList.length,
                 pieColors: statusColor,
+                pieError: statusError,
                 barData: scoreData,
+                barError: scoreError
             });
         }
     }
     
     componentDidMount() {
-        if (this.state.pieData && this.state.barData) {
-            console.log("length == " + this.state.pieLength);
+        if (!this.state.pieError) {
             this.setState({
                 pie: (
                     <GooglePie
@@ -735,22 +779,48 @@ class MediaStatistic extends React.Component {
                         title="Status Distribution"
                         colors={this.state.pieColors}
                     />
-                ),
-                bar: <GoogleBar data={this.state.barData} title="Score Distribution" />,
+                )
             });
         }
-        
+        if (!this.state.barError) {
+            this.setState({
+                bar: (
+                    <GoogleBar
+                        data={this.state.barData}
+                        title="Score Distribution"
+                    />
+                ),
+            });
+        } 
     }
 
     render() {
-        return (
-            <div className={style.StatContainer}>
-                <Grid doubling columns={2} textAlign="center">
-                    <Grid.Column>{this.state.pie}</Grid.Column>
-                    <Grid.Column>{this.state.bar}</Grid.Column>
-                </Grid>
-            </div>
-        );
+        if (!this.state.pieError && !this.state.barError) {
+            return (
+                <div className={style.StatContainer}>
+                    <Grid doubling columns={2} textAlign="center">
+                        <Grid.Column>{this.state.pie}</Grid.Column>
+                        <Grid.Column>{this.state.bar}</Grid.Column>
+                    </Grid>
+                </div>
+            );
+        } else if (!this.state.barError || !this.state.pieError) {
+            return (
+                <div className={style.StatContainer}>
+                    <Grid doubling columns={1} textAlign="center">
+                        <Grid.Column>{this.state.barError ? this.state.pie : this.state.bar}</Grid.Column>
+                    </Grid>
+                </div>
+            );
+        } else {
+            return (
+                <div className={style.StatContainer}>
+                    <div className={style.emptyBox + ' ' + style.emptyStatBox}>
+                        <div>No Stats Available</div>
+                    </div>
+                </div>
+            );
+        }
     }
 }
 
@@ -760,7 +830,8 @@ class CharacterList extends React.Component {
         super(props);
         this.state = {
             id: props.id,
-            content: []
+            content: [],
+            error: false
         };
     }
 
@@ -769,51 +840,59 @@ class CharacterList extends React.Component {
         const mycontent = [];
         if (characters) {
             let charList = characters.edges;
-            charList.forEach(char => {
-                let roleID = char.id;
-                let role = char.role;
-                let fullName = char.node.name.full;
-                let nativeName = char.node.name.native;
-                let img = char.node.image.medium;
-                mycontent.push(
-                    <Grid.Column key={roleID} className={style.myColumn}>
-                        <div className={style.charBox}>
-                            <div>
-                                <Image
-                                    id={roleID}
-                                    src={img}
-                                    className={style.charImg}
-                                />
-                            </div>
-                            <div className={style.charContent}>
-                                <div className={style.charNameBlock}>
-                                    <div className={style.charName}>
-                                        {nativeName}
-                                    </div>
-                                    <div className={style.charName}>
-                                        {fullName}
-                                    </div>
+            if (charList && charList.length > 0) {
+                charList.forEach(char => {
+                    let roleID = char.id;
+                    let role = char.role;
+                    let fullName = char.node.name.full;
+                    let nativeName = char.node.name.native;
+                    let img = char.node.image.medium;
+                    mycontent.push(
+                        <Grid.Column key={roleID} className={style.myColumn}>
+                            <div className={style.charBox}>
+                                <div>
+                                    <Image
+                                        id={roleID}
+                                        src={img}
+                                        className={style.charImg}
+                                    />
                                 </div>
+                                <div className={style.charContent}>
+                                    <div className={style.charNameBlock}>
+                                        <div className={style.charName}>
+                                            {nativeName}
+                                        </div>
+                                        <div className={style.charName}>
+                                            {fullName}
+                                        </div>
+                                    </div>
 
-                                <div className={style.charRole}>{role}</div>
+                                    <div className={style.charRole}>{role}</div>
+                                </div>
                             </div>
-                        </div>
-                    </Grid.Column>
-                );
-            });
+                        </Grid.Column>
+                    );
+                });
+                this.setState({ content: this.state.content.concat(mycontent) });
 
-            this.setState({
-                content: this.state.content.concat(mycontent)
-            });
+            } else {
+                this.setState({ error: true });
+            }
         }
     }
 
     render() {
         return (
             <div className={style.characterContainer}>
-                <Grid doubling columns={3}>
-                    {this.state.content}
-                </Grid>
+                {!this.state.error ? (
+                    <Grid doubling columns={3}>
+                        {this.state.content}
+                    </Grid>
+                ) : (
+                    <div className={style.emptyBox + ' ' + style.emptyCharacterBox}>
+                        <div>No characters available</div>
+                    </div>
+                )}
             </div>
         );
     }
@@ -825,7 +904,6 @@ class WatchList extends React.Component {
         super(props);
         this.state = {
             content: [],
-            empty: null
         };
     }
 
@@ -870,8 +948,8 @@ class WatchList extends React.Component {
         } else {
             return (
                 <div className={style.characterContainer}>
-                    <div className={style.emptyWatchBox}>
-                        <div>No watch list</div>
+                    <div className={style.emptyBox + ' ' + style.emptyWatchListBox}>
+                        <div>No watch list available</div>
                     </div>
                 </div>
             );
@@ -881,6 +959,9 @@ class WatchList extends React.Component {
 
 
 function handleDescription(mediaDescription) {
+    if (mediaDescription === null || mediaDescription === ' ') {
+        return "No description available ...";
+    }
     let desList = mediaDescription.split(/<br>(.*|[^.*])<br>/g);
     var description = "";
     for (var i = 0; i < desList.length; ++i) {
@@ -944,8 +1025,5 @@ function convertTime(time) {
         return 'Unknown';
     }
 }
-
-
-
 
 export default MediaModal;

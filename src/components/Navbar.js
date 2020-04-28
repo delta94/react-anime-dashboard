@@ -2,6 +2,7 @@ import React from "react";
 import { Menu, Segment, Input, Image, Icon, Sidebar, Button } from "semantic-ui-react";
 import style from './Navbar.module.scss';
 import logo from '../images/angel.png';
+import $ from 'jquery';
 
 class Navbar extends React.Component {
     constructor(props) {
@@ -114,12 +115,12 @@ class Navbar extends React.Component {
                 </Sidebar>
 
                 <Sidebar.Pusher dimmed={this.state.openSidebar}>
-                    <Segment inverted className={style.fixedNav}>
+                    <Segment inverted className={this.state.active === 'home' ? style.fixedNav + ' ' + style.transparent : style.fixedNav}>
                         <Menu
                             inverted
                             pointing
                             secondary
-                            className={style.wholeMenu}
+                            className={this.state.active === 'home' ? style.wholeMenu + ' ' + style.homeMenu : style.wholeMenu}
                         >
                             <Menu.Item
                                 as="a"
@@ -187,6 +188,7 @@ class Navbar extends React.Component {
                                         placeholder="Search..."
                                         onChange={this.handleChange}
                                         onKeyUp={this.handleEnterSearch}
+                                        className={style.searchInput}
                                     />
                                 </Menu.Item>
                             </Menu.Menu>
@@ -210,10 +212,11 @@ class ScrollTopBtn extends React.Component {
     }
 
     scrollToTop = () => {
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
+        // window.scrollTo({
+        //     top: 0,
+        //     behavior: "smooth"
+        // });
+        $('html, body').animate({scrollTop: 0}, 600);
     }
 
     componentDidMount() {

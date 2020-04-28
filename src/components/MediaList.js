@@ -157,7 +157,7 @@ class MediaList extends React.Component {
         return (
             <div>
                 <h3 style={{ color: "white" }}>
-                    showing {this.state.ResultNum} results{" "}
+                    Showing {this.state.ResultNum} results{" "}
                     {this.state.searchText}
                 </h3>
                 <div className="flex-container">{this.state.content}</div>

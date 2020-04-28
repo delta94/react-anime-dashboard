@@ -59,6 +59,8 @@ class AnimeQuery {
                         id
                         url
                     }
+                    duration
+                    episodes
                     chapters
                     volumes
                     favourites
@@ -66,62 +68,57 @@ class AnimeQuery {
                     meanScore
                     averageScore
                     trending
-                    rankings {
-                        id
-                        rank
-                        format
+                    studios(isMain: true) {
+                        edges {
+                            id
+                            node {
+                                name
+                            }
+                        }
                     }
                     stats {
                         scoreDistribution {
-                        score
-                        amount
+                            score
+                            amount
                         }
                         statusDistribution {
-                        status
-                        amount
+                            status
+                            amount
                         }
                     }
-                    siteUrl
                     genres
                     title {
                         romaji
                         english
                         native
                     }
-                    synonyms
-                    duration
-                    episodes    
+                    synonyms   
                     isAdult
                     description
-                    trailer {
-                        id
-                        site
-                        thumbnail
-                    }
                     characters(sort: ROLE, perPage: 12, page: 1) {
                         pageInfo {
-                        total
-                        perPage
-                        currentPage
-                        lastPage
-                        hasNextPage
+                            total
+                            perPage
+                            currentPage
+                            lastPage
+                            hasNextPage
                         }
                         edges {
-                        id
-                        node {
-                            name {
-                            first
-                            last
-                            full
-                            native
+                            id
+                            node {
+                                name {
+                                    first
+                                    last
+                                    full
+                                    native
+                                }
+                                image {
+                                    large
+                                    medium
+                                }
+                                description
                             }
-                            image {
-                            large
-                            medium
-                            }
-                            description
-                        }
-                        role
+                            role
                         }
                     }
                     startDate {

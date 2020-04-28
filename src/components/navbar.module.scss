@@ -1,10 +1,24 @@
 :global(#root) {
+    .transparent {
+        background: transparent;
+    }
+
     .search {
         border-bottom: none;
     }
 
+    .searchInput > input {
+        border-radius: 1.285714rem;
+    }
+
     .wholeMenu {
         border: none;
+        background: rgba(255, 255, 255, 0.06);
+        padding: 10px;
+        border-radius: 30px;
+    }
+    .homeMenu {
+        background: rgba(8, 8, 8, 0.415);
     }
 
     .fixedNav {
@@ -20,6 +34,7 @@
     .header {
         padding: 0;
         font-size: 22px;
+        margin-left: 10px;
     }
 
     .headerLogo {
@@ -27,9 +42,10 @@
     }
 
     .menuLink {
+        display: none;
         margin: 0;
         margin-left: 13px;
-        border-radius: 7px;
+        border-radius: 25px;
         border: none;
         transition: all 0.45s;
     }
@@ -44,6 +60,7 @@
         }
 
         .menuLink {
+            display: flex;
             margin-right: 10px;
             margin-left: auto;
         }
@@ -85,6 +102,9 @@
         font-size: 15px !important;
         margin-bottom: 0 !important;
     }
+    .sidebarSearch > input {
+        border-radius: 1.285714rem;
+    }
 
     .topBlock {
         position: fixed;
@@ -117,6 +137,6 @@
 }
 
 .bodyContent {
-    margin-top: 100px;
+    margin-top: 115px;
 }
 
