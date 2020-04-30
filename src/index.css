@@ -3,6 +3,7 @@
 body {
     background-color: #282c34;
     overflow-x: hidden;
+    height: 100%;
 }
 
 code {
@@ -34,6 +35,7 @@ code {
     justify-content: center;
     font-size: calc(10px + 2vmin);
     color: white;
+    z-index: 3;
 }
 
 .App-link {
@@ -54,12 +56,33 @@ code {
     /* background-image: url(https://s4.anilist.co/file/anilistcdn/media/anime/banner/106286-09fyYBntN8rR.jpg); */
     background-size: cover;
     width: 100%;
-    height: auto;
-    min-height: 400px;
+    height: 100vh;
+    
+    /* min-height: 50vh; */
     background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.15)) 0% 0% / cover no-repeat, url(./images/tenki.jpg) 0% 10% / cover black;
     background-position: center;
-
+    /* background-attachment: fixed; */
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+@media (min-device-width: 1025px) {
+    .home-img {
+        background-attachment: fixed;
+    }
+}
+
+.home-content {
+    margin-top: 200px;
+    margin-bottom: 200px;
+}
+
+.home-title {
+    font-size: 25px;
+    text-align: center;
+}
+
 
 .flex-container {
     display: flex;
@@ -68,7 +91,12 @@ code {
     justify-content: center;
 }
 
+#root .none {
+    display: none;
+}
+
 .anime-block {
+    display: block;
     width: 180px;
     height: auto;
     margin: 10px;
@@ -78,12 +106,25 @@ code {
     box-shadow: 0px 0px 5px 2px #adadad41;
     transition: all 0.5s;
 }
-.anime-block:hover {
+.home-anime-block {
+    display: block;
+    height: auto;
+    max-width: 210px;
+    margin: 10px auto;
+    background-color: rgb(240, 238, 238);
+    border-radius: 13px;
+    overflow: hidden;
+    box-shadow: 0px 0px 5px 2px #adadad41;
+    transition: all 0.5s;
+}
+.anime-block:hover, .home-anime-block:hover {
     box-shadow: 0px 0px 10px 3px #adadad7d;
 }
-.anime-block:hover > .anime-img img {
+.anime-block:hover > .anime-img img, .home-anime-block:hover > .anime-img img {
     opacity: 0.85;
 }
+
+
 
 .anime-img {
     width: 100%;
@@ -150,6 +191,24 @@ code {
     overflow-x: hidden;
 }
 
+.main-container {
+    margin-top: 40px;
+}
+
+.block-title {
+    color: white;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.section-block {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
+}
+
+
+
+
 .pushable:not(body) {
     transform: none;
 }
@@ -172,4 +231,6 @@ code {
     margin-top: 4vh;
     margin-bottom: 4vh;
 }
+
+
 

@@ -16,9 +16,13 @@
         background: rgba(255, 255, 255, 0.06);
         padding: 10px;
         border-radius: 30px;
+        transition: all 1s;
     }
-    .homeMenu {
+    .topMenu {
         background: rgba(8, 8, 8, 0.415);
+    }
+    .bottomMenu {
+        background: black;
     }
 
     .fixedNav {
@@ -28,7 +32,7 @@
         width: 100%;
         top: 0;
         left: 0;
-        z-index: 2;
+        z-index: 10;
     }
 
     .header {
@@ -63,6 +67,12 @@
             display: flex;
             margin-right: 10px;
             margin-left: auto;
+        }
+    }
+
+    @media (max-width: 550px) {
+        .header {
+            font-size: 18px;
         }
     }
 

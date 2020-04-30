@@ -212,13 +212,13 @@ class OneMedia extends React.Component {
     }
 
     render() {
-        const { id, img, native, romaji, english, click} = this.props;
+        const { id, img, native, romaji, english, click, location} = this.props;
         var alt = (english ? english : romaji ? romaji : native);
         var firstTitle = (native ? native : romaji);
         var secondTitle = english;
-
+        var locStyle = (location ? (location === 'home' ? 'home-anime-block' : 'anime-block') : 'anime-block');
         return (
-            <div key={id} className="anime-block">
+            <div key={id} className={locStyle}>
                 <div className="anime-img">
                     <img id={id} src={img} alt={alt} onClick={click}></img>
                 </div>
@@ -228,5 +228,5 @@ class OneMedia extends React.Component {
         );
     }
 }
-
 export default MediaList;
+export { OneMedia };

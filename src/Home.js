@@ -1,35 +1,94 @@
 import React from 'react';
 import logo from './logo.svg';
-import { Link } from 'react-router-dom';
 import $ from 'jquery';
-import { Button, Form, Input, Card, Placeholder } from "semantic-ui-react";
+import { Button, Form, Input, Card, Placeholder, Container, Label, Divider, Grid } from "semantic-ui-react";
 import Navbar from './components/Navbar';
 
-import AnimeQuery from './components/AnimeQuery';
+import AnimeQuery from "./components/AnimeQuery";
 
+import tempimg from './images/page-not-found.png';
+
+import { OneMedia } from './components/MediaList';
+import MediaModal from './components/MediaModal';
+
+var colNum = 5;
+var tempArray = [false, false, false, false, false, false, false, false, false, false];
 
 class Home extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            apiRes: "",
-            test: "first test",
-            openSidebar: false,
-            value: "",
+            columnNum: null,
+            visibleArray: [false, false, false, false, false, false, false, false, false, false],
+            content: []
         };
-        this.changeProps = this.changeProps.bind(this);
     }
 
-    handleToggle = () => this.setState({ openSidebar: true });
-
-    componentDidUpdate() {
-        console.log("updated~~ componentDidUpdate, after updated");
+    handleResize = () => {
+        if (window.innerWidth >= 1200) {
+            if (this.state.columnNum !== 5) {
+                colNum = 5;
+                this.handleResizeVisible(this.state.columnNum, colNum);
+                this.setState({ columnNum: 5 });
+            }
+        } else if (window.innerWidth >= 992) {
+            if (this.state.columnNum !== 4) {
+                colNum = 4;
+                this.handleResizeVisible(this.state.columnNum, colNum);
+                this.setState({ columnNum: 4 });
+            }
+        } else if (window.innerWidth >= 640) {
+            if (this.state.columnNum !== 3) {     
+                colNum = 3;
+                this.handleResizeVisible(this.state.columnNum, colNum);
+                this.setState({ columnNum: 3 });
+            }
+        } else {
+            if (this.state.columnNum !== 2) {
+                colNum = 2;
+                this.handleResizeVisible(this.state.columnNum, colNum);
+                this.setState({ columnNum: 2 });
+            }     
+        }
+        // console.log("resize == " + colNum);
     }
+
+
+    handleResizeVisible = (currentCol, nextCol) => {
+        if (currentCol) {
+            let index = 0;
+            for (let i = 0; i < 10; ++i) {
+                if (tempArray[i] === true) {
+                    index = i;
+                    break;
+                }
+            }
+            let lastIndex = index + (currentCol - 1);
+            // console.log('current = ' + currentCol + '  next = ' + nextCol);
+            if (currentCol > nextCol) {
+                // shrink list
+                tempArray[lastIndex] = false;
+            } else {
+                // expand list
+                if (lastIndex === 9) {
+                    tempArray[index - 1] = true;
+                } else {
+                    tempArray[lastIndex + 1] = true;
+                }
+            }
+            this.setState({ visibleArray: tempArray });
+        }
+    }
+
+
+    handleExplore = () => {
+        $("html, body").animate({ scrollTop: $('#home-main').offset().top - 117 }, 600);
+    }
+
 
     componentDidMount() {
-        console.log("Mount finished!");
-        $(".App-header").append("<h1>Hello JQuery!</h1>");
-        this.setState({ test: "second test" });
+        window.addEventListener('resize', this.handleResize);
+        console.log("did mount ..");
     }
 
     componentWillUpdate() {
@@ -37,171 +96,68 @@ class Home extends React.Component {
     }
 
     UNSAFE_componentWillMount() {
-        // $('#root').append("<h1>Hello JQuery!</h1>");
-        console.log("first Mount!");
-        const fun = AnimeQuery.getAllMedia;
+        this.handleResize();
+        tempArray = this.state.visibleArray;
+        console.log(this.state.columnNum);
+        for (var i = 0; i < colNum; ++i) {
+            tempArray[i] = true;
+        }
+        this.setState({ visibleArray: tempArray });
     }
-
-    changeProps() {
-        this.setState({
-            test: this.state.value,
-        });
-    }
-
-    onChangeValue = (event) => {
-        this.setState({ value: event.target.value });
-    };
 
     render() {
         return (
             <Navbar active="home">
-                <header className="App-header">
-                    <img src={logo} className="App-logo" alt="logo" />
-                    <p>
-                        Edit <code>src/App.js</code> and save to reload.
-                    </p>
-                    <a
-                        className="App-link"
-                        href="https://reactjs.org"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                    >
-                        Learn React
-                    </a>
-                    <br></br>
-                    <Button onClick={this.changeProps}>change props</Button>
-                    <p>{this.state.value}</p>
-                    <input
-                        type="text"
-                        value={this.state.value}
-                        onChange={this.onChangeValue}
-                    />
-                    <Link to="./anime" target="_self">
-                        Go to Anime
-                    </Link>
-                    <br></br>
-                    <Link to="./search" target="_self">
-                        Go to Search
-                    </Link>
-                    <p>my test = {this.state.test}</p>
+                <div className="home-img">
+                    <Container>
+                        <div className="home-content">
+                            <div className="home-title">
+                                <Label
+                                    as="a"
+                                    circular
+                                    size="massive"
+                                    className="aa"
+                                    onClick={this.handleExplore}
+                                >
+                                    Explore ANIME
+                                </Label>
+                            </div>
+                        </div>
+                    </Container>
+                </div>
 
-                    <Car />
-                    <MyComponent qq={this.state.test} />
+                <Container id="home-main" className="main-container">
+                    <h3 className="block-title">Popular</h3>
+                    <Divider />
+                    <Grid columns={this.state.columnNum}>
+                        <HomeBlock visible={this.state.visibleArray[0]} id={'popular-0'} />
+                        <HomeBlock visible={this.state.visibleArray[1]} id={'popular-1'} />
+                        <HomeBlock visible={this.state.visibleArray[2]} id={'popular-2'} />
+                        <HomeBlock visible={this.state.visibleArray[3]} id={'popular-3'} />
+                        <HomeBlock visible={this.state.visibleArray[4]} id={'popular-4'} />
+                        <HomeBlock visible={this.state.visibleArray[5]} id={'popular-5'} />
+                        <HomeBlock visible={this.state.visibleArray[6]} id={'popular-6'} />
+                        <HomeBlock visible={this.state.visibleArray[7]} id={'popular-7'} />
+                        <HomeBlock visible={this.state.visibleArray[8]} id={'popular-8'} />
+                        <HomeBlock visible={this.state.visibleArray[9]} id={'popular-9'} />
+                    </Grid>
 
-                    <Car3>
-                        <Car />
-                    </Car3>
-                </header>
+                    <div style={{ height: "100vh" }}></div>
+                </Container>
             </Navbar>
         );
     }
 }
 
-// class as component
-class Car extends React.Component {
-  render() {
-    return <div><h2>Hi, I am a Car!</h2><Car2 /></div>;
-  }
-}
-
-// function as component
-function Car2() {
-    return <h3>Hi, I am car22222!</h3>;
-  
-}
-
-class Car3 extends React.Component {
-  render() {
-      return (
-          <div>
-              <h2>Hi, I am a Car33!</h2>
-              {this.props.children}
-          </div>
-      );
-  }
-}
-
-function test() {
-  React.createElement('h1', {}, 'heading');
-}
-
-class MyComponent extends React.Component {
+class HomeBlock extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            array: [],
-            value: "",
-            test: props.qq
-        };
-        // this.addComponent = this.addComponent.bind(this);
     }
-
-    UNSAFE_componentWillMount() {
-        console.log("my component will mount");
-        const myarray = [];
-        myarray.push(<h6>my component</h6>);
-        this.setState({
-            array: myarray,
-        });
-    }
-
-    componentWillReceiveProps() {
-        console.log(this.props.qq);
-        
-    }
-
-    UNSAFE_componentWillUpdate() {
-        console.log("at component will update: " + this.props.qq);
-    }
-
-    componentDidMount() {
-        console.log("at component did mount: " + this.props.qq);
-    }
-
-    componentDidUpdate() {
-        console.log("at component did update: " + this.props.qq);
-    }
-    
-    getSnapshotBeforeUpdate() {
-        console.log("at snapshot before update: " + this.props.qq);
-    }
-    addComponent = () => {
-        const myarray = [];
-        myarray.push(<h6>{this.state.value}</h6>);
-        this.setState({
-            array: this.state.array.concat(myarray)
-        });
-    }
-
-    onChangeValue = (event) => {
-        this.setState({ value: event.target.value });
-    };
-
-    onClearArray = () => {
-        this.setState({ array: [] });
-    };
-
-    onSubmit = (event) => {
-        event.preventDefault();
-        window.location.href = "/search/" + this.state.value + "/1/";
-    }
-
     render() {
         return (
-            <div>
-                <p>{this.props.qq}</p>
-                {this.state.array}
-                <Button onClick={this.addComponent}>Add Component</Button>
-                <Button onClick={this.onClearArray}>Clear Array</Button>
-                <p>{this.state.value}</p>
-                <form onSubmit={this.onSubmit}>
-                    <input
-                        type="text"
-                        value={this.state.value}
-                        onChange={this.onChangeValue}
-                    />
-                </form>
-            </div>
+            <Grid.Column id={this.props.id} className={this.props.visible ? '' : 'none'}>
+                <OneMedia img={tempimg} id={null} native={this.props.id} english={'English Title'} click={null} location={'home'} />
+            </Grid.Column>
         );
     }
 }

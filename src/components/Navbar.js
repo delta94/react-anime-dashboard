@@ -10,7 +10,8 @@ class Navbar extends React.Component {
         this.state = {
             active: props.active,
             openSidebar: false,
-            searchId: ""
+            searchId: "",
+            reachScrollHeight: false,
         };
     }
 
@@ -24,17 +25,34 @@ class Navbar extends React.Component {
 
     handleEnterSearch = (e) => {
         if (e.keyCode === 13) {
-            console.log("search for " + e.target.value);
+            // console.log("search for " + e.target.value);
             if (e.target.value !== "") {
                 window.location.href = "/search/" + e.target.value;
             }
         }
     }
 
-    handleClickSearch = (e) => {
-        console.log("click + " + this.state.searchId);
+    handleClickSearch = () => {
         if (this.state.searchId !== "") {
             window.location.href = "/search/" + this.state.searchId;
+        }
+    }
+
+    handleNavbarScroll = () => {
+        if (window.pageYOffset > window.innerHeight - 80) {
+            this.setState({ reachScrollHeight: true });
+        } else {
+            this.setState({ reachScrollHeight: false });
+        }
+    }
+
+    UNSAFE_componentWillMount() {
+        this.handleNavbarScroll();
+    }
+
+    componentDidMount() {
+        if (this.state.active === 'home') {
+            document.addEventListener("scroll", this.handleNavbarScroll);
         }
     }
 
@@ -120,7 +138,7 @@ class Navbar extends React.Component {
                             inverted
                             pointing
                             secondary
-                            className={this.state.active === 'home' ? style.wholeMenu + ' ' + style.homeMenu : style.wholeMenu}
+                            className={this.state.active === 'home' ? this.state.reachScrollHeight ? style.wholeMenu + ' ' + style.bottomMenu : style.wholeMenu + ' ' + style.topMenu : style.wholeMenu}
                         >
                             <Menu.Item
                                 as="a"
