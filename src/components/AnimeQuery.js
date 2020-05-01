@@ -219,16 +219,14 @@ class AnimeQuery {
                     }
                     media(type: $type, sort: POPULARITY_DESC) {
                         id
+                        popularity
                         title {
                             romaji
                             english
                             native
                         }
                         coverImage {
-                            extraLarge
                             large
-                            medium
-                            color
                         }
                     }
                 }
@@ -279,7 +277,6 @@ class AnimeQuery {
                         }
                         coverImage {
                             large
-                            medium
                         }
                         startDate {
                             year

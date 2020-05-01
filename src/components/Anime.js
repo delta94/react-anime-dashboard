@@ -1,7 +1,7 @@
 import React from 'react';
 import Navbar from './Navbar';
 import MediaList from "./MediaList";
-import { Container, Button, Modal, Image, Icon, Header } from 'semantic-ui-react';
+import { Container} from 'semantic-ui-react';
 
 class Anime extends React.Component {
     constructor(props) {

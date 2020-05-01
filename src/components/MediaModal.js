@@ -2,8 +2,6 @@ import React from "react";
 import AnimeQuery from "./AnimeQuery";
 import paragraph from "../images/paragraph.png";
 import { getName } from 'country-list';
-import { Doughnut, Bar, Line, Pie } from 'react-chartjs';
-
 import { Chart } from "react-google-charts";
 import {
     Container,
@@ -156,6 +154,7 @@ class MediaModal extends React.Component {
                     open={this.props.open}
                     onClose={this.props.close}
                     closeOnDimmerClick={true}
+                    dimmer="blurring"
                     // closeIcon
                 >
                     <div className={style.myModal}>

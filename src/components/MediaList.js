@@ -8,6 +8,7 @@ import {
     Card,
     Loader,
     Grid,
+    Label
 } from "semantic-ui-react";
 import style from "./MediaList.module.scss";
 
@@ -212,11 +213,13 @@ class OneMedia extends React.Component {
     }
 
     render() {
-        const { id, img, native, romaji, english, click, location} = this.props;
+        const { id, img, native, romaji, english, click, location, label} = this.props;
         var alt = (english ? english : romaji ? romaji : native);
         var firstTitle = (native ? native : romaji);
         var secondTitle = english;
         var locStyle = (location ? (location === 'home' ? 'home-anime-block' : 'anime-block') : 'anime-block');
+        var mylabel = (label ? label : null); 
+
         return (
             <div key={id} className={locStyle}>
                 <div className="anime-img">
@@ -224,6 +227,7 @@ class OneMedia extends React.Component {
                 </div>
                 <div className="anime-title">{firstTitle}</div>
                 <div className="anime-title">{secondTitle}</div>
+                {mylabel}
             </div>
         );
     }

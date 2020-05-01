@@ -62,6 +62,7 @@ class Navbar extends React.Component {
                 <Sidebar
                     as={Menu}
                     animation="overlay"
+                    direction="right"
                     icon="labeled"
                     inverted
                     onHide={this.handleSidebarHide}
@@ -133,8 +134,9 @@ class Navbar extends React.Component {
                 </Sidebar>
 
                 <Sidebar.Pusher dimmed={this.state.openSidebar}>
-                    <Segment inverted className={this.state.active === 'home' ? style.fixedNav + ' ' + style.transparent : style.fixedNav}>
+                    <Segment id="outer-nav" inverted className={this.state.active === 'home' ? this.state.reachScrollHeight ? style.fixedNav + ' ' + style.bottomMenu : style.fixedNav + ' ' + style.transparent : style.fixedNav}>
                         <Menu
+                            id="inner-nav"
                             inverted
                             pointing
                             secondary
@@ -234,7 +236,7 @@ class ScrollTopBtn extends React.Component {
         //     top: 0,
         //     behavior: "smooth"
         // });
-        $('html, body').animate({scrollTop: 0}, 600);
+        $('html, body').animate({scrollTop: 0}, 1000);
     }
 
     componentDidMount() {
