@@ -1,3 +1,18 @@
+/*  config object documentation
+const config_info = {
+    type: 'anime' | 'manga' | "",
+    search: "search_name",
+    season: 'spring' | 'summer' | 'fall' | 'winter' | "",
+    seasonYear: (1900 - 2100), 
+    startDate: true | false,
+    sort: "latest" | "popularity" | "popularity_desc" | "id" | "id_desc" | "",
+    isAdult: true | false | "all",
+    popularity: true | false,
+    startDate: true | false,
+    nextAiringEpisode: true | false,
+};
+*/
+
 /**
  * AnimeQuery is a helper class to execute all kinds of AniList GraphQL query.
  */
@@ -36,7 +51,139 @@ class AnimeQuery {
         };
         return callAPI(query_searchAnime, query_searchAnime_variables);
     }
-    
+
+    static searchCustomMedia(perPage, pageNum, config) {
+        // media filter variable
+        let type = ``, search, season = ``, seasonYear = ``, isAdult=`isAdult: false,`, sort=`` ;
+        // media property variable
+        let popularity = ``, startDate = ``, nextAiringEpisode = ``;
+        let today, todayFlag = false;
+
+        if (config) {
+            // handle media type
+            if (config.type) {
+                if (config.type.toUpperCase() === 'ANIME')
+                    type = `type: ANIME,`;
+                else if (config.type.toUpperCase() === 'MANGA')
+                    type = `type: MANGA`;
+                else
+                    type = ``;
+            }
+
+            // handle search key
+            if (config.search) {
+                if (config.search !== '')
+                    search = config.search;
+            }
+
+            // get popularity data ?
+            if (config.popularity === true) {
+                popularity = `popularity`;
+            }
+
+            // get start date ?
+            if (config.startDate === true) {
+                startDate = `startDate {
+                                year
+                                month
+                                day
+                            }`;
+            }
+
+            // get next airing episode data ?
+            if (config.nextAiringEpisode === true) {
+                nextAiringEpisode = `nextAiringEpisode {
+                                        id
+                                        episode
+                                        airingAt
+                                        timeUntilAiring
+                                        mediaId
+                                    }`;
+            }
+
+            // handle season filter
+            if (config.season) {
+                if (config.season.toUpperCase() === 'SPRING')
+                    season = `season: SPRING,`;
+                else if (config.season.toUpperCase() === "SUMMER")
+                    season = `season: SUMMER,`;
+                else if (config.season.toUpperCase() === "FALL")
+                    season = `season: FALL,`;
+                else if (config.season.toUpperCase() === "WINTER")
+                    season = `season: WINTER,`;
+                else
+                    season = ``; // any season
+            }
+
+            // handle season year filter
+            if (config.seasonYear) {
+                let year = parseInt(config.seasonYear);
+                if (year > 1900 && year < 2100) {
+                    seasonYear = `seasonYear: ${year},`;
+                } else {
+                    seasonYear = ``;  // any season year
+                }
+            }
+
+            // handle adult content filter, default is prohibited by my initial setting above.
+            if (config.isAdult) {
+                if (config.isAdult === true)
+                    isAdult = `isAdult: true,`;
+                else if (config.isAdult === 'all')
+                    isAdult = ``;
+                else
+                    isAdult = `isAdult: false,`;
+            }
+
+            if (config.sort) {
+                if (config.sort.toUpperCase() === "LATEST") {
+                    today = getTodayDateInt();
+                    sort = `startDate_lesser: $today, startDate_greater: 19700101, sort: START_DATE_DESC`;
+                    todayFlag = true;
+                } else if (config.sort.toUpperCase() === "POPULARITY")
+                    sort = `sort: POPULARITY`;
+                else if (config.sort.toUpperCase() === "POPULARITY_DESC")
+                    sort = `sort: POPULARITY_DESC`;
+                else if (config.sort.toUpperCase() === "ID") sort = `sort: ID`;
+                else if (config.sort.toUpperCase() === "ID_DESC") sort = `sort: ID_DESC`;
+                else sort = ``;
+            }
+        }
+
+        let query = `
+            query ($perPage: Int, $pageNum: Int, $searchKey: String, ${todayFlag ? `$today: FuzzyDateInt` : ``} ) {
+                Page(perPage: $perPage, page: $pageNum) {
+                    pageInfo {
+                        total
+                        perPage
+                        currentPage
+                        lastPage
+                        hasNextPage
+                    }
+                    media (${type} ${season} ${seasonYear} ${isAdult} ${sort} search: $searchKey) {
+                        id
+                        title {
+                            romaji
+                            english
+                            native
+                        }
+                        coverImage {
+                            large
+                        }
+                        ${popularity}
+                        ${startDate}
+                        ${nextAiringEpisode}
+                    }
+                }
+            }`;
+        let query_variables = {
+            searchKey: search,
+            perPage: perPage,
+            pageNum: pageNum,
+            today: today
+        };
+        return callAPI(query, query_variables);
+    }
 
     static getMediaByID(id) {
         let query = `
@@ -248,52 +395,6 @@ class AnimeQuery {
     static getAllMangaByPopularity(perPage, pageNum) {
         return AnimeQuery.getMediaByPopularity("MANGA", perPage, pageNum);
     }
-
-    static getMediaByLatest(type, perPage, pageNum) {
-        var mytype = type.toUpperCase() === "ANIME" ? TYPE.ANIME : TYPE.MANGA;
-        var today = new Date();
-        var todayStr =
-            today.getFullYear().toString() +
-            (today.getMonth() + 1).toString().padStart(2, "0") +
-            today.getDate().toString().padStart(2, "0");
-        var todayInt = parseInt(todayStr);
-
-        let query = `
-            query ($perPage: Int, $pageNum: Int, $type: MediaType, $today: FuzzyDateInt) {
-                Page(perPage: $perPage, page: $pageNum) {
-                    pageInfo {
-                        total
-                        perPage
-                        currentPage
-                        lastPage
-                        hasNextPage
-                    }
-                    media(type: $type, startDate_lesser: $today, sort: START_DATE_DESC) {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                        }
-                        coverImage {
-                            large
-                        }
-                        startDate {
-                            year
-                            month
-                            day
-                        }
-                    }
-                }
-            }`;
-        let variables = {
-            perPage: perPage,
-            pageNum: pageNum,
-            type: mytype,
-            today: todayInt,
-        };
-        return callAPI(query, variables);
-    }
 }
 
 // declare Enum type
@@ -301,6 +402,17 @@ const TYPE = {
     ANIME: "ANIME",
     MANGA: "MANGA"
 };
+
+
+function getTodayDateInt() {
+    var today = new Date();
+    var todayStr =
+        today.getFullYear().toString() +
+        (today.getMonth() + 1).toString().padStart(2, "0") +
+        today.getDate().toString().padStart(2, "0");
+    var todayInt = parseInt(todayStr);
+    return todayInt;
+}
 
 
 /**
