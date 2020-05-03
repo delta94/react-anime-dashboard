@@ -6,8 +6,9 @@ import { Container} from 'semantic-ui-react';
 class Anime extends React.Component {
     constructor(props) {
         super(props);
-        this.state = {
-            apiRes: "",
+        this.defaultConfig = {
+            type: 'anime',
+            sort: 'popularity_desc'
         };
     }
 
@@ -18,7 +19,7 @@ class Anime extends React.Component {
                     <h1 style={{ textAlign: "center", color: "white" }}>
                         All Anime
                     </h1>
-                    <MediaList type="anime" />
+                    <MediaList type="anime" config={this.defaultConfig} />
                 </Container>
             </Navbar>
         );

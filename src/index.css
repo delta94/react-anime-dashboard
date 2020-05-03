@@ -122,9 +122,9 @@ code {
 .home-anime-block {
     position: relative;
     display: block;
-    height: auto;
+    height: 100%;
     max-width: 210px;
-    margin: 10px auto;
+    margin: 0 auto;
     background-color: rgb(240, 238, 238);
     border-radius: 13px;
     overflow: hidden;

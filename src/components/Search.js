@@ -40,13 +40,16 @@ class DisplayResult extends React.Component {
         this.state = {
             id: props.id,
         };
+        this.config = {
+            search: props.id
+        }
     }
 
     render() {
         return (
             <Navbar search={this.state.id}>
                 <Container>
-                    <MediaList type="search" searchKey={this.state.id} />
+                    <MediaList type="search" searchKey={this.state.id} config={this.config} />
                 </Container>
             </Navbar>
         );

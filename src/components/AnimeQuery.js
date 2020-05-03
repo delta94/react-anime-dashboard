@@ -17,42 +17,13 @@ const config_info = {
  * AnimeQuery is a helper class to execute all kinds of AniList GraphQL query.
  */
 class AnimeQuery {
-    static searchMedia(searchKey, perPage, pageNum) {
-        let query_searchAnime = `
-            query ($key: String, $perPage: Int, $pageNum: Int) {
-                Page(perPage: $perPage, page: $pageNum) {
-                    pageInfo {
-                        total
-                        perPage
-                        currentPage
-                        lastPage
-                        hasNextPage
-                    }
-                    media (search: $key) {
-                        id
-                        title {
-                            romaji
-                            english
-                            native
-                        }
-                        bannerImage
-                        coverImage {
-                            large
-                            medium
-                            color
-                        }
-                    }
-                }
-            }`;
-        let query_searchAnime_variables = {
-            key: searchKey,
-            perPage: perPage,
-            pageNum: pageNum,
-        };
-        return callAPI(query_searchAnime, query_searchAnime_variables);
-    }
-
-    static searchCustomMedia(perPage, pageNum, config) {
+    /**
+     * get a list of medias by custom config.
+     * @param {number} perPage number of medias to request
+     * @param {number} pageNum page number
+     * @param {Object} config custom config object
+     */
+    static getCustomMedia(perPage, pageNum, config) {
         // media filter variable
         let type = ``, search, season = ``, seasonYear = ``, isAdult=`isAdult: false,`, sort=`` ;
         // media property variable
@@ -135,6 +106,7 @@ class AnimeQuery {
                     isAdult = `isAdult: false,`;
             }
 
+            // handle content sorting
             if (config.sort) {
                 if (config.sort.toUpperCase() === "LATEST") {
                     today = getTodayDateInt();
@@ -185,6 +157,10 @@ class AnimeQuery {
         return callAPI(query, query_variables);
     }
 
+    /**
+     * get all information about a media by its id.
+     * @param {number} id media id
+     */
     static getMediaByID(id) {
         let query = `
             query ($id: Int) {
@@ -199,9 +175,6 @@ class AnimeQuery {
                     seasonInt
                     updatedAt
                     countryOfOrigin
-                    nextAiringEpisode {
-                        id
-                    }
                     externalLinks {
                         id
                         url
@@ -302,107 +275,7 @@ class AnimeQuery {
         };
         return callAPI(query, variables);
     }
-
-    static getAllMedia(type, perPage, pageNum) {
-        var mytype = type.toUpperCase() === "ANIME" ? TYPE.ANIME : TYPE.MANGA;
-        let all_anime = `
-            query ($perPage: Int, $pageNum: Int, $type: MediaType) {
-                Page(perPage: $perPage, page: $pageNum) {
-                    pageInfo {
-                        total
-                        perPage
-                        currentPage
-                        lastPage
-                        hasNextPage
-                    }
-                    media(type: $type) {
-                        id
-                        type
-                        title {
-                            romaji
-                            english
-                            native
-                        }
-                        meanScore
-                        averageScore
-                        description
-                        coverImage {
-                            large
-                            medium
-                            color
-                        }
-                    }
-                }
-            }`;
-        let variables = {
-            perPage: perPage,
-            pageNum: pageNum,
-            type: mytype,
-        };
-        return callAPI(all_anime, variables);
-    }
-
-    // wrapper
-    static getAllAnime(perPage, pageNum) {
-        return AnimeQuery.getAllMedia("ANIME", perPage, pageNum);
-    }
-
-    // wrapper
-    static getAllManga(perPage, pageNum) {
-        return AnimeQuery.getAllMedia("MANGA", perPage, pageNum);
-    }
-
-    static getMediaByPopularity(type, perPage, pageNum) {
-        var mytype = type.toUpperCase() === "ANIME" ? TYPE.ANIME : TYPE.MANGA;
-        let query = `
-            query ($perPage: Int, $pageNum: Int, $type: MediaType) {
-                Page(perPage: $perPage, page: $pageNum) {
-                    pageInfo {
-                        total
-                        perPage
-                        currentPage
-                        lastPage
-                        hasNextPage
-                    }
-                    media(type: $type, sort: POPULARITY_DESC) {
-                        id
-                        popularity
-                        title {
-                            romaji
-                            english
-                            native
-                        }
-                        coverImage {
-                            large
-                        }
-                    }
-                }
-            }`;
-        let variables = {
-            perPage: perPage,
-            pageNum: pageNum,
-            type: mytype,
-        };
-        return callAPI(query, variables);
-    }
-
-    // wrapper
-    static getAllAnimeByPopularity(perPage, pageNum) {
-        return AnimeQuery.getMediaByPopularity("ANIME", perPage, pageNum);
-    }
-
-    // wrapper
-    static getAllMangaByPopularity(perPage, pageNum) {
-        return AnimeQuery.getMediaByPopularity("MANGA", perPage, pageNum);
-    }
 }
-
-// declare Enum type
-const TYPE = {
-    ANIME: "ANIME",
-    MANGA: "MANGA"
-};
-
 
 function getTodayDateInt() {
     var today = new Date();
@@ -413,7 +286,6 @@ function getTodayDateInt() {
     var todayInt = parseInt(todayStr);
     return todayInt;
 }
-
 
 /**
  * Default function to call AniList GraphQL API.

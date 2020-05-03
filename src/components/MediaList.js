@@ -23,11 +23,11 @@ class MediaList extends React.Component {
             open: false,
             reset: false,
             loadmore: null,
-            runQuery: null,
             ResultNum: 0,
             searchText: "",
             error: false
         };
+        this.config = props.config;
     }
 
     getId = (event) => {
@@ -53,7 +53,7 @@ class MediaList extends React.Component {
         if (this.props.type === "search") {
             var key = this.props.searchKey;
             if (key !== "") {
-                AnimeQuery.searchMedia(key, 25, this.state.current + 1)
+                AnimeQuery.getCustomMedia(25, this.state.currentPage + 1, this.config)
                     .then((res) => {
                         this.handleResult(res);
                         this.addLoadMore(true, false);
@@ -66,25 +66,15 @@ class MediaList extends React.Component {
             }
 
         } else {
-            var runQuery;
-            if (this.props.type === "anime")
-                runQuery = AnimeQuery.getAllAnimeByPopularity;
-            else if (this.props.type === "manga")
-                runQuery = AnimeQuery.getAllManga;
-            else runQuery = null;
-
-            if (runQuery) {
-                runQuery(50, 1)
-                    .then((res) => {
-                        this.handleResult(res);
-                        this.addLoadMore(true);
-                        this.setState({
-                            runQuery: runQuery,
-                            ResultNum: res.data.Page.pageInfo.total
-                        });
-                    })
-                    .catch(err => this.handleError(err));
-            }
+            AnimeQuery.getCustomMedia(50, this.state.currentPage + 1, this.config)
+                .then((res) => {
+                    this.handleResult(res);
+                    this.addLoadMore(true, false);
+                    this.setState({
+                        ResultNum: res.data.Page.pageInfo.total
+                    });
+                })
+                .catch(err => this.handleError(err));
         }
     }
 
@@ -107,7 +97,7 @@ class MediaList extends React.Component {
 
         this.setState({
             content: this.state.content.concat(result),
-            current: res.data.Page.pageInfo.currentPage,
+            currentPage: res.data.Page.pageInfo.currentPage,
             hasNext: res.data.Page.pageInfo.hasNextPage,
         });
     }
@@ -128,26 +118,16 @@ class MediaList extends React.Component {
     addComponent = () => {
         this.addLoadMore(true, true);
         if (this.state.hasNext) {
-            if (this.props.type === 'search') {
-                AnimeQuery.searchMedia(
-                    this.props.searchKey,
-                    25,
-                    this.state.current + 1
-                ).then((res) => {
-                    this.handleResult(res);
-                    this.addLoadMore(true, false);
-                })
-                .catch(err => this.handleError(err));
-
-            } else {
-                this.state.runQuery(
-                    50,
-                    this.state.current + 1
-                ).then((res) => {
-                    this.handleResult(res);
-                    this.addLoadMore(true, false);
-                }).catch(err => this.handleError(err));
-            }
+            let num = (this.props.type === 'search' ? 25 : 50);
+            AnimeQuery.getCustomMedia(
+                num,
+                this.state.currentPage + 1,
+                this.config
+            ).then((res) => {
+                this.handleResult(res);
+                this.addLoadMore(true, false);
+            })
+            .catch(err => this.handleError(err));
         } else {
             this.addLoadMore(false, false);
             console.log("The End!");
@@ -216,7 +196,7 @@ class OneMedia extends React.Component {
         const { id, img, native, romaji, english, click, location, label} = this.props;
         var alt = (english ? english : romaji ? romaji : native);
         var firstTitle = (native ? native : romaji);
-        var secondTitle = english;
+        var secondTitle = (english ? english : native ? romaji : '');
         var locStyle = (location ? (location === 'home' ? 'home-anime-block' : 'anime-block') : 'anime-block');
         var mylabel = (label ? label : null); 
 

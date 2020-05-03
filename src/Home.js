@@ -6,10 +6,9 @@ import AnimeQuery from "./components/AnimeQuery";
 import tempimg from './images/page-not-found.png';
 import { OneMedia } from './components/MediaList';
 import MediaModal from './components/MediaModal';
-import angel from './images/angel.png';
 
 // const variable to set how many elements to show in each section.
-const PopularElementNumber = 10;
+const PopularElementNumber = 15;
 const LatestElementNumber = 15;
 
 class Home extends React.Component {
@@ -97,7 +96,13 @@ class PopularSection extends React.Component {
     }
 
     handleContent = () => {
-        AnimeQuery.getAllAnimeByPopularity(this.state.numElements, 1)
+        const config = {
+            type: "anime",
+            sort: 'popularity_desc',
+            popularity: true,
+        };
+
+        AnimeQuery.getCustomMedia(this.state.numElements, 1, config)
             .then((res) => {
                 if (res.data) {
                     let list = res.data.Page.media;
@@ -111,7 +116,7 @@ class PopularSection extends React.Component {
                     });
                     this.setState({
                         content: contentList,
-                        labels: labelList
+                        labels: labelList,
                     });
                 }
             })

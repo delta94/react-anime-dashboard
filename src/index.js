@@ -10,8 +10,6 @@ import Manga from './components/Manga';
 import Home from './Home';
 import Error from './components/Error';
 import Search from './components/Search';
-import Latest from './components/Latest';
-import Popular from './components/Popular';
 
 import * as serviceWorker from './serviceWorker';
 
@@ -22,8 +20,6 @@ const Main = () => {
         <Switch>
             <Route exact path='/' component={Home}></Route>
             <Route exact path='/anime' component={Anime}></Route>
-            <Route exact path='/anime/latest' component={Latest}></Route>
-            <Route exact path='/anime/popular' component={Popular}></Route>
             <Route exact path='/manga' component={Manga}></Route>
             <Route path='/search' component={Search}></Route>
             <Route component={Error}></Route>
@@ -36,4 +32,4 @@ ReactDOM.render(<BrowserRouter basename="/my-react-app/build"><Main /></BrowserR
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
 // Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();
+serviceWorker.register();
