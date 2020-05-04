@@ -1,25 +1,38 @@
 import React from 'react';
-import { useRouteMatch, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import Navbar from "./Navbar";
-import { Container } from 'semantic-ui-react';
+import angel from '../images/angel.png';
+import style from './Error.module.css';
 
 const Error = () => {
-    let match = useRouteMatch();
     let location = useLocation();
-    console.log(match.url);
     return (
-        <Navbar>
-            <Container>
-                <h1>Error! Wrong Page!</h1>
-                <h2>
-                    Wrong URL: <code>{match.url}</code>
-                </h2>
-                <h2>
-                    No match for <code>{location.pathname}</code>
-                </h2>
-            </Container>
+        <Navbar active="error">
+            <ErrorBox
+                title={"404 NOT FOUND"}
+                text={"No match for " + location.pathname}
+            />
         </Navbar>
     );
 }
 
+const ErrorBox = (props) => {
+    let errorTitle = (props.title ? props.title : 'ERROR!');
+    let errorText = (props.text ? props.text : 'Something Wrong');
+    return (
+        <div className={style.errorContainer}>
+            <div className={style.errorBox}>
+                <div className={style.textBlock}>
+                    <h1>{errorTitle}</h1>
+                    <h4>
+                        {errorText}
+                    </h4>
+                </div>
+            </div>
+            <img src={angel} className={style.img}></img>
+        </div>
+    );
+}
+
 export default Error;
+export { ErrorBox };

@@ -18,7 +18,8 @@ import {
     Transition,
     Table,
 } from "semantic-ui-react";
-import style from "./MediaList.module.scss";
+import style from "./MediaModal.module.scss";
+import { ErrorBox } from "./Error";
 
 /**
  * A single media box for displaying information for a single media
@@ -70,8 +71,6 @@ class MediaModal extends React.Component {
 
     UNSAFE_componentWillReceiveProps(nextProps) {
         if (nextProps.open) {
-            console.log("current id == " + this.props.id);
-            console.log("will receive id == " + nextProps.id);
             AnimeQuery.getMediaByID(nextProps.id)
                 .then((res) => {
                     this.setState({
@@ -157,7 +156,7 @@ class MediaModal extends React.Component {
                     dimmer="blurring"
                     // closeIcon
                 >
-                    <div className={style.myModal}>
+                    <div className={style.myModal + " " + style.fadeInEffect}>
                         {media.bannerImage ? (
                             <div className={style.modalBanner}>
                                 <img
@@ -374,19 +373,24 @@ class MediaModal extends React.Component {
                     closeOnDimmerClick={true}
                 >
                     <div className={style.myModal + " " + style.tempModal}>
-                        <Segment className={style.loadingBox}>
-                            <Dimmer active inverted>
-                                <Loader inverted size="large" >
-                                    Loading
-                                </Loader>
-                            </Dimmer>
+                        {!this.state.error ? (
+                            <Segment className={style.loadingBox}>
+                                <Dimmer active inverted>
+                                    <Loader inverted size="large" >
+                                        Loading
+                                    </Loader>
+                                </Dimmer>
 
-                            <Image
-                                src={paragraph}
-                                alt="p"
-                                className={style.paragraph}
-                            />
-                        </Segment>
+                                <Image
+                                    src={paragraph}
+                                    alt="p"
+                                    className={style.paragraph}
+                                />
+                            </Segment>)
+                        :
+                            (<ErrorBox title="Internet Error" text="Please try again later" />)
+                        }
+                        
                     </div>
                     <Modal.Actions>
                         <Button

@@ -134,13 +134,13 @@ class Navbar extends React.Component {
                 </Sidebar>
 
                 <Sidebar.Pusher dimmed={this.state.openSidebar}>
-                    <Segment id="outer-nav" inverted className={this.state.active === 'home' ? this.state.reachScrollHeight ? style.fixedNav + ' ' + style.bottomMenu : style.fixedNav + ' ' + style.transparent : style.fixedNav}>
+                    <Segment id="outer-nav" inverted className={this.state.active === 'home' || this.state.active === 'error' ? this.state.reachScrollHeight ? style.fixedNav + ' ' + style.bottomMenu : style.fixedNav + ' ' + style.transparent : style.fixedNav}>
                         <Menu
                             id="inner-nav"
                             inverted
                             pointing
                             secondary
-                            className={this.state.active === 'home' ? this.state.reachScrollHeight ? style.wholeMenu + ' ' + style.bottomMenu : style.wholeMenu + ' ' + style.topMenu : style.wholeMenu}
+                            className={this.state.active === 'home' || this.state.active === 'error' ? this.state.reachScrollHeight ? style.wholeMenu + ' ' + style.bottomMenu : style.wholeMenu + ' ' + style.topMenu : style.wholeMenu}
                         >
                             <Menu.Item
                                 as="a"

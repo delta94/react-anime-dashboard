@@ -1,0 +1,324 @@
+:global(#modal) {
+    .modalBanner {
+        width: 100%;
+    }
+
+    .modalBannerImg {
+        width: 100%;
+        height: 100%;
+        object-fit: fill;
+        max-height: 250px;
+    }
+
+    .loadingBox {
+        border: none;
+        box-shadow: none;
+        width: 100%;
+    }
+
+    .myModal {
+        display: block;
+        width: 100%;
+        font-size: 1em;
+        line-height: 1.4;
+        background: #fff;
+        height: calc(100% - 65px);
+        overflow: scroll;
+        overflow-x: hidden;
+    }
+    // .myModal::-webkit-scrollbar {
+    //     width: 5px;
+    //     background: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet);
+
+    // }
+    // .myModal::-webkit-scrollbar-track {
+    //     background-color: transparent;
+    // }
+    // .myModal::-webkit-scrollbar-thumb {
+    //     background-color: rgba(207, 204, 204, 0.425);
+    // }
+
+    .fadeInEffect {
+        animation: fadeIn 1.5s ease-in-out;
+    }
+    @keyframes fadeIn {
+        from {opacity: 0;}
+        to {opacity: 1;}
+    }
+
+    .tempModal {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .modalContent {
+        padding: 10px 15px 10px;
+    }
+
+    .modalTitle {
+        text-align: center;
+        padding-bottom: 10px;
+        border-bottom: 1px solid rgba(204, 204, 204, 0.418);
+    }
+    .modalNative {
+        font-size: 22px;
+        font-weight: 700;
+        margin-bottom: 2px;
+    }
+    .modalRomaji {
+        font-size: 15px;
+        font-weight: 500;
+        margin-bottom: 2px;
+    }
+    .modalEnglish {
+        font-size: 20px;
+        font-weight: 500;
+    }
+
+    .cover {
+        margin-top: 12px;
+    }
+
+    .flexColumnContainer {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        height: 100%;
+    }
+
+    .descriptionContainer {
+        margin: 15px 12px;
+        font-size: 18px;
+    }
+
+    .description {
+        white-space: pre-wrap;
+    }
+
+    .descriptionReadmore {
+        cursor: pointer;
+    }
+
+    .rating {
+        text-align: center;
+        margin: 15px 0;
+    }
+
+    .favorite {
+        text-align: center;
+        margin: 10px;
+    }
+
+    @media only screen and (max-width: 767px) {
+        .modalContent {
+            margin-left: 0 !important;
+            margin-right: 0 !important;
+        }
+    }
+
+    .tagsContainer {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-around;
+        flex-wrap: wrap;
+        margin: 10px;
+    }
+
+    .tag {
+        margin: 5px;
+    }
+
+    .genreContainer {
+        width: 100%;
+        margin: 20px 0 15px;
+        text-align: center;
+    }
+
+    .genre {
+        width: 85%;
+        text-align: center;
+        margin: 3px 0;
+    }
+
+    .informationContainer {
+        width: 95%;
+        text-align: center;
+        margin: 20px auto 10px;
+    }
+
+    .modalBigBtn {
+        width: 100%;
+        text-align: center;
+        font-size: 20px;
+        transition: all 0.4s;
+    }
+
+    .modalTable {
+        margin: 20px auto 15px;
+        width: 95%;
+        text-align: center;
+    }
+
+    .characterContainer {
+        width: 95%;
+        margin: 20px auto 10px;
+    }
+
+    .charBox {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        border: 1px solid #cccccc70;
+        border-radius: 10px;
+        background-color: #cccccc23;
+        height: 100%;
+        box-shadow: 0 2px 4px 0 rgba(34,36,38,.12), 0 2px 10px 0 rgba(34,36,38,.15);
+    }
+
+    .charImg {
+        width: 100%;
+        height: 100%;
+        border-top-left-radius: 10px;
+        border-bottom-left-radius: 10px;
+    }
+
+    .charContent {
+        text-align: left;
+        font-size: 0.9em;
+        padding: 10px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .charNameBlock {
+        font-weight: bold;
+    }
+
+    .charName {
+        margin-bottom: 10px;
+    }
+
+    .watchBox {
+        position: relative;
+        height: 100%;
+    }
+
+    .watchImg {
+        border-radius: 7px;
+        width: 100%;
+        height: 100%;
+    }
+
+    .watchTitle {
+        position: absolute;
+        background-color: rgba(22, 21, 21, 0.658);
+        color: rgba(228, 218, 218, 0.815);
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        padding: 10px;
+        border-bottom-right-radius: 7px;
+        border-bottom-left-radius: 7px;
+        transition: opacity 0.5s;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        overflow: hidden;
+    }
+
+    .watchBox:hover > a > .watchTitle {
+        opacity: 0;
+    }
+
+    @media screen and (max-width: 767px) {
+        .watchBox:hover > a > .watchTitle {
+            opacity: 1;
+        }
+    }
+
+    .emptyBox {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 25vh;
+        background-color: #cccccc35;
+        font-size: 1.4em;
+        border-radius: 15px;
+    }
+    .emptyStatBox {
+        color: rgba(180, 204, 24, 0.733);
+    }
+    .emptyCharacterBox {
+        color: rgba(100, 53, 201, 0.733);
+    }
+    .emptyWatchListBox {
+        color: rgba(0, 128, 128, 0.753);
+    }
+
+    .StatContainer {
+        width: 95%;
+        height: 100%;
+        margin: 20px auto 10px;
+    }
+
+    .statTitle {
+        font-size: 22px;
+        font-weight: 600;
+        color: #b5cc18c7;
+        margin: 10px auto;
+    }
+    .statTitle:focus, .statTitle::selection {
+        color: #9cc747c7;
+    }
+
+    @media (max-width: 550px) {
+        .descriptionContainer {
+            margin: 12px 8px;
+            font-size: 13px;
+        }
+
+        .ratingSize {
+            font-size: 9px;
+        }
+        .rating {
+            margin: 4px 0;
+        }
+
+        .tag {
+            font-size: 8px;
+        }
+
+        .genre {
+            font-size: smaller;
+        }
+
+        .favoriteText {
+            font-size: smaller;
+        }
+
+        .favoriteLabel {
+            padding: 0.4em 0.6em;
+        }
+
+        .charContent {
+            font-size: 0.6em;
+        }
+
+        .watchTitle {
+            padding: 5px;
+            font-size: smaller;
+        }
+
+        .myColumn {
+            padding: 5px;
+        }
+
+        .modalBigBtn {
+            font-size: 15px;
+        }
+    }
+}
+
+.paragraph {
+    width: 100%;
+}

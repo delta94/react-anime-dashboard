@@ -1,6 +1,7 @@
 import React from "react";
 import AnimeQuery from "./AnimeQuery";
 import MediaModal from './MediaModal';
+import { ErrorBox } from './Error';
 import {
     Button,
     Image,
@@ -103,7 +104,10 @@ class MediaList extends React.Component {
     }
 
     handleError = (err) => {
-        this.setState({ error: true });
+        this.setState({
+            error: true,
+            content: [],
+        });
     }
 
     addLoadMore = (status, loading) => {
@@ -138,11 +142,19 @@ class MediaList extends React.Component {
         return (
             <div>
                 <h3 style={{ color: "white" }}>
-                    Showing {this.state.ResultNum} results{" "}
-                    {this.state.searchText}
+                    Total {this.state.ResultNum} results {this.state.searchText}
                 </h3>
-                <div className="flex-container">{this.state.content}</div>
-                {this.state.loadmore}
+                {!this.state.error ? (
+                    <React.Fragment>
+                        <div className="flex-container">
+                            {this.state.content}
+                        </div>
+                        {this.state.loadmore}
+                    </React.Fragment>
+                ) : (
+                    <ErrorBox text='Please try again later ...' />
+                )}
+
                 <MediaModal
                     id={this.state.id}
                     open={this.state.open}
