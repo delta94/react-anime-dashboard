@@ -10,51 +10,6 @@ body {
     overflow: auto;
 }
 
-code {
-    font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New', monospace;
-}
-
-.App {
-    text-align: center;
-}
-
-.App-logo {
-    height: 40vmin;
-    pointer-events: none;
-}
-
-@media (prefers-reduced-motion: no-preference) {
-    .App-logo {
-        animation: App-logo-spin infinite 20s linear;
-    }
-}
-
-.App-header {
-    /* margin-top: 60px; */
-    background-color: #282c34;
-    min-height: 100vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    font-size: calc(10px + 2vmin);
-    color: white;
-    z-index: 3;
-}
-
-.App-link {
-    color: #61dafb;
-}
-
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 .home-img {
     margin-top: -115px;
     /* background-image: url(https://s4.anilist.co/file/anilistcdn/media/anime/banner/106286-09fyYBntN8rR.jpg); */
@@ -112,16 +67,18 @@ code {
     border-bottom: 1.2em solid transparent;
 }
 
+/************************ Anime Card CSS ****************************/
+
 .anime-block {
     display: block;
     width: 180px;
     height: auto;
     margin: 10px;
-    background-color: rgb(240, 238, 238);
-    border-radius: 13px;
+    background-color: rgba(248, 249, 250, 0.952);
+    border-radius: 10px;
     overflow: hidden;
     box-shadow: 0px 0px 3px 1px #adadad41;
-    transition: all 0.5s;
+    transition: all 0.5s ease-in-out;
 }
 .home-anime-block {
     position: relative;
@@ -129,57 +86,52 @@ code {
     height: 100%;
     max-width: 210px;
     margin: 0 auto;
-    background-color: rgb(240, 238, 238);
-    border-radius: 13px;
+    background-color: rgba(248, 249, 250, 0.945);
+    border-radius: 10px;
     overflow: hidden;
     box-shadow: 0px 0px 3px 1px #adadad41;
-    transition: all 500ms ease;
+    transition: all 500ms ease-in-out;
     animation: fadeIn 2.1s ease-out;
 }
-.home-anime-block .anime-img {
-    transition: 500ms ease-out;
+.anime-img-block {
+    width: 100%;
+    height: 220px;
+    cursor: pointer;
+    overflow: hidden;
 }
-.home-anime-block .anime-img img {
-    transition: 1000ms ease-out;
+.anime-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
 .anime-block:hover, .home-anime-block:hover {
-    box-shadow: 0px 0px 10px 3px #adadad7d;
+    box-shadow: 0px 0px 8px 3px #adadad7d;
 }
-.anime-block:hover > .anime-img img {
+/* home page anime block hover effect */
+.home-anime-block .anime-img-block {
+    transition: 600ms ease-out;
+}
+.home-anime-block .anime-img {
+    transition: 1000ms ease-out;
+}
+.home-anime-block:hover > .anime-img-block {
     opacity: 0.85;
 }
-.home-anime-block:hover > .anime-img {
-    opacity: 0.85;
-}
-.home-anime-block:hover > .anime-img img {
+.home-anime-block:hover > .anime-img-block .anime-img {
     transform: scale3d(1.1, 1.1, 1);
+}
+/* media list anime block hover effect */
+.anime-block:hover > .anime-img-block {
+    opacity: 0.85;
+}
+.anime-block .anime-img-block {
+    transition: all 0.5s;
 }
 
 @keyframes fadeIn {
     from {opacity: 0.1;}
     to {opacity: 1;}
 }
-
-
-.anime-img {
-    width: 100%;
-    height: 230px;
-    cursor: pointer;
-    overflow: hidden;
-}
-
-.anime-img img {
-    width: 100%;
-    height: 100%;
-    object-fit: fill;
-}
-.anime-block .anime-img {
-    transition: all 0.5s;
-}
-.anime-block .anime-img img{
-    transition: inherit;
-}
-
 
 @media (max-width: 540px) {
     .anime-block {
@@ -218,7 +170,6 @@ code {
         height: 150px;
     }
 }
-
 
 .anime-title {
     font-size: 13px;
@@ -301,6 +252,7 @@ code {
 
 .ui.modals {
     padding: 0;
+    animation: fadeIn 0.35s ease-out;
 }
 
 #modal.ui.modal {
@@ -308,4 +260,27 @@ code {
     height: calc(100% - 8vh);
     margin-top: 4vh;
     margin-bottom: 4vh;
+}
+
+/*********** Lazy Load cutsom effect css ************/
+.lazy-load-image-background.myblur {
+  filter: blur(10px);
+  opacity: 0;
+  display: inline-block;
+}
+
+.lazy-load-image-background.myblur.lazy-load-image-loaded {
+  filter: blur(0);
+  opacity: 1;
+  transition: all 0.6s;
+  display: unset !important;
+}
+
+.lazy-load-image-background.myblur > img {
+  /* opacity: 0; */
+}
+
+.lazy-load-image-background.myblur.lazy-load-image-loaded > img {
+  /* opacity: 1; */
+  /* transition: opacity .5s; */
 }

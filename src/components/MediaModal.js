@@ -17,9 +17,20 @@ import {
     Rating,
     Transition,
     Table,
+    Placeholder
 } from "semantic-ui-react";
 import style from "./MediaModal.module.scss";
 import { ErrorBox } from "./Error";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+
+
+const ImgPlaceHolder = () => {
+    return (
+        <Placeholder>
+            <Placeholder.Image />
+        </Placeholder>
+    );
+}
 
 /**
  * A single media box for displaying information for a single media
@@ -156,14 +167,21 @@ class MediaModal extends React.Component {
                     dimmer="blurring"
                     // closeIcon
                 >
-                    <div className={style.myModal + " " + style.fadeInEffect}>
+                    <div className={style.myModal + ' ' + style.fadeInEffect}>
                         {media.bannerImage ? (
                             <div className={style.modalBanner}>
-                                <img
+                                <LazyLoadImage
                                     src={media.bannerImage}
                                     alt={media.title.english}
                                     className={style.modalBannerImg}
-                                ></img>
+                                    wrapperClassName={style.myWrapper}
+                                    effect="myblur"
+                                />
+                                {/* <img
+                                    src={media.bannerImage}
+                                    alt={media.title.english}
+                                    className={style.modalBannerImg}
+                                ></img> */}
                             </div>
                         ) : null}
 
@@ -184,11 +202,11 @@ class MediaModal extends React.Component {
                                 <Grid.Row>
                                     <Grid.Column width={7}>
                                         <div className={style.cover}>
-                                            <Image
+                                            <LazyLoadImage
                                                 src={media.coverImage.large}
-                                                size="medium"
-                                                centered
-                                                rounded
+                                                alt={media.title.english}
+                                                className={style.coverImg + ' ui medium centered rounded image'}
+                                                effect="myblur"
                                             />
                                         </div>
                                         <div className={style.rating}>
@@ -199,7 +217,7 @@ class MediaModal extends React.Component {
                                                 icon="star"
                                                 size="large"
                                                 title={
-                                                    "Mean Score: " +
+                                                    'Mean Score: ' +
                                                     media.meanScore
                                                 }
                                                 className={style.ratingSize}
@@ -239,7 +257,7 @@ class MediaModal extends React.Component {
                                                         style.favoriteText
                                                     }
                                                 >
-                                                    {media.popularity}{" "}
+                                                    {media.popularity}{' '}
                                                     Pupularity
                                                 </span>
                                             </Label>
@@ -282,11 +300,11 @@ class MediaModal extends React.Component {
                                                             }
                                                         >
                                                             {this.state.readMore
-                                                                ? "Read Less >>>"
-                                                                : "... Read More >>>"}
+                                                                ? 'Read Less >>>'
+                                                                : '... Read More >>>'}
                                                         </a>
                                                     ) : (
-                                                        ""
+                                                        ''
                                                     )}
                                                 </p>
                                             </div>
@@ -606,7 +624,6 @@ const InformationTable = (props) => {
 
 
 const load = (
-    // <Loader active size="large" />
     <Dimmer active inverted>
         <Loader size="large">Loading</Loader>
     </Dimmer>
@@ -854,10 +871,12 @@ class CharacterList extends React.Component {
                         <Grid.Column key={roleID} className={style.myColumn}>
                             <div className={style.charBox}>
                                 <div>
-                                    <Image
+                                    <LazyLoadImage
                                         id={roleID}
                                         src={img}
-                                        className={style.charImg}
+                                        alt={fullName}
+                                        className={style.charImg + ' ui image'}
+                                        effect="myblur"
                                     />
                                 </div>
                                 <div className={style.charContent}>
@@ -922,9 +941,11 @@ class WatchList extends React.Component {
                     <Grid.Column key={title} className={style.myColumn}>
                         <div className={style.watchBox} title={title}>
                             <a href={url} target="_blank">
-                                <Image
+                                <LazyLoadImage
                                     src={img}
-                                    className={style.watchImg}
+                                    alt={title}
+                                    className={style.watchImg + ' ui image'}
+                                    effect="myblur"
                                 />
                                 <div className={style.watchTitle}>{title}</div>
                             </a>

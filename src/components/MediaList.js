@@ -4,14 +4,13 @@ import MediaModal from './MediaModal';
 import { ErrorBox } from './Error';
 import {
     Button,
-    Image,
     Icon,
-    Card,
-    Loader,
-    Grid,
-    Label
+    Placeholder
 } from "semantic-ui-react";
 import style from "./MediaList.module.scss";
+import { LazyLoadImage } from 'react-lazy-load-image-component';
+import paragraph from '../images/paragraph.png';
+import tempimg from '../images/page-not-found.png';
 
 class MediaList extends React.Component {
     constructor(props) {
@@ -141,7 +140,7 @@ class MediaList extends React.Component {
     render() {
         return (
             <div>
-                <h3 style={{ color: "white" }}>
+                <h3 style={{ color: 'white' }}>
                     Total {this.state.ResultNum} results {this.state.searchText}
                 </h3>
                 {!this.state.error ? (
@@ -152,7 +151,7 @@ class MediaList extends React.Component {
                         {this.state.loadmore}
                     </React.Fragment>
                 ) : (
-                    <ErrorBox text='Please try again later ...' />
+                    <ErrorBox text="Please try again later ..." />
                 )}
 
                 <MediaModal
@@ -210,12 +209,21 @@ class OneMedia extends React.Component {
         var firstTitle = (native ? native : romaji);
         var secondTitle = (english ? english : native ? romaji : '');
         var locStyle = (location ? (location === 'home' ? 'home-anime-block' : 'anime-block') : 'anime-block');
-        var mylabel = (label ? label : null); 
+        var mylabel = (label ? label : null);
 
         return (
             <div key={id} className={locStyle}>
-                <div className="anime-img">
-                    <img id={id} src={img} alt={alt} onClick={click}></img>
+                <div className="anime-img-block">
+                    {/* <img id={id} src={img} alt={alt} onClick={click}></img> */}
+                    <LazyLoadImage
+                        id={id}
+                        src={img}
+                        alt={alt}
+                        onClick={click}
+                        className={"anime-img"}
+                        threshold={100}
+                        effect="myblur"
+                    />
                 </div>
                 <div className="anime-title">{firstTitle}</div>
                 <div className="anime-title">{secondTitle}</div>
@@ -224,5 +232,6 @@ class OneMedia extends React.Component {
         );
     }
 }
+
 export default MediaList;
 export { OneMedia };

@@ -8,8 +8,8 @@ import { OneMedia } from './components/MediaList';
 import MediaModal from './components/MediaModal';
 
 // const variable to set how many elements to show in each section.
-const PopularElementNumber = 15;
-const LatestElementNumber = 15;
+const PopularElementNumber = 20;
+const LatestElementNumber = 30;
 
 class Home extends React.Component {
     constructor(props) {
@@ -69,6 +69,8 @@ class Home extends React.Component {
 
                 <Container id="home-main" className="main-container">
                     <PopularSection clickOpenModal={this.handleOpenModal} />
+                    <Divider></Divider>
+                    <CurrentSeasonSection clickOpenModal={this.handleOpenModal} />
                     <Divider></Divider>
                     <div style={{ height: "100vh" }}></div>
                 </Container>
@@ -142,6 +144,79 @@ class PopularSection extends React.Component {
                     content={this.state.content}
                     labelList={this.state.labels}
                     sectionName="popular"
+                    clickOpenModal={this.props.clickOpenModal}
+                    num={this.state.numElements}
+                />
+            </div>
+        );
+    }
+}
+
+class CurrentSeasonSection extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            content: [],
+            labels: [],
+            numElements: LatestElementNumber,
+        };
+    }
+
+    handleContent = () => {
+        const config = {
+            type: "anime",
+            sort: "popularity_desc",
+            popularity: true,
+            season: 'Spring',
+            seasonYear: '2020'
+        };
+
+        AnimeQuery.getCustomMedia(this.state.numElements, 1, config)
+            .then((res) => {
+                if (res.data) {
+                    let list = res.data.Page.media;
+                    let contentList = [];
+                    let labelList = [];
+                    list.forEach((element) => {
+                        contentList.push(element);
+                        labelList.push(
+                            <PopularLabel text={element.popularity} />
+                        );
+                    });
+                    this.setState({
+                        content: contentList,
+                        labels: labelList,
+                    });
+                }
+            })
+            .catch((err) => {
+                console.log(err);
+            });
+    };
+
+    componentWillMount() {
+        this.handleContent();
+    }
+
+    render() {
+        return (
+            <div>
+                <div className="block-title">
+                    <Label
+                        as="a"
+                        color='olive'
+                        tag
+                        size="massive"
+                        className="title-tag"
+                    >
+                        <Icon name="star" />
+                        Spring Season Anime
+                    </Label>
+                </div>
+                <HomeSubSection
+                    content={this.state.content}
+                    labelList={this.state.labels}
+                    sectionName="spring"
                     clickOpenModal={this.props.clickOpenModal}
                     num={this.state.numElements}
                 />
