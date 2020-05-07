@@ -4,6 +4,7 @@ import { Button, Container, Label, Divider, Grid, Icon } from "semantic-ui-react
 import Navbar from './components/Navbar';
 import AnimeQuery from "./components/AnimeQuery";
 import tempimg from './images/page-not-found.png';
+import angel from './images/angel.png';
 import { OneMedia } from './components/MediaList';
 import MediaModal from './components/MediaModal';
 
@@ -27,7 +28,6 @@ class Home extends React.Component {
 
     handleOpenModal = (event) => {
         if (event.target.id) {
-            console.log(event.target.id);
             let id = event.target.id.split('-');
             let myID = id[1];
             myID = parseInt(myID);
@@ -57,10 +57,10 @@ class Home extends React.Component {
                                     as="a"
                                     circular
                                     size="massive"
-                                    className="aa"
+                                    className="explore-btn"
                                     onClick={this.handleExplore}
                                 >
-                                    Explore ANIME
+                                    Explore ANIME >>>
                                 </Label>
                             </div>
                         </div>
@@ -68,11 +68,13 @@ class Home extends React.Component {
                 </div>
 
                 <Container id="home-main" className="main-container">
+                    <CurrentSeasonSection
+                        clickOpenModal={this.handleOpenModal}
+                    />
+                    <Divider></Divider>
                     <PopularSection clickOpenModal={this.handleOpenModal} />
                     <Divider></Divider>
-                    <CurrentSeasonSection clickOpenModal={this.handleOpenModal} />
-                    <Divider></Divider>
-                    <div style={{ height: "100vh" }}></div>
+                    <div style={{ height: '100vh' }}></div>
                 </Container>
 
                 <MediaModal
@@ -95,16 +97,15 @@ class PopularSection extends React.Component {
             labels: [],
             numElements: PopularElementNumber
         }
-    }
-
-    handleContent = () => {
-        const config = {
-            type: "anime",
+        this.config = {
+            type: 'anime',
             sort: 'popularity_desc',
             popularity: true,
         };
+    }
 
-        AnimeQuery.getCustomMedia(this.state.numElements, 1, config)
+    handleContent = () => {
+        AnimeQuery.getCustomMedia(this.state.numElements, 1, this.config)
             .then((res) => {
                 if (res.data) {
                     let list = res.data.Page.media;
@@ -113,7 +114,12 @@ class PopularSection extends React.Component {
                     list.forEach((element) => {
                         contentList.push(element);
                         labelList.push(
-                            <PopularLabel text={element.popularity} />
+                            <RibbonLabel
+                                text={element.popularity}
+                                default={'Popular'}
+                                color={'red'}
+                                icon={'star'}
+                            />
                         );
                     });
                     this.setState({
@@ -160,18 +166,50 @@ class CurrentSeasonSection extends React.Component {
             labels: [],
             numElements: LatestElementNumber,
         };
+        this.config = {
+            type: 'anime',
+            sort: 'popularity_desc',
+            nextAiringEpisode: true,
+        };
+        this.seasonMeta = {};
+    }
+
+    handleSeasonMeta = () => {
+        const { season, seasonYear } = getCurrentSeason();
+        this.config.seasonYear = seasonYear;
+        this.config.season = season;
+        if (season === 'Spring') {
+            this.seasonMeta = {
+                iconName: 'tree',
+                seasonSectionTitle: 'Spring Anime',
+                seasonColor: 'green',
+            }
+        } else if (season === 'Summer') {
+            this.seasonMeta = {
+                iconName: 'sun',
+                seasonSectionTitle: 'Summer Anime',
+                seasonColor: 'blue',
+            };
+        } else if (season === 'Fall') {
+            this.seasonMeta = {
+                iconName: 'leaf',
+                seasonSectionTitle: 'Fall Anime',
+                seasonColor: 'yellow',
+            };
+        } else {
+            this.seasonMeta = {
+                iconName: 'snowflake outline',
+                seasonSectionTitle: 'Winter Anime',
+                seasonColor: 'teal',
+            };
+        }
+        this.seasonMeta.season = season;
+        this.seasonMeta.seasonYear = seasonYear;
     }
 
     handleContent = () => {
-        const config = {
-            type: "anime",
-            sort: "popularity_desc",
-            popularity: true,
-            season: 'Spring',
-            seasonYear: '2020'
-        };
-
-        AnimeQuery.getCustomMedia(this.state.numElements, 1, config)
+        this.handleSeasonMeta();
+        AnimeQuery.getCustomMedia(this.state.numElements, 1, this.config)
             .then((res) => {
                 if (res.data) {
                     let list = res.data.Page.media;
@@ -179,8 +217,14 @@ class CurrentSeasonSection extends React.Component {
                     let labelList = [];
                     list.forEach((element) => {
                         contentList.push(element);
+                        let text = getNextEpTime(element.nextAiringEpisode);
                         labelList.push(
-                            <PopularLabel text={element.popularity} />
+                            <RibbonLabel
+                                default={this.seasonMeta.season + ' ' + this.seasonMeta.seasonYear}
+                                color={this.seasonMeta.seasonColor}
+                                icon={this.seasonMeta.iconName}
+                                text={text}
+                            />
                         );
                     });
                     this.setState({
@@ -204,19 +248,19 @@ class CurrentSeasonSection extends React.Component {
                 <div className="block-title">
                     <Label
                         as="a"
-                        color='olive'
+                        color={this.seasonMeta.seasonColor}
                         tag
                         size="massive"
                         className="title-tag"
                     >
-                        <Icon name="star" />
-                        Spring Season Anime
+                        <Icon name={this.seasonMeta.iconName} />
+                        {this.seasonMeta.seasonSectionTitle}
                     </Label>
                 </div>
                 <HomeSubSection
                     content={this.state.content}
                     labelList={this.state.labels}
-                    sectionName="spring"
+                    sectionName="season"
                     clickOpenModal={this.props.clickOpenModal}
                     num={this.state.numElements}
                 />
@@ -427,11 +471,11 @@ class HomeBlock extends React.Component {
             english = content.title.english;
             label = this.props.label;
         } else {
-            id = this.props.id;
-            img = tempimg;
-            native = "Native Name";
+            id = null;
+            img = angel;
+            native = "Unknown";
             romaji = "Romaji Name";
-            english = "English Name";
+            english = "Anime Not Found";
         }
         return (
             <Grid.Column className={this.props.visible ? "" : "none"}>
@@ -450,15 +494,45 @@ class HomeBlock extends React.Component {
     }
 }
 
-
-const PopularLabel = (props) => {
-    let text = (props.text ? props.text : 'Popular');
+const RibbonLabel = (props) => {
+    let text = props.text ? props.text : props.default;
     return (
-        <Label as="a" color="red" ribbon className="myRibbon">
-            <Icon name="star" />
+        <Label as="a" color={props.color} ribbon className="myRibbon">
+            <Icon name={props.icon} />
             {text}
         </Label>
     );
+}
+
+const getCurrentSeason = () => {
+    let today = new Date();
+    let seasonYear = today.getFullYear().toString();
+    let month = today.getMonth() + 1;
+    let season = '';
+    if (month >= 1 && month <= 3) season = 'Winter'; // 1 - 3
+    else if (month >= 4 && month <= 6) season = 'Spring'; // 4 - 6
+    else if (month >= 7 && month <= 9) season = 'Summer'; // 7 - 9
+    else if (month >= 10 && month <= 12) season = 'Fall';  // 10 - 12
+    else season = '';
+
+    return { season: season, seasonYear: seasonYear };
+};
+
+const getNextEpTime = (element) => {
+    if (!element) {
+        return null;
+    }
+
+    let episode = element.episode;
+    let timeInSecond = element.timeUntilAiring;
+    let day = Math.floor(timeInSecond / (60 * 60 * 24)); // seconds in one day
+    timeInSecond = timeInSecond - (day * 60 * 60 * 24);
+    let hour = Math.floor(timeInSecond / 3600);
+    timeInSecond = timeInSecond - hour * 3600;
+    let minute = Math.floor(timeInSecond / 60);
+    timeInSecond = timeInSecond - minute * 60;
+
+    return `EP ${episode}: ${day === 0 ? '' : day + ' d'} ${hour === 0 ? '' : hour + ' h'} ${minute === 0 ? '' : minute + ' m'} ${timeInSecond + ' s'}`;
 }
 
 export default Home;

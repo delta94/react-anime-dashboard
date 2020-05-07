@@ -10,6 +10,18 @@ body {
     overflow: auto;
 }
 
+#home-img .explore-btn {
+    transition: all 0.7s;
+    padding: 20px 20px !important;
+    background-color: rgba(70, 68, 68, 0.966);
+    color: rgba(221, 219, 217, 0.815);
+}
+#home-img .explore-btn:hover {
+    transform: scale3d(1.15, 1.15, 1);
+    background-color: rgba(230, 222, 222, 0.966);
+    color: rgba(49, 49, 48, 0.815);
+}
+
 .home-img {
     margin-top: -115px;
     /* background-image: url(https://s4.anilist.co/file/anilistcdn/media/anime/banner/106286-09fyYBntN8rR.jpg); */
@@ -261,6 +273,61 @@ body {
     margin-top: 4vh;
     margin-bottom: 4vh;
 }
+
+#home-main .ui.red.label {
+    background-color: #ed293a!important;
+    border-color: #ed293a!important;
+    color: #fff!important;
+}
+#home-main .ui.red.label:hover {
+    background-color: #f71a2c!important;
+    border-color: #f71a2c!important;
+    color: #fff!important;
+}
+
+/* spring color */
+#home-main .ui.green.label {
+    background-color: #50b14f!important;
+    border-color: #50b14f!important;
+    color: #fff!important;
+}
+#home-main .ui.green.label:hover {
+    background-color: #4abd48!important;
+    border-color: #4abd48!important;
+    color: #fff!important;
+}
+/* summer season color */
+#home-main .ui.teal.label {
+    background-color: #236e96!important;
+    border-color: #236e96!important;
+    color: #fff!important;
+}
+#home-main .ui.teal.label:hover {
+    background-color: #127db6!important;
+    border-color: #127db6!important;
+    color: #fff!important;
+}
+/* Fall season color */
+#home-main .ui.yellow.label {
+    background-color: #cc6633!important;
+    border-color: #cc6633!important;
+    color: #fff!important;
+}
+#home-main .ui.yellow.label:hover {
+    background-color: #e06324!important;
+    border-color: #cc6324!important;
+}
+/* Winter season color */
+#home-main .ui.teal.label {
+    background-color: #dffaff!important;
+    border-color: #dffaff!important;
+    color: #6f788e!important;
+}
+#home-main .ui.teal.label:hover {
+    background-color: #d4f1f9!important;
+    border-color: #d4f1f9!important;
+}
+    
 
 /*********** Lazy Load cutsom effect css ************/
 .lazy-load-image-background.myblur {
