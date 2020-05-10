@@ -3,10 +3,10 @@ import $ from 'jquery';
 import { Button, Container, Label, Divider, Grid, Icon } from "semantic-ui-react";
 import Navbar from './components/Navbar';
 import AnimeQuery from "./components/AnimeQuery";
-import tempimg from './images/page-not-found.png';
 import angel from './images/angel.png';
 import { OneMedia } from './components/MediaList';
 import MediaModal from './components/MediaModal';
+import { Link } from 'react-router-dom';
 
 // const variable to set how many elements to show in each section.
 const PopularElementNumber = 20;
@@ -48,7 +48,7 @@ class Home extends React.Component {
 
     render() {
         return (
-            <Navbar active="home">
+            <Navbar active="home" {...this.props}>
                 <div className="home-img" id="home-img">
                     <Container>
                         <div className="home-content">
@@ -141,10 +141,17 @@ class PopularSection extends React.Component {
         return (
             <div>
                 <div className="block-title">
-                        <Label as='a' color='red' tag size="massive" className="title-tag">
+                    <Link to={{ pathname: '/anime', data: this.config }}>
+                        <Label
+                            color="red"
+                            tag
+                            size="massive"
+                            className="title-tag"
+                        >
                             <Icon name="star" />
                             Popular Anime
                         </Label>
+                    </Link>
                 </div>
                 <HomeSubSection
                     content={this.state.content}
@@ -246,16 +253,17 @@ class CurrentSeasonSection extends React.Component {
         return (
             <div>
                 <div className="block-title">
-                    <Label
-                        as="a"
-                        color={this.seasonMeta.seasonColor}
-                        tag
-                        size="massive"
-                        className="title-tag"
-                    >
-                        <Icon name={this.seasonMeta.iconName} />
-                        {this.seasonMeta.seasonSectionTitle}
-                    </Label>
+                    <Link to={{ pathname: '/anime', data: this.config }}>
+                        <Label
+                            color={this.seasonMeta.seasonColor}
+                            tag
+                            size="massive"
+                            className="title-tag"
+                        >
+                            <Icon name={this.seasonMeta.iconName} />
+                            {this.seasonMeta.seasonSectionTitle}
+                        </Label>
+                    </Link>
                 </div>
                 <HomeSubSection
                     content={this.state.content}
@@ -400,6 +408,10 @@ class HomeSubSection extends React.Component {
     componentDidMount() {
         window.addEventListener("resize", this.handleResize);
         this.startHandleVisible = true;
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.handleResize);
     }
 
     UNSAFE_componentWillMount() {

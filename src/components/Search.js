@@ -1,55 +1,68 @@
 import React from 'react';
-import { useParams, useRouteMatch, Switch, Route } from 'react-router-dom';
+import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import Navbar from "./Navbar";
 import MediaList from "./MediaList";
 import { Container } from "semantic-ui-react";
 
 
-function Search() {
+function Search(props) {
     let match = useRouteMatch();
-    console.log(match);
-
+    // console.log(props);
     return (
         <Switch>
-            <Route path={`${match.path}/:id/`}>
-                <Result />
+            <Route path={`${match.path}/:id`} render={(props) => <SearchResult {...props} />} >
             </Route>
-            <Route path={match.path}>
+            <Route path={match.path} render={(props) => <SearchDefaultPage {...props} />}>
             </Route>
         </Switch>
     );
 }
 
-function Result() {
-    let { id } = useParams();
-    let match = useRouteMatch();
-    console.log(id);
-    return (
-        <div>
-            {/* <h3>Requested search ID: {id}</h3>
-            <h3>Requested url: {match.url}</h3>
-            <h3>Requested path: {match.path}</h3> */}
-            <DisplayResult id={id}/>
-        </div>
-    );
-}
-
-class DisplayResult extends React.Component {
+class SearchResult extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            id: props.id,
+            id: props.match.params.id,
         };
-        this.config = {
-            search: props.id
+        this.DefaultConfig = {
+            search: props.match.params.id,
+        };
+    }
+
+    shouldComponentUpdate(nextProps) {
+        // do not re-render if same search key
+        if (this.state.id === nextProps.match.params.id) {
+            return false;
         }
+        return true;
+    }
+
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        this.setState({
+            id: nextProps.match.params.id,
+        });
     }
 
     render() {
         return (
-            <Navbar search={this.state.id}>
+            <Navbar search={this.state.id} {...this.props}>
                 <Container>
-                    <MediaList type="search" searchKey={this.state.id} config={this.config} />
+                    <MediaList type="search" searchKey={this.state.id} config={this.DefaultConfig} />
+                </Container>
+            </Navbar>
+        );
+    }
+}
+
+
+class SearchDefaultPage extends React.Component {
+    render() {
+        return (
+            <Navbar {...this.props}>
+                <Container>
+                    <MediaList
+                        type="searchPage"
+                    />
                 </Container>
             </Navbar>
         );

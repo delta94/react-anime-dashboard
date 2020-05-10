@@ -14,9 +14,9 @@ class Manga extends React.Component {
 
     render() {
         return (
-            <Navbar active="manga">
+            <Navbar active="manga" {...this.props}>
                 <Container>
-                    <h1 style={{ textAlign: "center", color: "white" }}>
+                    <h1 style={{ textAlign: 'center', color: 'white' }}>
                         All Manga
                     </h1>
                     <MediaList type="manga" config={this.defaultConfig} />

@@ -2,15 +2,9 @@ import React from "react";
 import AnimeQuery from "./AnimeQuery";
 import MediaModal from './MediaModal';
 import { ErrorBox } from './Error';
-import {
-    Button,
-    Icon,
-    Placeholder
-} from "semantic-ui-react";
-import style from "./MediaList.module.scss";
+import { Button, Icon } from "semantic-ui-react";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import paragraph from '../images/paragraph.png';
-import tempimg from '../images/page-not-found.png';
+import style from './MediaList.module.scss';
 
 class MediaList extends React.Component {
     constructor(props) {
@@ -24,10 +18,20 @@ class MediaList extends React.Component {
             reset: false,
             loadmore: null,
             ResultNum: 0,
-            searchText: "",
-            error: false
+            searchText: '',
+            error: false,
+            errorTitle: 'Error!',
+            errorMessage: 'Please try again later ...',
         };
-        this.config = props.config;
+
+        this.config = null;
+        if (props.config) {
+            this.config = props.config;
+        } else {
+            this.config = {
+                sort: "id"
+            }
+        }
     }
 
     getId = (event) => {
@@ -48,25 +52,57 @@ class MediaList extends React.Component {
         });
     };
 
+    UNSAFE_componentWillReceiveProps(nextProps) {
+        // if received new search key
+        if (this.props.searchKey !== nextProps.searchKey) {
+            // reset config
+            this.config = {
+                search: nextProps.searchKey,
+            };
+            let key = nextProps.searchKey;
+            if (key !== '') {
+                AnimeQuery.getCustomMedia(25, 1, this.config)
+                    .then((res) => {
+                        if (res.data.Page.pageInfo.total !== 0) {
+                            this.handleResult(res, true);
+                            this.addLoadMore(true, false);
+                            this.setState({
+                                error: false,
+                                searchText: 'for "' + key + '"',
+                                ResultNum: res.data.Page.pageInfo.total,
+                            });
+                        } else {
+                            this.handleError('No Result For "' + key + '"', 'NOT FOUND', 'No Result For "' + key + '"');
+                        }
+                    })
+                    .catch((err) => this.handleError(err));
+            }
+        }
+    }
+
     // execute before the very beginning render, for frist time only
     UNSAFE_componentWillMount() {
         if (this.props.type === "search") {
             var key = this.props.searchKey;
             if (key !== "") {
-                AnimeQuery.getCustomMedia(25, this.state.currentPage + 1, this.config)
+                AnimeQuery.getCustomMedia(25, 1, this.config)
                     .then((res) => {
-                        this.handleResult(res);
-                        this.addLoadMore(true, false);
-                        this.setState({
-                            searchText: 'for "' + key + '"',
-                            ResultNum: res.data.Page.pageInfo.total,
-                        });
+                        if (res.data.Page.pageInfo.total !== 0) {
+                            this.handleResult(res);
+                            this.addLoadMore(true, false);
+                            this.setState({
+                                searchText: 'for "' + key + '"',
+                                ResultNum: res.data.Page.pageInfo.total,
+                            });
+                        } else {
+                            this.handleError('No Result For "' + key + '"', 'NOT FOUND', 'No Result For "' + key + '"');
+                        }
                     })
                     .catch((err) => this.handleError(err));
             }
 
         } else {
-            AnimeQuery.getCustomMedia(50, this.state.currentPage + 1, this.config)
+            AnimeQuery.getCustomMedia(50, 1, this.config)
                 .then((res) => {
                     this.handleResult(res);
                     this.addLoadMore(true, false);
@@ -78,8 +114,12 @@ class MediaList extends React.Component {
         }
     }
 
-    handleResult = (res) => {
+    handleResult = (res, reset) => {
         const result = [];
+        let resetFlag = false;
+        if (reset && reset === true) {
+            resetFlag = true;
+        }
         var list = res.data.Page.media;
         list.forEach((element) => {
             result.push(
@@ -96,16 +136,19 @@ class MediaList extends React.Component {
         });
 
         this.setState({
-            content: this.state.content.concat(result),
+            content: (resetFlag ? result : this.state.content.concat(result)),
             currentPage: res.data.Page.pageInfo.currentPage,
             hasNext: res.data.Page.pageInfo.hasNextPage,
         });
     }
 
-    handleError = (err) => {
+    handleError = (err, errTitle, errMessage) => {
+        console.log(err);
         this.setState({
             error: true,
             content: [],
+            errorTitle: (errTitle ? errTitle : this.state.errorTitle),
+            errorMessage: (errMessage ? errMessage : this.state.errMessage),
         });
     }
 
@@ -140,9 +183,11 @@ class MediaList extends React.Component {
     render() {
         return (
             <div>
-                <h3 style={{ color: 'white' }}>
-                    Total {this.state.ResultNum} results {this.state.searchText}
-                </h3>
+                {!this.state.error &&
+                    <h3 style={{ color: 'white' }}>
+                        Total {this.state.ResultNum} results {this.state.searchText}
+                    </h3>
+                }
                 {!this.state.error ? (
                     <React.Fragment>
                         <div className="flex-container">
@@ -151,7 +196,7 @@ class MediaList extends React.Component {
                         {this.state.loadmore}
                     </React.Fragment>
                 ) : (
-                    <ErrorBox text="Please try again later ..." />
+                    <ErrorBox title={this.state.errorTitle} text={this.state.errorMessage} />
                 )}
 
                 <MediaModal

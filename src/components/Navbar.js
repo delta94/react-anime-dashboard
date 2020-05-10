@@ -1,5 +1,6 @@
 import React from "react";
 import { Menu, Segment, Input, Image, Icon, Sidebar, Button } from "semantic-ui-react";
+import { Link } from 'react-router-dom';
 import style from './Navbar.module.scss';
 import logo from '../images/angel.png';
 import $ from 'jquery';
@@ -25,16 +26,20 @@ class Navbar extends React.Component {
 
     handleEnterSearch = (e) => {
         if (e.keyCode === 13) {
-            // console.log("search for " + e.target.value);
             if (e.target.value !== "") {
-                window.location.href = "/search/" + e.target.value;
+                // window.location.href = "/search/" + e.target.value;
+                this.props.history.push({
+                    pathname: '/search/' + e.target.value,
+                });
             }
         }
     }
 
     handleClickSearch = () => {
         if (this.state.searchId !== "") {
-            window.location.href = "/search/" + this.state.searchId;
+            this.props.history.push({
+                pathname: '/search/' + this.state.searchId,
+            });
         }
     }
 
@@ -48,6 +53,10 @@ class Navbar extends React.Component {
 
     UNSAFE_componentWillMount() {
         this.handleNavbarScroll();
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('scroll', this.handleNavbarScroll);
     }
 
     componentDidMount() {
@@ -70,12 +79,10 @@ class Navbar extends React.Component {
                     visible={this.state.openSidebar}
                     className={style.mySidebar}
                 >
-                    <Menu.Item
-                        as="a"
-                        href="/"
+                    <Link
+                        to="/"
                         target="_self"
-                        header
-                        className={style.sidebarHeader}
+                        className={'header item ' + style.sidebarHeader}
                     >
                         <Image
                             src={logo}
@@ -85,7 +92,7 @@ class Navbar extends React.Component {
                         <div className={style.sidebarTitle}>
                             Anime Dashboard
                         </div>
-                    </Menu.Item>
+                    </Link>
                     <Menu.Item>
                         <Input
                             className={style.sidebarSearch}
@@ -101,48 +108,74 @@ class Navbar extends React.Component {
                             onKeyUp={this.handleEnterSearch}
                         />
                     </Menu.Item>
-                    <Menu.Item
-                        as="a"
-                        href="/"
+                    <Link
+                        to="/"
                         target="_self"
-                        active={this.state.active === "home"}
-                        className={style.mySideItem}
+                        className={
+                            this.state.active === 'home'
+                                ? 'active item ' + style.mySideItem
+                                : 'item ' + style.mySideItem
+                        }
                     >
                         <Icon name="home" />
                         Home
-                    </Menu.Item>
-                    <Menu.Item
-                        as="a"
-                        href="/anime"
+                    </Link>
+                    <Link
+                        to="/anime"
                         target="_self"
-                        active={this.state.active === "anime"}
-                        className={style.mySideItem}
+                        className={
+                            this.state.active === 'anime'
+                                ? 'active item ' + style.mySideItem
+                                : 'item ' + style.mySideItem
+                        }
                     >
                         <Icon name="film" />
                         Anime
-                    </Menu.Item>
-                    <Menu.Item
-                        as="a"
-                        href="/manga"
+                    </Link>
+                    <Link
+                        to="/manga"
                         target="_self"
-                        active={this.state.active === "manga"}
-                        className={style.mySideItem}
+                        className={
+                            this.state.active === 'manga'
+                                ? 'active item ' + style.mySideItem
+                                : 'item ' + style.mySideItem
+                        }
                     >
                         <Icon name="book" />
                         Manga
-                    </Menu.Item>
+                    </Link>
                 </Sidebar>
 
                 <Sidebar.Pusher dimmed={this.state.openSidebar}>
-                    <Segment id="outer-nav" inverted className={this.state.active === 'home' || this.state.active === 'error' ? this.state.reachScrollHeight ? style.fixedNav + ' ' + style.bottomMenu : style.fixedNav + ' ' + style.transparent : style.fixedNav}>
+                    <Segment
+                        id="outer-nav"
+                        inverted
+                        className={
+                            this.state.active === 'home' ||
+                            this.state.active === 'error'
+                                ? this.state.reachScrollHeight
+                                    ? style.fixedNav + ' ' + style.bottomMenu
+                                    : style.fixedNav + ' ' + style.transparent
+                                : style.fixedNav
+                        }
+                    >
                         <Menu
                             id="inner-nav"
                             inverted
                             pointing
                             secondary
-                            className={this.state.active === 'home' || this.state.active === 'error' ? this.state.reachScrollHeight ? style.wholeMenu + ' ' + style.bottomMenu : style.wholeMenu + ' ' + style.topMenu : style.wholeMenu}
+                            className={
+                                this.state.active === 'home' ||
+                                this.state.active === 'error'
+                                    ? this.state.reachScrollHeight
+                                        ? style.wholeMenu +
+                                          ' ' +
+                                          style.bottomMenu
+                                        : style.wholeMenu + ' ' + style.topMenu
+                                    : style.wholeMenu
+                            }
                         >
-                            <Menu.Item
+                            {/* <Menu.Item
                                 as="a"
                                 href="/"
                                 target="_self"
@@ -156,7 +189,20 @@ class Navbar extends React.Component {
                                     className={style.headerLogo}
                                 />
                                 Anime Dashboard
-                            </Menu.Item>
+                            </Menu.Item> */}
+                            <Link
+                                to="/"
+                                target="_self"
+                                className={'header item ' + style.header}
+                            >
+                                <Image
+                                    src={logo}
+                                    alt="logo"
+                                    size="mini"
+                                    className={style.headerLogo}
+                                />
+                                    Anime Dashboard
+                            </Link>
                             <Menu.Item
                                 as="a"
                                 className={style.menuLink}
@@ -169,33 +215,39 @@ class Navbar extends React.Component {
                                 position="right"
                                 className={style.navMenu}
                             >
-                                <Menu.Item
-                                    name="home"
-                                    as="a"
-                                    href="/"
+                                <Link
+                                    to="/"
                                     target="_self"
-                                    active={this.state.active === "home"}
-                                    onClick={this.handleItemClick}
-                                    className={style.mySideItem}
-                                />
-                                <Menu.Item
-                                    name="anime"
-                                    as="a"
-                                    href="/anime/"
+                                    className={
+                                        this.state.active === 'home'
+                                            ? 'active item ' + style.mySideItem
+                                            : 'item ' + style.mySideItem
+                                    }
+                                >
+                                    Home
+                                </Link>
+                                <Link
+                                    to="/anime"
                                     target="_self"
-                                    active={this.state.active === "anime"}
-                                    onClick={this.handleItemClick}
-                                    className={style.mySideItem}
-                                />
-                                <Menu.Item
-                                    name="manga"
-                                    as="a"
-                                    href="/manga/"
+                                    className={
+                                        this.state.active === 'anime'
+                                            ? 'active item ' + style.mySideItem
+                                            : 'item ' + style.mySideItem
+                                    }
+                                >
+                                    Anime
+                                </Link>
+                                <Link
+                                    to="/manga"
                                     target="_self"
-                                    active={this.state.active === "manga"}
-                                    onClick={this.handleItemClick}
-                                    className={style.mySideItem}
-                                />
+                                    className={
+                                        this.state.active === 'manga'
+                                            ? 'active item ' + style.mySideItem
+                                            : 'item ' + style.mySideItem
+                                    }
+                                >
+                                    Manga
+                                </Link>
                                 <Menu.Item className={style.search}>
                                     <Input
                                         icon={
@@ -226,8 +278,8 @@ class Navbar extends React.Component {
 
 
 class ScrollTopBtn extends React.Component {
-    constructor(props) {
-        super(props);
+    constructor() {
+        super();
         this.state = {visible: false};
     }
 
@@ -239,14 +291,21 @@ class ScrollTopBtn extends React.Component {
         $('html, body').animate({scrollTop: 0}, 1000);
     }
 
+    detectScroll = () => {
+        if (window.pageYOffset > 100) {
+            this.setState({ visible: true });
+        } else {
+            this.setState({ visible: false });
+        }
+    }
+
     componentDidMount() {
-        document.addEventListener('scroll', (e) => {
-            if (window.pageYOffset > 100) {
-                this.setState({ visible: true });
-            } else {
-                this.setState({ visible: false });
-            }
-        });
+        document.addEventListener('scroll', this.detectScroll);
+        this.detectScroll();
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('scroll', this.detectScroll);
     }
 
     render() {

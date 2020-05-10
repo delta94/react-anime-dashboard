@@ -13,6 +13,7 @@ import Search from './components/Search';
 
 import * as serviceWorker from './serviceWorker';
 
+const basename = '/my-react-app/build';
 
 // Main app component, set different main components for different routing paths.
 const Main = () => {
@@ -27,7 +28,8 @@ const Main = () => {
     );
 }
 
-ReactDOM.render(<BrowserRouter basename="/my-react-app/build"><Main /></BrowserRouter>, document.getElementById('root'));
+// <BrowserRouter basename={basename}>  for deployment
+ReactDOM.render(<BrowserRouter ><Main /></BrowserRouter>, document.getElementById('root'));
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
