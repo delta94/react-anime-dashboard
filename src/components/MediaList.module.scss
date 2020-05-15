@@ -8,6 +8,91 @@
         font-size: 22px;
         margin-left: 10px;
     }
+
+    .filterContainer {
+        margin: 10px 5px;
+    }
+
+    .filterSidebar {
+        width: 270px;
+        padding: 0;
+        background-color: rgb(240, 240, 240);
+    }
+
+    .filterSection {
+        // max-height: calc(100vh - 214px);
+        // overflow-y: auto;
+    }
+
+    .filterItem {
+        transition: all 0.5s;
+    }
+    .filterItem:hover {
+        background: rgba(0,0,0,.03);
+        color: rgba(0,0,0,.95);
+    }
+
+    .filterBtn {
+        border-radius: 7px;
+        margin: 0;
+    }
+    .filterBtn > i {
+        margin: 0;
+    }
+
+    .filterTag {
+        margin: 4px 3px;
+        transition: all 0.5s;
+    }
+    .filterTag > span {
+        margin-right: 5px;
+    }
+    .filterTag:hover .filterTagIcon {
+        // visibility: visible;
+        display: inline-block;
+    }
+    .filterTagIcon {
+        // visibility: hidden;
+        display: none;
+        transition: all 0.25s;
+    }
+    .filterTagIcon:hover {
+        color: rgb(226, 44, 44);
+        opacity: 1;
+    }
+
+    .applyBtn {
+        transition: all 0.5s;
+    }
+    .left {
+        text-align: left;
+    }
+
+    .wrapper {
+        visibility: hidden;
+        opacity: 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+        z-index: 40;
+        background-color: rgba(8, 8, 8, 0.295);
+        transition: opacity 0.5s;
+    }
+    .wrapperShow {
+        visibility: visible;
+        opacity: 1;
+    }
+    .sidebarLid {
+        cursor: pointer;
+        position: absolute;
+        display: block;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;  
+    }
 }
 
 .loadmoreBlock {
@@ -18,4 +103,3 @@
     bottom: 0;
     left: 0;
 }
-
