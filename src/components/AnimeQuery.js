@@ -1,7 +1,7 @@
 /*  config object documentation
 const config_info = {
     type: 'anime' | 'manga' | "",
-    search: "search_name",
+    search: "search_name" | "",
     season: 'spring' | 'summer' | 'fall' | 'winter' | "",
     seasonYear: (1900 - 2100), 
     startDate: true | false,

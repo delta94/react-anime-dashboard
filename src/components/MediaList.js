@@ -334,50 +334,50 @@ class MediaFilterBar extends React.Component {
         this.state = {
             visible: false,
             tagList: [],
+            filterSearch: '',
             filterType: '',
             filterSeason: '',
             filterSeasonYear: '',
             filterSort: '',
         };
         this.searchKey = this.props.searchKey;
-        this.initialDisable = false;
+        this.initialTypeDisabled = false;
+        this.initialSearchDisabled = false;
         this.config = { ...props.initialConfig };
+        this.filterSearch = '';
         this.filterType = '';
         this.filterSeason = '';
         this.filterSeasonYear = '';
         this.filterSort = '';
-        this.handleInitial();
     }
 
     handleInitial = () => {
         let initialType = this.props.initialType;
         if (initialType) {
-            if (initialType === 'anime') {
-                this.initialDisable = true;
-                this.filterType = 'anime';
-                this.state.filterType = 'anime';
-            } else if (initialType === 'manga') {
-                this.initialDisable = true;
-                this.filterType = 'manga';
-                this.state.filterType = 'manga';
+            if (initialType === 'anime' || initialType === 'manga') {
+                this.initialTypeDisabled = true;
+            } else if (initialType === 'search') {
+                this.initialSearchDisabled = true;
             }
         }
-    }
-
-    UNSAFE_componentWillMount = () => {
         let config = this.props.initialConfig;
         if (config.type) this.filterType = config.type;
         if (config.season) this.filterSeason = config.season;
         if (config.seasonYear) this.filterSeasonYear = config.seasonYear;
-        if (config.sort) {
-            this.filterSort = config.sort;
-        }
+        if (config.sort) this.filterSort = config.sort;
+        if (config.search) this.filterSearch = config.search;
+
         this.setState({
+            filterSearch: this.filterSearch,
             filterType: this.filterType,
             filterSeason: this.filterSeason,
             filterSeasonYear: this.filterSeasonYear,
             filterSort: this.filterSort,
         });
+    }
+
+    UNSAFE_componentWillMount = () => {
+        this.handleInitial();
         this.updateFilterTags();
     };
 
@@ -385,6 +385,8 @@ class MediaFilterBar extends React.Component {
         if (this.searchKey !== nextProps.searchKey) {
             this.searchKey = nextProps.searchKey;
             this.resetFilter();
+            this.filterSearch = this.searchKey;
+            this.setState({ filterSearch: this.filterSearch });
             this.updateFilterTags();
         }
     };
@@ -413,12 +415,17 @@ class MediaFilterBar extends React.Component {
         this.filterSort = data.value;
         this.setState({ [data.id]: data.value });
     };
+    handleSearch = (e) => {
+        this.filterSearch = e.target.value;
+        this.setState({ filterSearch: e.target.value });
+    }
 
     applyFilter = () => {
         this.config.type = this.filterType;
         this.config.season = this.filterSeason;
         this.config.seasonYear = this.filterSeasonYear;
         this.config.sort = this.filterSort;
+        this.config.search = this.filterSearch;
         this.props.sendConfig(this.config);
         this.updateFilterTags();
         this.handleClose();
@@ -431,13 +438,17 @@ class MediaFilterBar extends React.Component {
     };
 
     resetFilter = () => {
-        if (!this.initialDisable) {
+        if (!this.initialTypeDisabled) {
             this.filterType = '';
+        }
+        if (!this.initialSearchDisabled) {
+            this.filterSearch = '';
         }
         this.filterSeason = '';
         this.filterSeasonYear = '';
         this.filterSort = '';
         this.setState({
+            filterSearch: this.filterSearch,
             filterType: this.filterType,
             filterSeason: this.filterSeason,
             filterSeasonYear: this.filterSeasonYear,
@@ -447,8 +458,8 @@ class MediaFilterBar extends React.Component {
 
     updateFilterTags = () => {
         const tagList = [];
-        if (this.searchKey) {
-            tagList.push(this.addTag('searchTag', this.searchKey));
+        if (this.filterSearch && this.filterSearch !== '') {
+            tagList.push(this.addTag('searchTag', this.filterSearch));
         }
         if (this.filterType && this.filterType !== '') {
             tagList.push(this.addTag('typeTag', this.filterType));
@@ -470,7 +481,7 @@ class MediaFilterBar extends React.Component {
         let id = e.target.parentNode.id;
         if (id && id !== '') {
             if (id === 'typeTag') {
-                if (!this.initialDisable) {
+                if (!this.initialTypeDisabled) {
                     this.filterType = '';
                     this.setState({ filterType: '' });
                 }
@@ -484,7 +495,10 @@ class MediaFilterBar extends React.Component {
                 this.filterSort = '';
                 this.setState({ filterSort: '' });
             } else if (id === 'searchTag') {
-                // ...
+                if (!this.initialSearchDisabled) {
+                    this.filterSearch = '';
+                    this.setState({ filterSearch: '' });
+                }
             }
             this.applyFilter();
         }
@@ -570,18 +584,29 @@ class MediaFilterBar extends React.Component {
                             <div className={style.filterSection}>
                                 <Menu.Item className={style.filterItem}>
                                     <Form.Field>
-                                        {/* <label htmlFor="filterType">
-                                            Media Type:
-                                        </label> */}
+                                        <label htmlFor='filterSearch'>Search:</label>
+                                        <Input
+                                            id="filterSearch"
+                                            label={{ icon: 'asterisk' }}
+                                            labelPosition="right corner"
+                                            placeholder="Search By Title ..."
+                                            disabled={this.initialSearchDisabled}
+                                            onChange={this.handleSearch}
+                                            value={this.state.filterSearch}
+                                        />
+                                    </Form.Field>
+                                </Menu.Item>
+                                <Menu.Item className={style.filterItem}>
+                                    <Form.Field>
                                         <Form.Select
                                             id="filterType"
-                                            placeholder="Type"
+                                            placeholder="Type: Any"
                                             clearable
                                             label={'Media Type:'}
                                             options={typeOptions}
                                             selectOnBlur={false}
                                             value={this.state.filterType}
-                                            disabled={this.initialDisable}
+                                            disabled={this.initialTypeDisabled}
                                             selection
                                             fluid
                                             onChange={this.handleType}
@@ -594,7 +619,7 @@ class MediaFilterBar extends React.Component {
                                         <label>Season:</label>
                                         <Dropdown
                                             id="filterSeason"
-                                            placeholder="Season"
+                                            placeholder="Season: Any"
                                             clearable
                                             options={seasonOptions}
                                             value={this.state.filterSeason}
@@ -613,7 +638,7 @@ class MediaFilterBar extends React.Component {
                                         </label>
                                         <Dropdown
                                             id="filterSeasonYear"
-                                            placeholder="Season Year"
+                                            placeholder="Season Year: Any"
                                             clearable
                                             search
                                             options={seasonYearOptions}
@@ -632,7 +657,7 @@ class MediaFilterBar extends React.Component {
                                         <label>Sort By:</label>
                                         <Dropdown
                                             id="filterSort"
-                                            placeholder="Sort"
+                                            placeholder="Sort: Default"
                                             clearable
                                             options={sortOptions}
                                             value={this.state.filterSort}
@@ -697,6 +722,11 @@ class MediaFilterBar extends React.Component {
 function getSeasonYearList() {
     let thisYear = new Date().getFullYear();
     const seasonYears = [];
+    seasonYears.push({
+        key: 'seasonYearOptionAny',
+        text: 'Any',
+        value: '',
+    });
     for (let i = thisYear + 2; i >= 1970; --i) {
         seasonYears.push({
             key: 'seasonYearOption' + i,

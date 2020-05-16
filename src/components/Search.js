@@ -26,6 +26,10 @@ class SearchResult extends React.Component {
         };
         this.DefaultConfig = {
             search: props.match.params.id,
+            type: '',
+            season: '',
+            seasonYear: '',
+            sort: '',
         };
     }
 
@@ -58,11 +62,9 @@ class SearchResult extends React.Component {
 class SearchDefaultPage extends React.Component {
     render() {
         return (
-            <Navbar {...this.props}>
+            <Navbar active='search' {...this.props}>
                 <Container>
-                    <MediaList
-                        type="searchPage"
-                    />
+                    <MediaList type="explore" />
                 </Container>
             </Navbar>
         );
