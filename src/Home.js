@@ -53,15 +53,19 @@ class Home extends React.Component {
                     <Container>
                         <div className="home-content">
                             <div className="home-title">
-                                <Label
+                                <Button
                                     as="a"
                                     circular
+                                    // icon
+                                    color='red'
+                                    // labelPosition='right'
                                     size="massive"
                                     className="explore-btn"
                                     onClick={this.handleExplore}
                                 >
-                                    Explore ANIME >>>
-                                </Label>
+                                    Explore ANIME
+                                    {/* <Icon name='angle double right' /> */}
+                                </Button>
                             </div>
                         </div>
                     </Container>

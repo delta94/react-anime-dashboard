@@ -2,7 +2,7 @@ import React from "react";
 import AnimeQuery from "./AnimeQuery";
 import MediaModal from './MediaModal';
 import { ErrorBox } from './Error';
-import { Button, Icon, Dropdown, Label, Grid, Divider, Transition, Sidebar, Menu, Form, Input } from 'semantic-ui-react';
+import { Button, Icon, Dropdown, Label, Grid, Divider, Transition, Sidebar, Menu, Form, Input, Select } from 'semantic-ui-react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import style from './MediaList.module.scss';
 
@@ -22,6 +22,7 @@ class MediaList extends React.Component {
             error: false,
             errorTitle: 'Error!',
             errorMessage: 'Please try again later ...',
+            loading: false,
         };
 
         this.config = null;
@@ -61,6 +62,7 @@ class MediaList extends React.Component {
             };
             let key = nextProps.searchKey;
             if (key !== '') {
+                this.setState({ loading: true });
                 AnimeQuery.getCustomMedia(25, 1, this.config)
                     .then((res) => {
                         if (res.data.Page.pageInfo.total !== 0) {
@@ -68,6 +70,7 @@ class MediaList extends React.Component {
                             this.addLoadMore(true, false);
                             this.setState({
                                 error: false,
+                                loading: false,
                                 searchText: 'for "' + key + '"',
                                 ResultNum: res.data.Page.pageInfo.total,
                             });
@@ -139,6 +142,7 @@ class MediaList extends React.Component {
             content: (resetFlag ? result : this.state.content.concat(result)),
             currentPage: res.data.Page.pageInfo.currentPage,
             hasNext: res.data.Page.pageInfo.hasNextPage,
+            loading: false,
         });
     }
 
@@ -148,7 +152,8 @@ class MediaList extends React.Component {
             error: true,
             content: [],
             errorTitle: (errTitle ? errTitle : this.state.errorTitle),
-            errorMessage: (errMessage ? errMessage : this.state.errMessage),
+            errorMessage: (errMessage ? errMessage : this.state.errorMessage),
+            loading: false,
         });
     }
 
@@ -183,6 +188,7 @@ class MediaList extends React.Component {
     getConfigFromFilter = (config) => {
         if (JSON.stringify(this.config) !== JSON.stringify(config)) {
             this.config = { ...config };
+            this.setState({ loading: true });
             AnimeQuery.getCustomMedia(50, 1, this.config)
                 .then((res) => {
                     this.handleResult(res, true);
@@ -208,6 +214,7 @@ class MediaList extends React.Component {
                     initialConfig={this.config}
                     initialType={this.props.type}
                     searchKey={this.props.searchKey}
+                    loading={this.state.loading}
                 />
                 <Divider />
                 {!this.state.error ? (
@@ -389,6 +396,9 @@ class MediaFilterBar extends React.Component {
             this.setState({ filterSearch: this.filterSearch });
             this.updateFilterTags();
         }
+        if (nextProps.loading === false && this.state.visible === true) {
+            this.handleClose();
+        }
     };
 
     handleOpen = () => {
@@ -428,7 +438,7 @@ class MediaFilterBar extends React.Component {
         this.config.search = this.filterSearch;
         this.props.sendConfig(this.config);
         this.updateFilterTags();
-        this.handleClose();
+        // this.handleClose();
     };
 
     keyupFilter = (e) => {
@@ -580,6 +590,7 @@ class MediaFilterBar extends React.Component {
                         <Form
                             // onSubmit={this.applyFilter}
                             onKeyUp={this.keyupFilter}
+                            loading={this.props.loading}
                         >
                             <div className={style.filterSection}>
                                 <Menu.Item className={style.filterItem}>
@@ -602,7 +613,7 @@ class MediaFilterBar extends React.Component {
                                             id="filterType"
                                             placeholder="Type: Any"
                                             clearable
-                                            label={'Media Type:'}
+                                            label={{children: 'Media Type:', htmlFor: 'filterType'}}
                                             options={typeOptions}
                                             selectOnBlur={false}
                                             value={this.state.filterType}

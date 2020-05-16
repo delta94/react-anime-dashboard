@@ -131,13 +131,14 @@
     .tagsContainer {
         display: flex;
         flex-direction: row;
-        justify-content: space-around;
+        justify-content: flex-start;
         flex-wrap: wrap;
         margin: 10px;
     }
 
     .tag {
-        margin: 5px;
+        margin-top: 5px;
+        margin-bottom: 5px;
     }
 
     .genreContainer {

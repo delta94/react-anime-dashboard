@@ -1,5 +1,5 @@
 import React from "react";
-import { Menu, Segment, Input, Image, Icon, Sidebar, Button } from "semantic-ui-react";
+import { Menu, Segment, Input, Image, Icon, Sidebar, Button, Transition } from "semantic-ui-react";
 import { Link } from 'react-router-dom';
 import style from './Navbar.module.scss';
 import logo from '../images/angel.png';
@@ -121,6 +121,18 @@ class Navbar extends React.Component {
                         Home
                     </Link>
                     <Link
+                        to="/search"
+                        target="_self"
+                        className={
+                            this.state.active === 'search'
+                                ? 'active item ' + style.mySideItem
+                                : 'item ' + style.mySideItem
+                        }
+                    >
+                        <Icon name="searchengin" />
+                        Explore
+                    </Link>
+                    <Link
                         to="/anime"
                         target="_self"
                         className={
@@ -175,21 +187,6 @@ class Navbar extends React.Component {
                                     : style.wholeMenu
                             }
                         >
-                            {/* <Menu.Item
-                                as="a"
-                                href="/"
-                                target="_self"
-                                header
-                                className={style.header}
-                            >
-                                <Image
-                                    size="mini"
-                                    src={logo}
-                                    alt="logo"
-                                    className={style.headerLogo}
-                                />
-                                Anime Dashboard
-                            </Menu.Item> */}
                             <Link
                                 to="/"
                                 target="_self"
@@ -201,7 +198,7 @@ class Navbar extends React.Component {
                                     size="mini"
                                     className={style.headerLogo}
                                 />
-                                    Anime Dashboard
+                                Anime Dashboard
                             </Link>
                             <Menu.Item
                                 as="a"
@@ -225,6 +222,17 @@ class Navbar extends React.Component {
                                     }
                                 >
                                     Home
+                                </Link>
+                                <Link
+                                    to="/search"
+                                    target="_self"
+                                    className={
+                                        this.state.active === 'search'
+                                            ? 'active item ' + style.mySideItem
+                                            : 'item ' + style.mySideItem
+                                    }
+                                >
+                                    Explore
                                 </Link>
                                 <Link
                                     to="/anime"
@@ -266,7 +274,7 @@ class Navbar extends React.Component {
                             </Menu.Menu>
                         </Menu>
                     </Segment>
-                    <div className={style.bodyContent}>
+                    <div className={style.bodyContent} id="content">
                         {this.props.children}
                     </div>
                     <ScrollTopBtn />
@@ -309,16 +317,19 @@ class ScrollTopBtn extends React.Component {
     }
 
     render() {
+        const { visible } = this.state;
         return (
-            <div id="scroll-top" className={`${style.topBlock} ${this.state.visible ? style.topBlockVisible : ""}`}>
-                <Button
-                    circular
-                    icon="arrow up"
-                    className={style.topBtn}
-                    title="go to top"
-                    onClick={this.scrollToTop}
-                />
-            </div>
+            <Transition visible={visible} animation="fly up" duration={1000}>
+                <div id="scroll-top" className={`${style.topBlock}`}>
+                    <Button
+                        circular
+                        icon="arrow up"
+                        className={style.topBtn}
+                        title="go to top"
+                        onClick={this.scrollToTop}
+                    />
+                </div>
+            </Transition>
         );
     }
 }

@@ -7,7 +7,10 @@ class Manga extends React.Component {
     constructor(props) {
         super(props);
         this.defaultConfig = {
+            search: '',
             type: "manga",
+            season: '',
+            seasonYear: '',
             sort: "popularity_desc",
         };
     }
@@ -16,9 +19,9 @@ class Manga extends React.Component {
         return (
             <Navbar active="manga" {...this.props}>
                 <Container>
-                    <h1 style={{ textAlign: 'center', color: 'white' }}>
+                    {/* <h1 style={{ textAlign: 'center', color: 'white' }}>
                         All Manga
-                    </h1>
+                    </h1> */}
                     <MediaList type="manga" config={this.defaultConfig} />
                 </Container>
             </Navbar>

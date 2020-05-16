@@ -1,5 +1,4 @@
 import React from 'react';
-import { withRouter } from 'react-router-dom';
 import Navbar from './Navbar';
 import MediaList from "./MediaList";
 import { Container} from 'semantic-ui-react';
@@ -12,7 +11,10 @@ class Anime extends React.Component {
             this.defaultConfig = props.location.data;
         } else {
             this.defaultConfig = {
+                search: '',
                 type: 'anime',
+                season: '',
+                seasonYear: '',
                 sort: 'popularity_desc',
             };
         }
@@ -23,9 +25,9 @@ class Anime extends React.Component {
         return (
             <Navbar active="anime" {...this.props}>
                 <Container>
-                    <h1 style={{ textAlign: "center", color: "white" }}>
+                    {/* <h1 style={{ textAlign: "center", color: "white" }}>
                         All Anime
-                    </h1>
+                    </h1> */}
                     <MediaList type="anime" config={this.defaultConfig} />
                 </Container>
             </Navbar>

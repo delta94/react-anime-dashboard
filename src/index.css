@@ -13,16 +13,31 @@ body {
     overflow: auto;
 }
 
+/***************************** Home page ****************************/
+
+.home-content {
+    margin-top: 200px;
+    margin-bottom: 200px;
+}
+
+.home-title {
+    text-align: center;
+}
+
 #home-img .explore-btn {
     transition: all 0.7s;
-    padding: 20px 20px !important;
+    /* padding: 20px 20px !important; */
     background-color: rgba(70, 68, 68, 0.966);
+    background-color: #d81c48;
     color: rgba(221, 219, 217, 0.815);
+    color: rgba(255, 255, 255, 0.932);
+    box-shadow: 0 2px 2px 0 #d81c481f;
 }
 #home-img .explore-btn:hover {
     transform: scale3d(1.15, 1.15, 1);
-    background-color: rgba(230, 222, 222, 0.966);
-    color: rgba(49, 49, 48, 0.815);
+    /* background-color: rgba(230, 222, 222, 0.966);
+    color: rgba(49, 49, 48, 0.815); */
+    box-shadow: 2px 10px 10px 1px #d81c4850;
 }
 
 .home-img {
@@ -44,25 +59,6 @@ body {
     }
 }
 
-.home-content {
-    margin-top: 200px;
-    margin-bottom: 200px;
-}
-
-.home-title {
-    font-size: 25px;
-    text-align: center;
-}
-
-
-.flex-container {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
-    margin-bottom: 90px;
-}
-
 #root .none {
     display: none;
 }
@@ -78,119 +74,6 @@ body {
     border-right: 0;
     border-left-width: 1.2em;
     border-bottom: 1.2em solid transparent;
-}
-
-/************************ Anime Card CSS ****************************/
-
-.anime-block {
-    display: block;
-    width: 180px;
-    height: auto;
-    margin: 10px;
-    background-color: rgba(248, 249, 250, 0.952);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0px 0px 3px 1px #adadad41;
-    transition: all 0.5s ease-in-out;
-}
-.home-anime-block {
-    position: relative;
-    display: block;
-    height: 100%;
-    max-width: 210px;
-    margin: 0 auto;
-    background-color: rgba(248, 249, 250, 0.945);
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0px 0px 3px 1px #adadad41;
-    transition: all 500ms ease-in-out;
-    animation: fadeIn 2.1s ease-out;
-}
-.anime-img-block {
-    width: 100%;
-    height: 220px;
-    cursor: pointer;
-    overflow: hidden;
-}
-.anime-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-.anime-block:hover, .home-anime-block:hover {
-    box-shadow: 0px 0px 8px 3px #adadad7d;
-}
-/* home page anime block hover effect */
-.home-anime-block .anime-img-block {
-    transition: 600ms ease-out;
-}
-.home-anime-block .anime-img {
-    transition: 1000ms ease-out;
-}
-.home-anime-block:hover > .anime-img-block {
-    opacity: 0.85;
-}
-.home-anime-block:hover > .anime-img-block .anime-img {
-    transform: scale3d(1.1, 1.1, 1);
-}
-/* media list anime block hover effect */
-.anime-block:hover > .anime-img-block {
-    opacity: 0.85;
-}
-.anime-block .anime-img-block {
-    transition: all 0.5s;
-}
-
-@keyframes fadeIn {
-    from {opacity: 0.1;}
-    to {opacity: 1;}
-}
-
-@media (max-width: 540px) {
-    .anime-block {
-        width: 160px;
-        height: auto;
-        margin: 6px;
-    }
-
-    .anime-img-block {
-        height: 210px;
-    }
-}
-
-/* phone */
-@media (max-width: 375px) {
-    .anime-block {
-        width: 140px;
-        height: auto;
-        margin: 6px;
-    }
-
-    .anime-img-block {
-        height: 190px;
-    }
-}
-
-/* phone */
-@media (max-width: 335px) {
-    .anime-block {
-        width: 120px;
-        height: auto;
-        margin: 5px;
-    }
-
-    .anime-img-block {
-        height: 150px;
-    }
-}
-
-.anime-title {
-    font-size: 13px;
-    text-align: center;
-    padding: 0 10px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow-x: hidden;
 }
 
 .main-container {
@@ -246,6 +129,134 @@ body {
     color: white;
 }
 
+
+/************************ Anime Card CSS ****************************/
+
+.flex-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 90px;
+}
+
+.anime-block {
+    position: relative;
+    display: block;
+    width: 180px;
+    height: auto;
+    margin: 10px;
+    background-color: rgb(240, 240, 240);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 0px 3px 1px #adadad41;
+    transition: all 0.5s ease-in-out;
+    animation: mediaList 1s ease-out;
+}
+.home-anime-block {
+    position: relative;
+    display: block;
+    height: 100%;
+    max-width: 210px;
+    margin: 0 auto;
+    background-color: rgb(240, 240, 240);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0px 0px 3px 1px #adadad41;
+    transition: all 500ms ease-in-out;
+    animation: fadeIn 2.1s ease-out;
+}
+.anime-img-block {
+    width: 100%;
+    height: 220px;
+    cursor: pointer;
+    overflow: hidden;
+}
+.anime-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+.anime-block:hover, .home-anime-block:hover {
+    box-shadow: 0px 0px 8px 3px #adadad7d;
+}
+/* home page anime block hover effect */
+.home-anime-block .anime-img-block {
+    transition: 600ms ease-out;
+}
+.home-anime-block .anime-img {
+    transition: 1000ms ease-out;
+}
+.home-anime-block:hover > .anime-img-block {
+    opacity: 0.85;
+}
+.home-anime-block:hover > .anime-img-block .anime-img {
+    transform: scale3d(1.1, 1.1, 1);
+}
+/* media list anime block hover effect */
+.anime-block:hover > .anime-img-block {
+    opacity: 0.85;
+}
+.anime-block .anime-img-block {
+    transition: all 0.5s;
+}
+
+@keyframes fadeIn {
+    from {opacity: 0.1;}
+    to {opacity: 1;}
+}
+@keyframes mediaList {
+    from {opacity: 0.1; transform: scale(0.9)}
+    to {opacity: 1; transform: scale(1);}
+}
+
+@media (max-width: 540px) {
+    .anime-block {
+        width: 160px;
+        height: auto;
+        margin: 6px;
+    }
+
+    .anime-img-block {
+        height: 210px;
+    }
+}
+
+/* phone */
+@media (max-width: 375px) {
+    .anime-block {
+        width: 140px;
+        height: auto;
+        margin: 6px;
+    }
+
+    .anime-img-block {
+        height: 190px;
+    }
+}
+
+/* phone */
+@media (max-width: 335px) {
+    .anime-block {
+        width: 120px;
+        height: auto;
+        margin: 5px;
+    }
+
+    .anime-img-block {
+        height: 150px;
+    }
+}
+
+.anime-title {
+    font-size: 13px;
+    text-align: center;
+    padding: 1px 10px;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
+    color: #515154;
+}
 
 /********************** Semantic-ui override **********************/
 
@@ -328,7 +339,7 @@ body {
 }
     
 
-/*********** Lazy Load cutsom effect css ************/
+/******************** Lazy Load cutsom effect css *******************/
 .lazy-load-image-background.myblur {
   filter: blur(10px);
   opacity: 0;

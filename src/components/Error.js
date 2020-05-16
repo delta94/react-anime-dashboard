@@ -29,7 +29,7 @@ const ErrorBox = (props) => {
                     </h4>
                 </div>
             </div>
-            <img src={angel} className={style.img}></img>
+            <img src={angel} alt={'error'} className={style.img}></img>
         </div>
     );
 }

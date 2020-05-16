@@ -135,6 +135,7 @@ class MediaModal extends React.Component {
                 let tag = media.tags[i];
                 tags.push(
                     <Label as="a" tag key={tag.name} className={style.tag}>
+                        <Icon name='tag' />
                         {tag.name}
                     </Label>
                 );

@@ -3,26 +3,20 @@
         background: transparent;
     }
 
-    .search {
-        border-bottom: none;
-    }
-
-    .searchInput > input {
-        border-radius: 1.285714rem;
-    }
-
     .wholeMenu {
         border: none;
-        background: rgba(255, 255, 255, 0.06);
-        padding: 10px;
+        // background: rgba(255, 255, 255, 0.06);
+        background: #1b1c1d;
+        // padding: 10px;
         border-radius: 30px;
-        transition: all 0.9s;
+        transition: all 0.5s;
     }
     .topMenu {
+        padding: 10px;
         background: rgba(8, 8, 8, 0.415);
     }
     .bottomMenu {
-        background: #1b1c1d;
+        // background: #1b1c1d;
     }
 
     .fixedNav {
@@ -33,7 +27,7 @@
         top: 0;
         left: 0;
         z-index: 10;
-        transition: all 1s;
+        transition: all 0.5s;
     }
 
     .header {
@@ -41,9 +35,15 @@
         font-size: 22px;
         margin-left: 10px;
     }
-
     .headerLogo {
         margin-right: 1.5em;
+    }
+
+    .search {
+        border-bottom: none;
+    }
+    .searchInput > input {
+        border-radius: 1.285714rem;
     }
 
     .menuLink {
@@ -123,7 +123,7 @@
         right: 20px;
         z-index: 5;
         padding: 5px;
-        opacity: 0;
+        // opacity: 0;
         -webkit-transition: opacity 0.8s;
         -moz-transition: opacity 0.8s;
         transition: opacity 0.8s;
