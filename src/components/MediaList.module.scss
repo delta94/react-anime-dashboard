@@ -19,11 +19,6 @@
         background-color: rgb(240, 240, 240);
     }
 
-    .filterSection {
-        // max-height: calc(100vh - 214px);
-        // overflow-y: auto;
-    }
-
     .filterItem {
         transition: all 0.5s;
     }
@@ -42,23 +37,24 @@
     }
 
     .filterTag {
-        margin: 4px 3px;
+        margin: 0.2em 0.2em;
         transition: all 0.5s;
     }
     .filterTag > span {
-        margin-right: 5px;
+        margin-right: 0.2em;
     }
-    .filterTag:hover .filterTagIcon {
-        // visibility: visible;
-        display: inline-block;
-    }
+    // .filterTag:hover .filterTagIcon {
+    //     // visibility: visible;
+    //     // display: inline-block;
+    // }
     .filterTagIcon {
         // visibility: hidden;
-        display: none;
+        // display: none;
         transition: all 0.25s;
+        margin-right: 0.2em;
     }
     .filterTagIcon:hover {
-        color: rgb(226, 44, 44);
+        color: rgb(218, 67, 67);
         opacity: 1;
     }
 

@@ -8,19 +8,17 @@
         // background: rgba(255, 255, 255, 0.06);
         background: #1b1c1d;
         // padding: 10px;
-        border-radius: 30px;
+        border-radius: 2.5em;
         transition: all 0.5s;
     }
     .topMenu {
         padding: 10px;
         background: rgba(8, 8, 8, 0.415);
     }
-    .bottomMenu {
-        // background: #1b1c1d;
-    }
 
     .fixedNav {
         margin: 0;
+        padding: 0.7em 0.7em;
         border-radius: 0;
         position: fixed;
         width: 100%;
@@ -32,8 +30,11 @@
 
     .header {
         padding: 0;
-        font-size: 22px;
-        margin-left: 10px;
+        border-bottom: 0;
+        font-size: 1.4em;
+        margin-left: 0.7em;
+        letter-spacing: 0.03em;
+        align-self: center;
     }
     .headerLogo {
         margin-right: 1.5em;
@@ -43,20 +44,24 @@
         border-bottom: none;
     }
     .searchInput > input {
-        border-radius: 1.285714rem;
+        border-radius: 1.2rem;
     }
 
     .menuLink {
         display: none;
+        align-self: center;
         margin: 0;
-        margin-left: 13px;
-        border-radius: 25px;
+        padding: 0.7em 0.7em;
+        border-radius: 50%;
         border: none;
         transition: all 0.45s;
     }
     .menuLink:hover, .menuLink:focus, .menuLink:active {
         background: rgba(255,255,255,.08);
         color: #fff;
+    }
+    .menuLink > i {
+        margin: 0;
     }
 
     @media (max-width: 900px) {
@@ -65,8 +70,8 @@
         }
 
         .menuLink {
-            display: flex;
-            margin-right: 10px;
+            display: block;
+            margin-right: 1.7em;
             margin-left: auto;
         }
     }
@@ -82,8 +87,11 @@
     }
 
     .mySideItem {
+        margin: 0;
+        align-self: center;
         transition: all 0.4s;
-        font-size: 15px;
+        font-size: 1.07em;
+        letter-spacing: 0.05em;
     }
 
     .sidebarHeader {
@@ -106,6 +114,7 @@
         margin: 10px auto 10px;
         font-size: 22px;
         padding: 0;
+        letter-spacing: 0.03em;
     }
 
     .sidebarSearch {
@@ -151,4 +160,3 @@
     margin-top: 115px;
     min-height: calc(100vh - 115px);
 }
-

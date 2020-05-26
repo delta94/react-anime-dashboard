@@ -198,15 +198,14 @@ class Navbar extends React.Component {
                                     size="mini"
                                     className={style.headerLogo}
                                 />
-                                Anime Dashboard
+                                <span>Anime Dashboard</span>
                             </Link>
                             <Menu.Item
                                 as="a"
                                 className={style.menuLink}
                                 onClick={this.handleToggle}
                             >
-                                <Icon name="sidebar"></Icon>
-                                Menu
+                                <Icon name="sidebar" size='big' ></Icon>
                             </Menu.Item>
                             <Menu.Menu
                                 position="right"

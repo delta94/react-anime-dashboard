@@ -3,23 +3,9 @@ import AnimeQuery from "./AnimeQuery";
 import paragraph from "../images/paragraph.png";
 import { getName } from 'country-list';
 import { Chart } from "react-google-charts";
-import {
-    Container,
-    Button,
-    Modal,
-    Image,
-    Icon,
-    Label,
-    Loader,
-    Segment,
-    Dimmer,
-    Grid,
-    Rating,
-    Transition,
-    Table,
-    Placeholder
-} from "semantic-ui-react";
+import {Container, Button, Modal, Image, Icon, Label, Loader, Segment, Dimmer, Grid, Rating, Transition, Table, Placeholder} from "semantic-ui-react";
 import style from "./MediaModal.module.scss";
+import './MediaModal.css';
 import { ErrorBox } from "./Error";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 
@@ -118,12 +104,20 @@ class MediaModal extends React.Component {
             // description
             var description = handleDescription(media.description);
             var firstDescription = '';
+            var secondDescription = '';
             var showReadmore = false;
             if (description.length > 401) {
                 showReadmore = true;
                 firstDescription = description.substring(0, 400);
+                secondDescription = description.substr(400);
             } else
                 firstDescription = description;
+            
+            const ReadMoreText = (
+                <Transition visible={this.state.readMore} animation='fade' duration={200} >
+                    <span className={'secondDescription'}>{secondDescription}</span>
+                </Transition>
+            );
 
             // score
             var score = Math.round((media.meanScore / 100) * 10);
@@ -269,41 +263,20 @@ class MediaModal extends React.Component {
                                         </div>
                                     </Grid.Column>
                                     <Grid.Column width={9}>
-                                        <div
-                                            className={
-                                                style.flexColumnContainer
-                                            }
-                                        >
-                                            <div
-                                                className={
-                                                    style.descriptionContainer
-                                                }
-                                            >
+                                        <div className={style.flexColumnContainer}>
+                                            <div className={style.descriptionContainer}>
                                                 <p>
                                                     <b>Description:</b>
                                                 </p>
-                                                <p
-                                                    className={
-                                                        style.description
-                                                    }
-                                                >
-                                                    {this.state.readMore
-                                                        ? description
-                                                        : firstDescription}
+                                                <p className={style.description}>
+                                                    {firstDescription}
+                                                    {ReadMoreText}
                                                     {showReadmore ? (
-                                                        <a
-                                                            onClick={
-                                                                this
-                                                                    .handleReadMore
-                                                            }
-                                                            className={
-                                                                style.descriptionReadmore
-                                                            }
-                                                        >
+                                                        <span onClick={this.handleReadMore} className={style.descriptionReadmore}>
                                                             {this.state.readMore
                                                                 ? 'Read Less >>>'
                                                                 : '... Read More >>>'}
-                                                        </a>
+                                                        </span>
                                                     ) : (
                                                         ''
                                                     )}
@@ -325,9 +298,9 @@ class MediaModal extends React.Component {
                                 name="Media Information"
                                 color="blue"
                             >
-                                <Container>
+                                <div>
                                     <InformationTable media={media} />
-                                </Container>
+                                </div>
                             </SubSection>
 
                             <SubSection
@@ -336,9 +309,9 @@ class MediaModal extends React.Component {
                                 name="Media Statistic"
                                 color="olive"
                             >
-                                <Container>
+                                <div>
                                     <MediaStatistic stats={media.stats} />
-                                </Container>
+                                </div>
                             </SubSection>
 
                             <SubSection
@@ -347,12 +320,12 @@ class MediaModal extends React.Component {
                                 name="Character List"
                                 color="violet"
                             >
-                                <Container>
+                                <div>
                                     <CharacterList
                                         id={media.id}
                                         characters={media.characters}
                                     />
-                                </Container>
+                                </div>
                             </SubSection>
 
                             <SubSection
@@ -361,11 +334,11 @@ class MediaModal extends React.Component {
                                 name="Watch List"
                                 color="teal"
                             >
-                                <Container>
+                                <div>
                                     <WatchList
                                         watchList={media.streamingEpisodes}
                                     />
-                                </Container>
+                                </div>
                             </SubSection>
                         </Container>
                     </div>
@@ -651,6 +624,7 @@ const GooglePie = (props) => {
                         alignment: "start",
                         maxLines: props.length,
                     },
+                    backgroundColor: 'rgb(243, 243, 243)',
                     pieStartAngle: 50,
                     pieHole: 0.5,
                     // is3D: true,
@@ -667,29 +641,30 @@ const GoogleBar = (props) => {
         <div>
             <div className={style.statTitle}>{props.title}</div>
             <Chart
-                width={"100%"}
-                height={"55vh"}
+                width={'100%'}
+                height={'55vh'}
                 chartType="ColumnChart"
                 loader={load}
                 data={props.data}
                 options={{
-                    chartArea: { width: "80%"},
+                    chartArea: { width: '82%' },
                     vAxis: {
                         // title: "# of people",
-                        format: 'short'
+                        format: 'short',
                     },
                     hAxis: {
-                        title: 'Scores'
+                        title: 'Scores',
                     },
                     legend: {
-                        position: "none",
+                        position: 'none',
                     },
                     animation: {
                         duration: 500,
                         startup: true,
                     },
                     dataOpacity: 0.75,
-                    bar: { groupWidth: "70%" },
+                    backgroundColor: 'rgb(243, 243, 243)',
+                    bar: { groupWidth: '70%' },
                 }}
             />
         </div>
@@ -738,19 +713,19 @@ class MediaStatistic extends React.Component {
                 statusList.forEach(status => {
                     statusData.push([status.status, status.amount]);
                     if (status.status === "CURRENT")
-                        statusColor.push("blue");
+                        statusColor.push('#63b4ee');
                     else if (status.status === "COMPLETED")
-                        statusColor.push("#9cc747");
+                        statusColor.push('#7ae487');
                     else if (status.status === "PLANNING")
-                        statusColor.push("purple");
+                        statusColor.push('#ac84fe');
                     else if (status.status === "DROPPED")
-                        statusColor.push("red");
+                        statusColor.push('#ff839c');
                     else if (status.status === "PAUSED")
-                        statusColor.push("orange");
+                        statusColor.push('#feb168');
                     else if (status.status === 'REPEATING')
-                        statusColor.push("teal");
+                        statusColor.push('#73cccc');
                     else // others
-                        statusColor.push("gray");
+                        statusColor.push('#d1d1d1');
                 });
             } else {
                 statusError = true;

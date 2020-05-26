@@ -2,7 +2,7 @@ import React from "react";
 import AnimeQuery from "./AnimeQuery";
 import MediaModal from './MediaModal';
 import { ErrorBox } from './Error';
-import { Button, Icon, Dropdown, Label, Grid, Divider, Transition, Sidebar, Menu, Form, Input, Select } from 'semantic-ui-react';
+import { Button, Icon, Dropdown, Label, Grid, Divider, Sidebar, Menu, Form, Input } from 'semantic-ui-react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import style from './MediaList.module.scss';
 
@@ -273,10 +273,6 @@ const LoadMore = (props) => {
 
 
 class OneMedia extends React.Component {
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const { id, img, native, romaji, english, click, location, label } = this.props;
         var alt = english ? english : romaji ? romaji : native;
@@ -304,8 +300,8 @@ class OneMedia extends React.Component {
                         tabIndex="0"
                     />
                 </div>
-                <div className="anime-title">{firstTitle}</div>
-                <div className="anime-title">{secondTitle}</div>
+                <div className="anime-title"><span id={id} onClick={click}>{firstTitle}</span></div>
+                <div className="anime-title"><span id={id} onClick={click}>{secondTitle}</span></div>
                 {mylabel}
             </div>
         );
@@ -546,7 +542,7 @@ class MediaFilterBar extends React.Component {
                         </Grid.Column>
                         <Grid.Column
                             computer={6}
-                            verticalAlign="middle"
+                            verticalAlign='bottom'
                             textAlign="right"
                         >
                             <div className={style.filterBtnBlock}>

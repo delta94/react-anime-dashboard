@@ -6,7 +6,7 @@
     .modalBannerImg {
         width: 100%;
         height: 100%;
-        object-fit: fill;
+        object-fit: cover;
         max-height: 250px;
     }
 
@@ -27,9 +27,9 @@
         width: 100%;
         font-size: 1em;
         line-height: 1.4;
-        background: #fff;
+        background: rgb(243,243,243);
         height: calc(100% - 65px);
-        overflow: scroll;
+        overflow: auto;
         overflow-x: hidden;
     }
     // .myModal::-webkit-scrollbar {
@@ -109,6 +109,7 @@
 
     .descriptionReadmore {
         cursor: pointer;
+        color: #468fdc;
     }
 
     .rating {
@@ -139,6 +140,7 @@
     .tag {
         margin-top: 5px;
         margin-bottom: 5px;
+        transition: all 0.25s;
     }
 
     .genreContainer {
@@ -151,10 +153,11 @@
         width: 85%;
         text-align: center;
         margin: 3px 0;
+        transition: all 0.25s;
     }
 
     .informationContainer {
-        width: 95%;
+        width: 100%;
         text-align: center;
         margin: 20px auto 10px;
     }
@@ -182,9 +185,10 @@
         grid-template-columns: 1fr 1fr;
         border: 1px solid #cccccc70;
         border-radius: 10px;
-        background-color: #cccccc23;
+        // background-color: #cccccc23;
+        background-color: white;
         height: 100%;
-        box-shadow: 0 2px 4px 0 rgba(34,36,38,.12), 0 2px 10px 0 rgba(34,36,38,.15);
+        box-shadow: 0 2px 4px 0 rgba(34,36,38,.12), 0 2px 8px 0 rgba(34,36,38,.15);
     }
 
     .charImg {
@@ -192,6 +196,7 @@
         height: 100%;
         border-top-left-radius: 10px;
         border-bottom-left-radius: 10px;
+        object-fit: cover;
     }
 
     .charContent {
@@ -220,6 +225,7 @@
         border-radius: 7px;
         width: 100%;
         height: 100%;
+        object-fit: cover;
     }
 
     .watchTitle {
@@ -297,7 +303,7 @@
         }
 
         .tag {
-            font-size: 8px;
+            font-size: 8px;   
         }
 
         .genre {
