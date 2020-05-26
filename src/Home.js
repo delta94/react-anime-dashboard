@@ -10,7 +10,7 @@ import { Link } from 'react-router-dom';
 
 // const variable to set how many elements to show in each section.
 const PopularElementNumber = 20;
-const LatestElementNumber = 30;
+const LatestElementNumber = 20;
 
 class Home extends React.Component {
     constructor(props) {
@@ -56,15 +56,15 @@ class Home extends React.Component {
                                 <Button
                                     as="a"
                                     circular
-                                    // icon
-                                    color='red'
+                                    icon
+                                    color="red"
                                     // labelPosition='right'
                                     size="massive"
                                     className="explore-btn"
                                     onClick={this.handleExplore}
                                 >
-                                    Explore ANIME
-                                    {/* <Icon name='angle double right' /> */}
+                                    <span>Explore ANIME</span>
+                                    <Icon name="angle double down" />
                                 </Button>
                             </div>
                         </div>
@@ -137,7 +137,7 @@ class PopularSection extends React.Component {
             });
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.handleContent();
     }
 
@@ -249,7 +249,7 @@ class CurrentSeasonSection extends React.Component {
             });
     };
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.handleContent();
     }
 
@@ -291,6 +291,8 @@ class HomeSubSection extends React.Component {
             content: [],
             labelList: [],
             numElements: props.num,
+            visibleLeftBtn: false,
+            visibleRightBtn: true,
         };
         this.colNum = 5;
         this.tempArray = [];
@@ -362,9 +364,27 @@ class HomeSubSection extends React.Component {
                     }
                 }
             }
-            this.setState({ visibleArray: this.tempArray });
+            this.fixResponsive();
+            let leftVisible = this.tempArray[0] === true ? false : true;
+            let rightVisible = this.tempArray[this.state.numElements - 1] === true ? false : true;
+            this.setState({
+                visibleArray: this.tempArray,
+                visibleLeftBtn: leftVisible,
+                visibleRightBtn: rightVisible,
+            });
         }
     };
+
+    // fix responsive issue when resize window and when visible media !== this.colNum.
+    fixResponsive = () => {
+        let lastIndex = this.state.numElements - 1;
+        if (this.tempArray[lastIndex] === true) {
+            let length = lastIndex - this.colNum;
+            for (let i = lastIndex; i > length; --i) {
+                this.tempArray[i] = true;
+            }
+        }
+    }
 
     handlePrev = () => {
         if (this.tempArray[0] === false) {
@@ -376,9 +396,25 @@ class HomeSubSection extends React.Component {
                 }
             }
             let lastIndex = index + (this.colNum - 1);
-            this.tempArray[index - 1] = true;
-            this.tempArray[lastIndex] = false;
-            this.setState({ visibleArray: this.tempArray });
+            for (let i = index; i <= lastIndex; ++i) {
+                this.tempArray[i] = false;
+            }
+            lastIndex = index - this.colNum;
+            let j = 0;
+            for (let i = index - 1; i >= lastIndex; --i) {
+                if (i < 0) {
+                    // if reached beginning, reveal another side
+                    this.tempArray[index + j] = true;
+                    ++j;
+                } else {
+                    this.tempArray[i] = true;
+                }
+            }
+            this.setState({
+                visibleArray: this.tempArray,
+                visibleLeftBtn: (lastIndex <= 0 ? false : true),
+                visibleRightBtn: true,
+            });
         }
     };
 
@@ -392,9 +428,23 @@ class HomeSubSection extends React.Component {
                 }
             }
             let lastIndex = index + (this.colNum - 1);
-            this.tempArray[index] = false;
-            this.tempArray[lastIndex + 1] = true;
-            this.setState({ visibleArray: this.tempArray });
+            for (let i = index; i <= lastIndex; ++i) {
+                this.tempArray[i] = false;
+            }
+            ++lastIndex;
+            for (let i = 0; i < this.colNum; ++i) {
+                if (lastIndex === this.state.numElements) {
+                    break;
+                } else {
+                    this.tempArray[lastIndex] = true;
+                    ++lastIndex;
+                }
+            }
+            this.setState({
+                visibleArray: this.tempArray,
+                visibleRightBtn: (lastIndex >= this.state.numElements ? false : true),
+                visibleLeftBtn: true,
+            });
         }
     };
 
@@ -405,12 +455,12 @@ class HomeSubSection extends React.Component {
         });
     };
 
-    componentWillReceiveProps(nextProps) {
+    UNSAFE_componentWillReceiveProps(nextProps) {
         this.handleContent(nextProps);
     }
 
     componentDidMount() {
-        window.addEventListener("resize", this.handleResize);
+        window.addEventListener('resize', this.handleResize);
         this.startHandleVisible = true;
     }
 
@@ -433,8 +483,8 @@ class HomeSubSection extends React.Component {
             elementList.push(
                 <HomeBlock
                     visible={this.state.visibleArray[i]}
-                    id={this.sectionName + "-" + i}
-                    key={this.sectionName + "-" + i}
+                    id={this.sectionName + '-' + i}
+                    key={this.sectionName + '-' + i}
                     content={this.state.content[i]}
                     label={this.state.labelList[i]}
                     clickOpenModal={this.props.clickOpenModal}
@@ -443,29 +493,27 @@ class HomeSubSection extends React.Component {
         }
         return (
             <div>
-                <Grid columns={this.state.columnNum}>
-                    {elementList}
-                </Grid>
+                <Grid columns={this.state.columnNum}>{elementList}</Grid>
 
                 <div className="control-block">
-                    <div className="btn-block">
-                        <Button
-                            icon
-                            className="control-btn"
-                            onClick={this.handlePrev}
-                        >
-                            <Icon name="arrow left" />
-                        </Button>
-                    </div>
-                    <div className="btn-block">
-                        <Button
-                            icon
-                            className="control-btn"
-                            onClick={this.handleNext}
-                        >
-                            <Icon name="arrow right" />
-                        </Button>
-                    </div>
+                    <div className={`btn-block ${!this.state.visibleLeftBtn && 'btn-block-hide' }`}>
+                            <Button
+                                icon
+                                className="control-btn"
+                                onClick={this.handlePrev}
+                            >
+                                <Icon name="arrow left" />
+                            </Button>
+                        </div>
+                        <div className={`btn-block ${!this.state.visibleRightBtn && 'btn-block-hide' }`}>
+                            <Button
+                                icon
+                                className="control-btn"
+                                onClick={this.handleNext}
+                            >
+                                <Icon name="arrow right" />
+                            </Button>
+                        </div>
                 </div>
             </div>
         );
@@ -473,9 +521,6 @@ class HomeSubSection extends React.Component {
 }
 
 class HomeBlock extends React.Component {
-    constructor(props) {
-        super(props);
-    }
     render() {
         const { content } = this.props;
         let id, img, native, romaji, english, label;
