@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import style from './Navbar.module.scss';
 import logo from '../images/angel.png';
 import $ from 'jquery';
+import Footer from './Footer';
 
 class Navbar extends React.Component {
     constructor(props) {
@@ -44,7 +45,7 @@ class Navbar extends React.Component {
     }
 
     handleNavbarScroll = () => {
-        if (window.pageYOffset > window.innerHeight - 80) {
+        if (window.pageYOffset > window.innerHeight - 65) {
             this.setState({ reachScrollHeight: true });
         } else {
             this.setState({ reachScrollHeight: false });
@@ -52,6 +53,7 @@ class Navbar extends React.Component {
     }
 
     UNSAFE_componentWillMount() {
+        window.scrollTo(0, 0);
         this.handleNavbarScroll();
     }
 
@@ -205,7 +207,7 @@ class Navbar extends React.Component {
                                 className={style.menuLink}
                                 onClick={this.handleToggle}
                             >
-                                <Icon name="sidebar" size='big' ></Icon>
+                                <Icon name="sidebar" size="big"></Icon>
                             </Menu.Item>
                             <Menu.Menu
                                 position="right"
@@ -276,6 +278,7 @@ class Navbar extends React.Component {
                     <div className={style.bodyContent} id="content">
                         {this.props.children}
                     </div>
+                    <Footer />
                     <ScrollTopBtn />
                 </Sidebar.Pusher>
             </Sidebar.Pushable>
@@ -299,7 +302,7 @@ class ScrollTopBtn extends React.Component {
     }
 
     detectScroll = () => {
-        if (window.pageYOffset > 100) {
+        if (window.pageYOffset > 200) {
             this.setState({ visible: true });
         } else {
             this.setState({ visible: false });

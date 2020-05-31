@@ -1,7 +1,18 @@
 :global(#root) {
+    .mediaListContainer {
+        position: relative;
+    }
+
+    .loadmoreBlock {
+        width: 100%;
+        margin: 3em 0;
+        text-align: center;
+    }
+
     .loadmoreBtn {
         width: 80%;
-        font-size: 18px;
+        font-size: 1.3em;
+        transition: all 0.4s;
     }
 
     .loadmoreIcon {
@@ -9,8 +20,38 @@
         margin-left: 10px;
     }
 
+    .resultNumText {
+        color: #c1c1c1;
+        padding: 0.5em 0;
+        font-size: 1.1em;
+    }
+
     .filterContainer {
-        margin: 10px 5px;
+        margin: 10px 20px;
+    }
+
+    .filterRow {
+        padding: 0;
+    }
+    .resultRow {
+        padding: 0;
+    }
+    .tagRow {
+        padding-top: 0;
+    }
+
+    .filterRowBlock {
+        width: 100%;
+        display: grid;
+        column-gap: 12px;
+        grid-template-columns: auto 42px;
+    }
+
+    .filterSearch {
+        width: 100%;
+    }
+    .filterSearch > input {
+        border-radius: 0.4em;
     }
 
     .filterSidebar {
@@ -28,9 +69,11 @@
     }
 
     .filterBtn {
-        border-radius: 7px;
+        width: 100%;
+        border-radius: 0.4em;
         margin: 0;
-        transition: all 0.65s;
+        transition: all 0.5s;
+        font-size: 1em;
     }
     .filterBtn > i {
         margin: 0;
@@ -90,13 +133,10 @@
         height: 100%;
         width: 100%;  
     }
-}
 
-.loadmoreBlock {
-    width: 100%;
-    margin: 20px 0;
-    text-align: center;
-    position: absolute;
-    bottom: 0;
-    left: 0;
+    @media (max-width: 600px) {
+        .filterTag {
+            font-size: 0.7em;
+        }
+    }
 }

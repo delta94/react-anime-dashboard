@@ -12,10 +12,10 @@ class Anime extends React.Component {
         } else {
             this.defaultConfig = {
                 search: '',
-                type: 'anime',
+                type: 'Anime',
                 season: '',
                 seasonYear: '',
-                sort: 'popularity_desc',
+                sort: 'Popularity',
             };
         }
         
@@ -24,12 +24,12 @@ class Anime extends React.Component {
     render() {
         return (
             <Navbar active="anime" {...this.props}>
-                <Container>
+                {/* <Container> */}
                     {/* <h1 style={{ textAlign: "center", color: "white" }}>
                         All Anime
                     </h1> */}
                     <MediaList type="anime" config={this.defaultConfig} />
-                </Container>
+                {/* </Container> */}
             </Navbar>
         );
     }

@@ -68,18 +68,21 @@
         border-bottom: 1px solid rgba(204, 204, 204, 0.418);
     }
     .modalNative {
-        font-size: 22px;
+        font-size: 1.6em;
         font-weight: 700;
         margin-bottom: 2px;
+        color: #353535;
     }
     .modalRomaji {
-        font-size: 15px;
+        font-size: 1em;
         font-weight: 500;
         margin-bottom: 2px;
+        color: #7b7a7a;
     }
     .modalEnglish {
-        font-size: 20px;
-        font-weight: 500;
+        font-size: 1.5em;
+        font-weight: 550;
+        color: #353535;
     }
 
     .cover {
@@ -105,6 +108,7 @@
 
     .description {
         white-space: pre-wrap;
+        color: rgba(35, 35, 35, 0.84);
     }
 
     .descriptionReadmore {
@@ -188,7 +192,8 @@
         // background-color: #cccccc23;
         background-color: white;
         height: 100%;
-        box-shadow: 0 2px 4px 0 rgba(34,36,38,.12), 0 2px 8px 0 rgba(34,36,38,.15);
+        // box-shadow: 0 1px 7px 0 rgba(34,36,38,.12), 0 5px 10px 0 rgba(34,36,38,.15);
+        box-shadow: 0px 5px 14px 1px rgba(34,36,38,0.2);
     }
 
     .charImg {
@@ -213,7 +218,11 @@
     }
 
     .charName {
-        margin-bottom: 10px;
+        margin-bottom: 0.5em;
+        color: #4c4b4b;
+    }
+    .charRole {
+        color: #8b8b8c;
     }
 
     .watchBox {
@@ -280,13 +289,16 @@
     }
 
     .statTitle {
-        font-size: 22px;
+        font-size: 1.5em;
         font-weight: 600;
-        color: #b5cc18c7;
-        margin: 10px auto;
+        color: rgba(0,0,0,.6);
+        margin: auto;
+        padding: 0.5em 0;
+        background-color: #e4e4e49c;
+        border-radius: 1.5em;
     }
     .statTitle:focus, .statTitle::selection {
-        color: #9cc747c7;
+        color: #000;
     }
 
     @media (max-width: 550px) {

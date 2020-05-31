@@ -1,11 +1,10 @@
-/*  config object documentation
-const config_info = {
-    type: 'anime' | 'manga' | "",
-    search: "search_name" | "",
-    season: 'spring' | 'summer' | 'fall' | 'winter' | "",
+/*  config object usage, belows are available config values for each property
+const config = {
+    type: 'Anime' | 'Manga' | "",
+    search: "custom_search_name" | "",
+    season: 'Spring' | 'Summer' | 'Fall' | 'Winter' | "",
     seasonYear: (1900 - 2100), 
-    startDate: true | false,
-    sort: "latest" | "popularity" | "popularity_desc" | "id" | "id_desc" | "",
+    sort: "Latest" | "Popularity" | "Popularity_insc" | "ID" | "ID_desc" | "Favorites" | "Trending" | "",
     isAdult: true | false | "all",
     popularity: true | false,
     startDate: true | false,
@@ -112,12 +111,19 @@ class AnimeQuery {
                     today = getTodayDateInt();
                     sort = `startDate_lesser: $today, startDate_greater: 19700101, sort: START_DATE_DESC`;
                     todayFlag = true;
-                } else if (config.sort.toUpperCase() === "POPULARITY")
+                }
+                else if (config.sort.toUpperCase() === "POPULARITY_INSC")
                     sort = `sort: POPULARITY`;
-                else if (config.sort.toUpperCase() === "POPULARITY_DESC")
+                else if (config.sort.toUpperCase() === 'POPULARITY')
                     sort = `sort: POPULARITY_DESC`;
-                else if (config.sort.toUpperCase() === "ID") sort = `sort: ID`;
-                else if (config.sort.toUpperCase() === "ID_DESC") sort = `sort: ID_DESC`;
+                else if (config.sort.toUpperCase() === 'FAVORITES')
+                    sort = `sort: FAVOURITES_DESC`;
+                else if (config.sort.toUpperCase() === 'TRENDING')
+                    sort = `sort: TRENDING_DESC`;
+                else if (config.sort.toUpperCase() === 'DEFAULT')
+                    sort = `sort: ID`;
+                else if (config.sort.toUpperCase() === 'DEFAULT_DESC')
+                    sort = `sort: ID_DESC`;
                 else sort = ``;
             }
         }
@@ -172,8 +178,6 @@ class AnimeQuery {
                     status
                     season
                     seasonYear
-                    seasonInt
-                    updatedAt
                     countryOfOrigin
                     externalLinks {
                         id
@@ -211,8 +215,7 @@ class AnimeQuery {
                         romaji
                         english
                         native
-                    }
-                    synonyms   
+                    }  
                     isAdult
                     description
                     characters(sort: ROLE, perPage: 12, page: 1) {
@@ -252,10 +255,8 @@ class AnimeQuery {
                         day
                     }
                     coverImage {
-                        extraLarge
                         large
                         medium
-                        color
                     }
                     bannerImage
                     tags {

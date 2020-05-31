@@ -17,7 +17,8 @@ class MediaList extends React.Component {
             open: false,
             reset: false,
             loadmore: null,
-            ResultNum: 0,
+            showLoadMore: false,
+            resultNum: 0,
             searchText: '',
             error: false,
             errorTitle: 'Error!',
@@ -62,17 +63,22 @@ class MediaList extends React.Component {
             };
             let key = nextProps.searchKey;
             if (key !== '') {
+                window.scrollTo(0, 0);
                 this.setState({ loading: true });
                 AnimeQuery.getCustomMedia(25, 1, this.config)
                     .then((res) => {
                         if (res.data.Page.pageInfo.total !== 0) {
                             this.handleResult(res, true);
-                            this.addLoadMore(true, false);
+                            if (res.data.Page.pageInfo.hasNextPage === true) {
+                                this.addLoadMore(true, false);
+                            } else {
+                                this.setState({ showLoadMore: false });
+                            }
                             this.setState({
                                 error: false,
                                 loading: false,
                                 searchText: 'for "' + key + '"',
-                                ResultNum: res.data.Page.pageInfo.total,
+                                resultNum: res.data.Page.pageInfo.total,
                             });
                         } else {
                             this.handleError('No Result For "' + key + '"', 'NOT FOUND', 'No Result For "' + key + '"');
@@ -92,10 +98,12 @@ class MediaList extends React.Component {
                     .then((res) => {
                         if (res.data.Page.pageInfo.total !== 0) {
                             this.handleResult(res);
-                            this.addLoadMore(true, false);
+                            if (res.data.Page.pageInfo.hasNextPage === true) {
+                                this.addLoadMore(true, false);
+                            }
                             this.setState({
                                 searchText: 'for "' + key + '"',
-                                ResultNum: res.data.Page.pageInfo.total,
+                                resultNum: res.data.Page.pageInfo.total,
                             });
                         } else {
                             this.handleError('No Result For "' + key + '"', 'NOT FOUND', 'No Result For "' + key + '"');
@@ -108,9 +116,11 @@ class MediaList extends React.Component {
             AnimeQuery.getCustomMedia(50, 1, this.config)
                 .then((res) => {
                     this.handleResult(res);
-                    this.addLoadMore(true, false);
+                    if (res.data.Page.pageInfo.hasNextPage === true) {
+                        this.addLoadMore(true, false);
+                    }
                     this.setState({
-                        ResultNum: res.data.Page.pageInfo.total
+                        resultNum: res.data.Page.pageInfo.total
                     });
                 })
                 .catch(err => this.handleError(err));
@@ -151,6 +161,7 @@ class MediaList extends React.Component {
         this.setState({
             error: true,
             content: [],
+            resultNum: 0,
             errorTitle: (errTitle ? errTitle : this.state.errorTitle),
             errorMessage: (errMessage ? errMessage : this.state.errorMessage),
             loading: false,
@@ -162,7 +173,8 @@ class MediaList extends React.Component {
             loadmore: (<LoadMore
                 addComponent={this.addComponent}
                 loadmoreYes={status}
-                loading={loading} />)
+                loading={loading} />),
+            showLoadMore: true,
         });
     }
 
@@ -194,7 +206,7 @@ class MediaList extends React.Component {
                     this.handleResult(res, true);
                     this.addLoadMore(true, false);
                     this.setState({
-                        ResultNum: res.data.Page.pageInfo.total,
+                        resultNum: res.data.Page.pageInfo.total,
                     });
                 })
                 .catch((err) => this.handleError(err));
@@ -203,18 +215,14 @@ class MediaList extends React.Component {
 
     render() {
         return (
-            <div>
-                {/* {!this.state.error &&
-                    <h3 style={{ color: 'white' }}>
-                        Total {this.state.ResultNum} results {this.state.searchText}
-                    </h3>
-                } */}
+            <div className={style.mediaListContainer}>
                 <MediaFilterBar
                     sendConfig={this.getConfigFromFilter}
                     initialConfig={this.config}
                     initialType={this.props.type}
                     searchKey={this.props.searchKey}
                     loading={this.state.loading}
+                    resultNum={this.state.resultNum}
                 />
                 <Divider />
                 {!this.state.error ? (
@@ -222,12 +230,15 @@ class MediaList extends React.Component {
                         <div className="flex-container">
                             {this.state.content}
                         </div>
-                        {this.state.loadmore}
+                        {this.state.showLoadMore && this.state.loadmore}
                     </React.Fragment>
                 ) : (
-                    <ErrorBox title={this.state.errorTitle} text={this.state.errorMessage} />
+                    <ErrorBox
+                        title={this.state.errorTitle}
+                        text={this.state.errorMessage}
+                    />
                 )}
-                
+
                 <MediaModal
                     id={this.state.id}
                     open={this.state.open}
@@ -286,23 +297,26 @@ class OneMedia extends React.Component {
         var mylabel = label ? label : null;
 
         return (
-            <div key={id} className={locStyle}>
-                <div className="anime-img-block">
-                    {/* <img id={id} src={img} alt={alt} onClick={click}></img> */}
-                    <LazyLoadImage
-                        id={id}
-                        src={img}
-                        alt={alt}
-                        onClick={click}
-                        className={'anime-img'}
-                        threshold={100}
-                        effect="myblur"
-                        tabIndex="0"
-                    />
+            <div className={location != 'home' && 'anime-wrapper'}>
+                <div key={id} className={locStyle} id={id} >
+                    <div className="anime-img-block">
+                        {/* <img id={id} src={img} alt={alt} onClick={click}></img> */}
+                        <LazyLoadImage
+                            id={id}
+                            src={img}
+                            alt={alt}
+                            onClick={click}
+                            onFocusCapture={click}
+                            className={'anime-img'}
+                            threshold={100}
+                            effect="myblur"
+                            tabIndex="0"
+                        />
+                    </div>
+                    <div className="anime-title"><span id={id} onClick={click} title={firstTitle}>{firstTitle}</span></div>
+                    <div className="anime-title"><span id={id} onClick={click} title={secondTitle}>{secondTitle}</span></div>
+                    {mylabel}
                 </div>
-                <div className="anime-title"><span id={id} onClick={click}>{firstTitle}</span></div>
-                <div className="anime-title"><span id={id} onClick={click}>{secondTitle}</span></div>
-                {mylabel}
             </div>
         );
     }
@@ -311,8 +325,8 @@ class OneMedia extends React.Component {
 
 const typeOptions = [
     { key: 'typeAny', text: 'Any', value: '' },
-    { key: 'animeOption', text: 'ANIME', value: 'anime' },
-    { key: 'mangaOption', text: 'MANGA', value: 'manga' },
+    { key: 'animeOption', text: 'ANIME', value: 'Anime' },
+    { key: 'mangaOption', text: 'MANGA', value: 'Manga' },
 ];
 
 const seasonOptions = [
@@ -325,8 +339,10 @@ const seasonOptions = [
 
 const sortOptions = [
     { key: 'sortAny', text: 'Default', value: '' },
-    { key: 'popularOption', text: 'Popularity', value: 'popularity_desc' },
-    { key: 'latestOption', text: 'Latest', value: 'latest' },
+    { key: 'popularOption', text: 'Popularity', value: 'Popularity' },
+    { key: 'favoritesOption', text: 'Favorites', value: 'Favorites' },
+    { key: 'latestOption', text: 'Latest', value: 'Latest' },
+    { key: 'trendingOption', text: 'Trending', value: 'Trending' },
 ];
 
 const seasonYearOptions = getSeasonYearList();
@@ -535,29 +551,50 @@ class MediaFilterBar extends React.Component {
         const { visible } = this.state;
         return (
             <div className={style.filterContainer}>
-                <Grid container columns={2}>
-                    <Grid.Row>
-                        <Grid.Column computer={10} verticalAlign="middle">
-                            {this.state.tagList}
-                        </Grid.Column>
-                        <Grid.Column
-                            computer={6}
-                            verticalAlign='bottom'
-                            textAlign="right"
-                        >
-                            <div className={style.filterBtnBlock}>
-                                <Button
-                                    size="medium"
-                                    icon
-                                    labelPosition="left"
-                                    className={style.filterBtn}
-                                    active={visible}
-                                    onClick={this.handleOpen}
-                                >
-                                    <Icon name="filter" />
-                                    Filter
-                                </Button>
+                <Grid>
+                    <Grid.Row className={style.filterRow}>
+                        <Grid.Column width="16">
+                            <div className={style.filterRowBlock}>
+                                <Input
+                                    size="small"
+                                    icon="search"
+                                    iconPosition="left"
+                                    placeholder="Search By Title ..."
+
+                                    disabled={this.initialSearchDisabled}
+                                    onChange={this.handleSearch}
+                                    onKeyUp={this.keyupFilter}
+                                    value={this.state.filterSearch}
+                                    className={style.filterSearch}
+                                />
+                                <div className={style.filterBtnBlock}>
+                                    <Button
+                                        size="small"
+                                        icon
+                                        // labelPosition="left"
+                                        className={style.filterBtn}
+                                        active={visible}
+                                        onClick={this.handleOpen}
+                                    >
+                                        <Icon name="filter" />
+                                        {/* Filter */}
+                                    </Button>
+                                </div>
                             </div>
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row className={style.resultRow}>
+                        <Grid.Column width="16">
+                            <div className={style.resultNumText}>
+                                Showing total of {this.props.resultNum} results
+                                {this.props.searchKey &&
+                                    ` for "${this.props.searchKey}"`}
+                            </div>
+                        </Grid.Column>
+                    </Grid.Row>
+                    <Grid.Row className={style.tagRow}>
+                        <Grid.Column width="16">
+                            {this.state.tagList}
                         </Grid.Column>
                     </Grid.Row>
                 </Grid>
@@ -591,25 +628,14 @@ class MediaFilterBar extends React.Component {
                             <div className={style.filterSection}>
                                 <Menu.Item className={style.filterItem}>
                                     <Form.Field>
-                                        <label htmlFor='filterSearch'>Search:</label>
-                                        <Input
-                                            id="filterSearch"
-                                            label={{ icon: 'asterisk' }}
-                                            labelPosition="right corner"
-                                            placeholder="Search By Title ..."
-                                            disabled={this.initialSearchDisabled}
-                                            onChange={this.handleSearch}
-                                            value={this.state.filterSearch}
-                                        />
-                                    </Form.Field>
-                                </Menu.Item>
-                                <Menu.Item className={style.filterItem}>
-                                    <Form.Field>
                                         <Form.Select
                                             id="filterType"
                                             placeholder="Type: Any"
                                             clearable
-                                            label={{children: 'Media Type:', htmlFor: 'filterType'}}
+                                            label={{
+                                                children: 'Media Type:',
+                                                htmlFor: 'filterType',
+                                            }}
                                             options={typeOptions}
                                             selectOnBlur={false}
                                             value={this.state.filterType}

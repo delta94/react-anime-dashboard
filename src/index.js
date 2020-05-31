@@ -7,7 +7,7 @@ import "./index.css";  // custom global css
 // import main components
 import Anime from './components/Anime';
 import Manga from './components/Manga';
-import Home from './Home';
+import Home from './components/Home';
 import Error from './components/Error';
 import Search from './components/Search';
 

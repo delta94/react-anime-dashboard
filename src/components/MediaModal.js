@@ -3,20 +3,11 @@ import AnimeQuery from "./AnimeQuery";
 import paragraph from "../images/paragraph.png";
 import { getName } from 'country-list';
 import { Chart } from "react-google-charts";
-import {Container, Button, Modal, Image, Icon, Label, Loader, Segment, Dimmer, Grid, Rating, Transition, Table, Placeholder} from "semantic-ui-react";
+import {Container, Button, Modal, Image, Icon, Label, Loader, Segment, Dimmer, Grid, Rating, Transition, Table } from "semantic-ui-react";
 import style from "./MediaModal.module.scss";
 import './MediaModal.css';
 import { ErrorBox } from "./Error";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-
-
-const ImgPlaceHolder = () => {
-    return (
-        <Placeholder>
-            <Placeholder.Image />
-        </Placeholder>
-    );
-}
 
 /**
  * A single media box for displaying information for a single media
@@ -37,33 +28,23 @@ class MediaModal extends React.Component {
     }
 
     handleReadMore = () => {
-        this.setState({
-            readMore: !this.state.readMore
-        });
+        this.setState({ readMore: !this.state.readMore });
     }
 
     toggleInformation = () => {
-        this.setState({
-            informationVisible: !this.state.informationVisible,
-        });
+        this.setState({ informationVisible: !this.state.informationVisible });
     };
 
     toggleStatistic = () => {
-        this.setState({
-            statisticVisible: !this.state.statisticVisible,
-        });
+        this.setState({ statisticVisible: !this.state.statisticVisible });
     };
 
     toggleCharacter = () => {
-        this.setState({
-            characterListVisible: !this.state.characterListVisible,
-        });
+        this.setState({ characterListVisible: !this.state.characterListVisible });
     };
 
     toggleWatch = () => {
-        this.setState({
-            watchListVisible: !this.state.watchListVisible,
-        });
+        this.setState({ watchListVisible: !this.state.watchListVisible });
     };
 
     UNSAFE_componentWillReceiveProps(nextProps) {
@@ -77,9 +58,7 @@ class MediaModal extends React.Component {
                 })
                 .catch(err => {
                     console.log('my err: ' + err);
-                    this.setState({
-                        error: true
-                    });
+                    this.setState({ error: true });
                 });
         }
 
@@ -114,7 +93,7 @@ class MediaModal extends React.Component {
                 firstDescription = description;
             
             const ReadMoreText = (
-                <Transition visible={this.state.readMore} animation='fade' duration={200} >
+                <Transition visible={this.state.readMore} animation='fade' duration={150} >
                     <span className={'secondDescription'}>{secondDescription}</span>
                 </Transition>
             );
@@ -136,7 +115,6 @@ class MediaModal extends React.Component {
             }
 
             // genres
-            var color = media.coverImage.color;
             var genres = [];
             media.genres.forEach((genre) => {
                 genres.push(
@@ -307,7 +285,7 @@ class MediaModal extends React.Component {
                                 click={this.toggleStatistic}
                                 visible={this.state.statisticVisible}
                                 name="Media Statistic"
-                                color="olive"
+                                color="green"
                             >
                                 <div>
                                     <MediaStatistic stats={media.stats} />
@@ -332,7 +310,7 @@ class MediaModal extends React.Component {
                                 click={this.toggleWatch}
                                 visible={this.state.watchListVisible}
                                 name="Watch List"
-                                color="teal"
+                                color="orange"
                             >
                                 <div>
                                     <WatchList
@@ -534,7 +512,7 @@ const InformationTable = (props) => {
                     <Table.Cell>
                         <b title="Source type the media was adapted from">Source</b>
                     </Table.Cell>
-                    <Table.Cell>{media.source ? media.source : 'Unknown'}</Table.Cell>
+                    <Table.Cell>{source}</Table.Cell>
                 </Table.Row>
 
                 <Table.Row>
@@ -636,6 +614,19 @@ const GooglePie = (props) => {
     );
 }
 
+const barColors = [
+    'color: rgb(226, 26, 26)',
+    'color: rgb(228, 110, 110)',
+    'color: rgb(210, 128, 45)',
+    'color: rgb(192, 123, 67)',
+    'color: rgb(202, 196, 111)',
+    'color: rgb(198, 201, 53)',
+    'color: rgb(188, 190, 37)',
+    'color: rgb(155, 210, 45)',
+    'color: rgb(116, 189, 67)',
+    'color: rgb(100, 210, 45)',
+];
+
 const GoogleBar = (props) => {
     return (
         <div>
@@ -662,7 +653,7 @@ const GoogleBar = (props) => {
                         duration: 500,
                         startup: true,
                     },
-                    dataOpacity: 0.75,
+                    dataOpacity: 0.85,
                     backgroundColor: 'rgb(243, 243, 243)',
                     bar: { groupWidth: '70%' },
                 }}
@@ -670,20 +661,6 @@ const GoogleBar = (props) => {
         </div>
     );
 }
-
-const barColors = [
-    "color: red",
-    "color: rgb(204, 57, 57)",
-    "color: rgb(153, 91, 91)",
-    "color: rgb(192, 123, 67)",
-    "color: rgb(202, 196, 111)",
-    "color: rgb(198, 201, 53)",
-    "color: rgb(188, 190, 37)",
-    "color: rgb(189, 204, 55)",
-    "color: rgb(116, 189, 67)",
-    "color: rgb(118, 228, 46)",
-];
-
 
 class MediaStatistic extends React.Component {
     constructor(props) {
@@ -916,7 +893,7 @@ class WatchList extends React.Component {
                 mycontent.push(
                     <Grid.Column key={title} className={style.myColumn}>
                         <div className={style.watchBox} title={title}>
-                            <a href={url} target="_blank">
+                            <a href={url} target="_blank" rel='noopener noreferrer'>
                                 <LazyLoadImage
                                     src={img}
                                     alt={title}

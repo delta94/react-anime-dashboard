@@ -128,11 +128,10 @@
 
     .topBlock {
         position: fixed;
-        bottom: 20px;
-        right: 20px;
+        bottom: 1.5em;
+        right: 2em;
         z-index: 5;
         padding: 5px;
-        // opacity: 0;
         -webkit-transition: opacity 0.8s;
         -moz-transition: opacity 0.8s;
         transition: opacity 0.8s;
@@ -143,9 +142,9 @@
     }
 
     .topBtn {
-        font-size: 19px;
-        background-color: rgba(0, 0, 0, 0.61);
-        color: rgba(255, 255, 255, 0.685);
+        font-size: 1.4em;
+        background-color: rgba(240, 240, 240, 0.918);
+        color: rgba(29, 29, 29, 0.774);
         -webkit-transition: all 0.5s;
         -moz-transition: all 0.5s;
         transition: all 0.5s;
@@ -158,5 +157,5 @@
 
 .bodyContent {
     margin-top: 115px;
-    min-height: calc(100vh - 115px);
+    min-height: calc(100vh - 63px);
 }

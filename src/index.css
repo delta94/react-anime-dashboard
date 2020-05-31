@@ -7,10 +7,12 @@ body {
     /* background: linear-gradient(rgba(0, 0, 0, 0.2), rgba(0, 0, 0, 0.15)) 0% 0% / cover no-repeat, url(./images/spring1.jpg) 0% 10% / cover black;
     background-position: center;
     background-attachment: fixed; */
+    font-size: 14px;
 }
 
 #root {
     overflow: auto;
+    /* height: 100%; */
 }
 
 /***************************** Home page ****************************/
@@ -126,8 +128,8 @@ body {
 }
 
 #root .control-btn {
-    font-size: 25px;
-    padding: 15px 20px;
+    font-size: 1.6em;
+    margin: auto;
     border-radius: 7px;
     background-color: rgba(0, 0, 0, 0.671);
     color: rgba(255, 255, 255, 0.377);
@@ -146,19 +148,58 @@ body {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    margin-bottom: 90px;
+    margin: 0 10px;
+}
+.flex-container1 {
+    display: grid;
+    grid-template-columns: repeat(auto-fill,minmax(150px,1fr));
+    gap: 13px 10px;
+    justify-content: center;
+    margin: 0 15px;
 }
 
+.anime-wrapper {
+    padding: 13px 10px;
+}
+
+.anime-block1 {
+    position: relative;
+    display: block;
+    width: 180px;
+    height: auto;
+    margin: 10px 10px;
+    background-color: rgb(240, 240, 240);
+    border-radius: 7px;
+    overflow: hidden;
+    box-shadow: 0px 0px 0px 0px #adadad41;
+    transition: all 0.5s ease-in-out;
+    animation: mediaList 1s ease-out;
+}
 .anime-block {
     position: relative;
     display: block;
     width: 180px;
     height: auto;
-    margin: 10px;
+    /* margin: 10px 10px; */
     background-color: rgb(240, 240, 240);
     border-radius: 7px;
     overflow: hidden;
-    box-shadow: 0px 0px 3px 1px #adadad41;
+    box-shadow: 0px 0px 0px 0px #adadad41;
+    transition: all 0.5s ease-in-out;
+    animation: mediaList 1s ease-out;
+}
+.anime-block2 {
+    position: relative;
+    display: block;
+    width: 180px;
+    /* width: 100%;
+    max-width: 190px; */
+    height: auto;
+    /* margin: 13px 10px; */
+    background-color: rgb(240, 240, 240);
+    border-radius: 7px;
+    overflow: hidden;
+    box-shadow: 0px 0px 0px 0px #adadad41;
     transition: all 0.5s ease-in-out;
     animation: mediaList 1s ease-out;
 }
@@ -171,13 +212,21 @@ body {
     background-color: rgb(240, 240, 240);
     border-radius: 7px;
     overflow: hidden;
-    box-shadow: 0px 0px 3px 1px #adadad41;
+    /* box-shadow: 0px 0px 5px 1px #adadad41; */
     transition: all 500ms ease-in-out;
-    animation: fadeIn 2.1s ease-out;
+    /* animation: fadeIn 2.1s ease-out; */
+    animation: mediaList 1s ease-out;
 }
 .anime-img-block {
     width: 100%;
-    height: 220px;
+    height: 14.5em;
+    cursor: pointer;
+    overflow: hidden;
+}
+.anime-img-block1 {
+    width: 100%;
+    /* height: 14.5em; */
+    max-height: 14.5em;
     cursor: pointer;
     overflow: hidden;
 }
@@ -187,7 +236,7 @@ body {
     object-fit: cover;
 }
 .anime-block:hover, .home-anime-block:hover {
-    box-shadow: 0px 0px 8px 3px #adadad7d;
+    box-shadow: 0px 0px 20px 1px #adadad59;
 }
 /* home page anime block hover effect */
 .home-anime-block .anime-img-block {
@@ -210,6 +259,19 @@ body {
     transition: all 0.5s;
 }
 
+.anime-title {
+    font-size: 0.85em;
+    text-align: center;
+    padding: 0.1em 0.8em;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow-x: hidden;
+    color: #515154;
+}
+.anime-title > span {
+    cursor: pointer;
+}
+
 @keyframes fadeIn {
     from {opacity: 0.1;}
     to {opacity: 1;}
@@ -219,55 +281,28 @@ body {
     to {opacity: 1; transform: scale(1);}
 }
 
-@media (max-width: 540px) {
-    .anime-block {
-        width: 160px;
-        height: auto;
-        margin: 6px;
-    }
-
-    .anime-img-block {
-        height: 210px;
-    }
+/********************** Footer *****************************/
+.footer-container {
+    width: 100%;
+    background-color: #1b1c1d;
+    padding: 2em 1.8em;
 }
 
-/* phone */
-@media (max-width: 375px) {
-    .anime-block {
-        width: 140px;
-        height: auto;
-        margin: 6px;
-    }
-
-    .anime-img-block {
-        height: 190px;
-    }
-}
-
-/* phone */
-@media (max-width: 335px) {
-    .anime-block {
-        width: 120px;
-        height: auto;
-        margin: 5px;
-    }
-
-    .anime-img-block {
-        height: 150px;
-    }
-}
-
-.anime-title {
-    font-size: 0.85em;
+.footer-text-block {
+    padding: 0.5em 0 0;
     text-align: center;
-    padding: 1px 10px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    overflow-x: hidden;
-    color: #515154;
 }
-.anime-title > span {
-    cursor: pointer;
+
+.footer-img {
+    font-size: .78rem;
+    width: 4em;
+}
+
+.footer-text {
+    margin-top: 0.2em;
+    color: rgb(156, 156, 156);
+    font-size: 0.95em;
+    letter-spacing: 0.04em;
 }
 
 /********************** Semantic-ui override **********************/
@@ -297,13 +332,13 @@ body {
 }
 
 #home-main .ui.red.label {
-    background-color: #ed293a!important;
-    border-color: #ed293a!important;
+    background-color: #f74050!important;
+    border-color: #f74050!important;
     color: #fff!important;
 }
 #home-main .ui.red.label:hover {
-    background-color: #f71a2c!important;
-    border-color: #f71a2c!important;
+    background-color: #f12a3a!important;
+    border-color: #f12a3a!important;
     color: #fff!important;
 }
 
@@ -370,6 +405,59 @@ body {
 }
 
 .lazy-load-image-background.myblur.lazy-load-image-loaded > img {
-  /* opacity: 1; */
-  /* transition: opacity .5s; */
+  /* opacity: 1;
+  transition: opacity .5s; */
+}
+
+@media (max-width: 768px) {
+    .anime-wrapper {
+        width: 33.3%;
+        padding: 10px 6px;
+        /* max-width: 190px; */
+    }
+    .anime-block {
+        width: 100%;
+    }
+    .anime-img-block {
+        height: 16.5em;
+        /* max-height: 16.5em; */
+        /* height: auto; */
+    }
+}
+
+@media (max-width: 560px) {
+    .anime-wrapper {
+        width: 50%;
+        padding: 8px 4px;
+        /* max-width: 190px; */
+    }
+    .anime-block {
+        /* width: 100%; */
+        /* width: 140px; */
+        /* width: 100%; */
+        /* max-width: 190px; */
+        /* margin: 10px 6px; */
+    }
+    .anime-img-block {
+        height: 14.5em;
+        /* max-height: 11.5em; */
+    }
+
+    .anime-title {
+        font-size: 0.7em;
+        padding: 0.06em 0.7em;
+    }
+    #root .myRibbon {
+        font-size: 0.6em;
+    }
+    #root .title-tag {
+        font-size: 1.2em;
+    }
+    .footer-text {
+        font-size: 0.75em;
+    }
+    #root .control-btn {
+        font-size: 1.5em;
+        padding: 0.7em;
+    }
 }

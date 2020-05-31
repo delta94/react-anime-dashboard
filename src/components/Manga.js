@@ -8,10 +8,10 @@ class Manga extends React.Component {
         super(props);
         this.defaultConfig = {
             search: '',
-            type: "manga",
+            type: "Manga",
             season: '',
             seasonYear: '',
-            sort: "popularity_desc",
+            sort: "Popularity",
         };
     }
 
