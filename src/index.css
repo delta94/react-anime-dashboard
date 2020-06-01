@@ -143,65 +143,36 @@ body {
 
 /************************ Anime Card CSS ****************************/
 
-.flex-container {
+.flex-container1 {
     display: flex;
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
-    margin: 0 10px;
+    margin: 0 15px;
 }
-.flex-container1 {
+.flex-container {
     display: grid;
     grid-template-columns: repeat(auto-fill,minmax(150px,1fr));
-    gap: 13px 10px;
+    gap: 1.2em 1em;
     justify-content: center;
-    margin: 0 15px;
+    /* margin: 0 15px; */
 }
 
 .anime-wrapper {
-    padding: 13px 10px;
+    /* padding: 13px 10px; */
 }
 
-.anime-block1 {
-    position: relative;
-    display: block;
-    width: 180px;
-    height: auto;
-    margin: 10px 10px;
-    background-color: rgb(240, 240, 240);
-    border-radius: 7px;
-    overflow: hidden;
-    box-shadow: 0px 0px 0px 0px #adadad41;
-    transition: all 0.5s ease-in-out;
-    animation: mediaList 1s ease-out;
-}
 .anime-block {
-    position: relative;
+    /* position: relative;
     display: block;
-    width: 180px;
-    height: auto;
-    /* margin: 10px 10px; */
+    height: 100%; */
     background-color: rgb(240, 240, 240);
-    border-radius: 7px;
+    border-radius: 5px;
     overflow: hidden;
     box-shadow: 0px 0px 0px 0px #adadad41;
-    transition: all 0.5s ease-in-out;
+    transition: all 0.5s ease-in-out; 
     animation: mediaList 1s ease-out;
-}
-.anime-block2 {
-    position: relative;
-    display: block;
-    width: 180px;
-    /* width: 100%;
-    max-width: 190px; */
-    height: auto;
-    /* margin: 13px 10px; */
-    background-color: rgb(240, 240, 240);
-    border-radius: 7px;
-    overflow: hidden;
-    box-shadow: 0px 0px 0px 0px #adadad41;
-    transition: all 0.5s ease-in-out;
-    animation: mediaList 1s ease-out;
+    /* animation: fadeIn 2.1s ease-out; */
 }
 .home-anime-block {
     position: relative;
@@ -210,31 +181,40 @@ body {
     max-width: 210px;
     margin: 0 auto;
     background-color: rgb(240, 240, 240);
-    border-radius: 7px;
+    border-radius: 5px;
     overflow: hidden;
     /* box-shadow: 0px 0px 5px 1px #adadad41; */
     transition: all 500ms ease-in-out;
     /* animation: fadeIn 2.1s ease-out; */
     animation: mediaList 1s ease-out;
 }
+
 .anime-img-block {
     width: 100%;
     height: 14.5em;
     cursor: pointer;
     overflow: hidden;
-}
-.anime-img-block1 {
-    width: 100%;
-    /* height: 14.5em; */
-    max-height: 14.5em;
-    cursor: pointer;
-    overflow: hidden;
+    background-color: #dedede;
 }
 .anime-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: opacity 0.6s;
 }
+/* .lazy-hide > .anime-img {
+    opacity: 0;
+}
+.lazy-show > .anime-img {
+    opacity: 1;
+} */
+.lazy-hide {
+    opacity: 0;
+}
+.lazy-show {
+    opacity: 1;
+}
+
 .anime-block:hover, .home-anime-block:hover {
     box-shadow: 0px 0px 20px 1px #adadad59;
 }
@@ -409,40 +389,8 @@ body {
   transition: opacity .5s; */
 }
 
-@media (max-width: 768px) {
-    .anime-wrapper {
-        width: 33.3%;
-        padding: 10px 6px;
-        /* max-width: 190px; */
-    }
-    .anime-block {
-        width: 100%;
-    }
-    .anime-img-block {
-        height: 16.5em;
-        /* max-height: 16.5em; */
-        /* height: auto; */
-    }
-}
 
 @media (max-width: 560px) {
-    .anime-wrapper {
-        width: 50%;
-        padding: 8px 4px;
-        /* max-width: 190px; */
-    }
-    .anime-block {
-        /* width: 100%; */
-        /* width: 140px; */
-        /* width: 100%; */
-        /* max-width: 190px; */
-        /* margin: 10px 6px; */
-    }
-    .anime-img-block {
-        height: 14.5em;
-        /* max-height: 11.5em; */
-    }
-
     .anime-title {
         font-size: 0.7em;
         padding: 0.06em 0.7em;
@@ -459,5 +407,10 @@ body {
     #root .control-btn {
         font-size: 1.5em;
         padding: 0.7em;
+    }
+    .flex-container {
+        grid-template-columns: repeat(auto-fill,minmax(130px,1fr));
+        gap: 1.2em 1em;
+        margin: 0;
     }
 }

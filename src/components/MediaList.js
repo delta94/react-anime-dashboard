@@ -2,7 +2,7 @@ import React from "react";
 import AnimeQuery from "./AnimeQuery";
 import MediaModal from './MediaModal';
 import { ErrorBox } from './Error';
-import { Button, Icon, Dropdown, Label, Grid, Divider, Sidebar, Menu, Form, Input } from 'semantic-ui-react';
+import { Button, Icon, Dropdown, Label, Grid, Divider, Sidebar, Menu, Form, Input, Container } from 'semantic-ui-react';
 import { LazyLoadImage } from 'react-lazy-load-image-component';
 import style from './MediaList.module.scss';
 
@@ -225,20 +225,21 @@ class MediaList extends React.Component {
                     resultNum={this.state.resultNum}
                 />
                 <Divider />
-                {!this.state.error ? (
-                    <React.Fragment>
-                        <div className="flex-container">
-                            {this.state.content}
-                        </div>
-                        {this.state.showLoadMore && this.state.loadmore}
-                    </React.Fragment>
-                ) : (
-                    <ErrorBox
-                        title={this.state.errorTitle}
-                        text={this.state.errorMessage}
-                    />
-                )}
-
+                <Container>
+                    {!this.state.error ? (
+                        <React.Fragment>
+                            <div className="flex-container">
+                                {this.state.content}
+                            </div>
+                            {this.state.showLoadMore && this.state.loadmore}
+                        </React.Fragment>
+                    ) : (
+                        <ErrorBox
+                            title={this.state.errorTitle}
+                            text={this.state.errorMessage}
+                        />
+                    )}
+                </Container>
                 <MediaModal
                     id={this.state.id}
                     open={this.state.open}
@@ -284,6 +285,20 @@ const LoadMore = (props) => {
 
 
 class OneMedia extends React.Component {
+    constructor() {
+        super();
+        this.state = {
+            show: false,
+        }
+    }
+    handleOnload = () => {
+        this.setState({ show: true });
+    }
+    handlePress = (e) => {
+        if (e.keyCode === 13) {
+            this.props.click(e);
+        }
+    }
     render() {
         const { id, img, native, romaji, english, click, location, label } = this.props;
         var alt = english ? english : romaji ? romaji : native;
@@ -294,27 +309,42 @@ class OneMedia extends React.Component {
                 ? 'home-anime-block'
                 : 'anime-block'
             : 'anime-block';
+        let animeImgBlock = location
+            ? location === 'home'
+                ? 'anime-img-block'
+                : `anime-img-block ${this.state.show ? 'lazy-show' : 'lazy-hide'}`
+            : `anime-img-block ${this.state.show ? 'lazy-show' : 'lazy-hide'}`;
         var mylabel = label ? label : null;
 
         return (
-            <div className={location != 'home' && 'anime-wrapper'}>
-                <div key={id} className={locStyle} id={id} >
-                    <div className="anime-img-block">
-                        {/* <img id={id} src={img} alt={alt} onClick={click}></img> */}
-                        <LazyLoadImage
-                            id={id}
-                            src={img}
-                            alt={alt}
-                            onClick={click}
-                            onFocusCapture={click}
-                            className={'anime-img'}
-                            threshold={100}
-                            effect="myblur"
-                            tabIndex="0"
-                        />
+            <div  className={location != 'home' && 'anime-wrapper'}>
+                <div key={id} className={locStyle} id={id}>
+                    <div  className={'anime-img-block'}>
+                        {location !== 'home' ?
+                            <img id={id} src={img} alt={alt} onClick={click} className={`anime-img ${this.state.show ? 'lazy-show' : 'lazy-hide'}`} onLoad={this.handleOnload}></img>
+                            :
+                            <LazyLoadImage
+                                id={id}
+                                src={img}
+                                alt={alt}
+                                onClick={click}
+                                className={'anime-img'}
+                                threshold={100}
+                                effect="myblur"
+                                tabIndex="0"
+                            />
+                        }   
                     </div>
-                    <div className="anime-title"><span id={id} onClick={click} title={firstTitle}>{firstTitle}</span></div>
-                    <div className="anime-title"><span id={id} onClick={click} title={secondTitle}>{secondTitle}</span></div>
+                    <div className="anime-title">
+                        <span id={id} onClick={click} title={firstTitle}>
+                            {firstTitle}
+                        </span>
+                    </div>
+                    <div className="anime-title">
+                        <span id={id} onClick={click} title={secondTitle}>
+                            {secondTitle}
+                        </span>
+                    </div>
                     {mylabel}
                 </div>
             </div>

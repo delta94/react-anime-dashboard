@@ -158,7 +158,7 @@ class MediaModal extends React.Component {
                             </div>
                         ) : null}
 
-                        <Container className={style.modalContent}>
+                        <div className={style.modalContent}>
                             <div className={style.modalTitle}>
                                 <div className={style.modalNative}>
                                     {media.title.native}
@@ -318,7 +318,7 @@ class MediaModal extends React.Component {
                                     />
                                 </div>
                             </SubSection>
-                        </Container>
+                        </div>
                     </div>
 
                     <Modal.Actions>
@@ -821,7 +821,7 @@ class CharacterList extends React.Component {
                     let nativeName = char.node.name.native;
                     let img = char.node.image.medium;
                     mycontent.push(
-                        <Grid.Column key={roleID} className={style.myColumn}>
+                        <Grid.Column key={roleID} className={style.myColumn} >
                             <div className={style.charBox}>
                                 <div>
                                     <LazyLoadImage
@@ -860,9 +860,13 @@ class CharacterList extends React.Component {
         return (
             <div className={style.characterContainer}>
                 {!this.state.error ? (
-                    <Grid doubling columns={3}>
+                    // <Grid doubling columns={3}>
+                    //     {this.state.content}
+                    // </Grid>
+                    <Grid container doubling columns='3'>
                         {this.state.content}
                     </Grid>
+
                 ) : (
                     <div className={style.emptyBox + ' ' + style.emptyCharacterBox}>
                         <div>No characters available</div>

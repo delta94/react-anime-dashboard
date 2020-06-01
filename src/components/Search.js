@@ -63,9 +63,7 @@ class SearchDefaultPage extends React.Component {
     render() {
         return (
             <Navbar active='search' {...this.props}>
-                <Container>
-                    <MediaList type="explore" />
-                </Container>
+                <MediaList type="explore" />
             </Navbar>
         );
     }

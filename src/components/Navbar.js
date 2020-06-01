@@ -203,7 +203,7 @@ class Navbar extends React.Component {
                                 <span>Anime Dashboard</span>
                             </Link>
                             <Menu.Item
-                                as="a"
+                                as='button'
                                 className={style.menuLink}
                                 onClick={this.handleToggle}
                             >
