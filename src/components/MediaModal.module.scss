@@ -279,7 +279,7 @@
         color: rgba(100, 53, 201, 0.733);
     }
     .emptyWatchListBox {
-        color: rgba(0, 128, 128, 0.753);
+        color: rgba(247, 138, 65, 0.733);
     }
 
     .StatContainer {
@@ -291,17 +291,18 @@
     .statTitle {
         font-size: 1.5em;
         font-weight: 600;
-        color: rgba(0,0,0,.6);
+        color: rgba(0, 0, 0, 0.7);
         margin: auto;
         padding: 0.5em 0;
-        background-color: #e4e4e49c;
-        border-radius: 1.5em;
-    }
-    .statTitle:focus, .statTitle::selection {
-        color: #000;
+        // background-color: #e4e4e49c;
+        border-radius: 0.3em;
     }
 
-    @media (max-width: 550px) {
+    .statBlock {
+        margin: 20px 0;
+    }
+
+    @media (max-width: 560px) {
         .descriptionContainer {
             margin: 12px 8px;
             font-size: 13px;
@@ -345,6 +346,11 @@
 
         .modalBigBtn {
             font-size: 15px;
+        }
+
+        .statTitle {
+            padding: 0.35em 0;
+            font-size: 1.2em;
         }
     }
 }

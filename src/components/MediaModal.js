@@ -8,7 +8,7 @@ import style from "./MediaModal.module.scss";
 import './MediaModal.css';
 import { ErrorBox } from "./Error";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
-import { Doughnut, Line } from 'react-chartjs-2';
+import { Doughnut, Bar } from 'react-chartjs-2';
 
 /**
  * A single media box for displaying information for a single media
@@ -580,93 +580,86 @@ const InformationTable = (props) => {
     );
 }
 
-
-const load = (
-    <Dimmer active inverted>
-        <Loader size="large">Loading</Loader>
-    </Dimmer>
-);
-
-const GooglePie = (props) => {
+const ChartJSDoughnut = (props) => {
+    if (!props.data) {
+        return null;
+    }
+    const doudata = {
+        labels: props.data.labels,
+        datasets: [
+            {
+                data: props.data.data,
+                backgroundColor: props.data.colors,
+                hoverBackgroundColor: props.data.hoverColors,
+                borderColor: '#fff',
+                hoverBorderColor: '#fff',
+            },
+        ],
+    };
     return (
         <div>
             <div className={style.statTitle}>{props.title}</div>
-            <Chart
-                width={"100%"}
-                height={"55vh"}
-                chartType="PieChart"
-                loader={load}
-                data={props.data}
-                options={{
-                    // pieSliceText: "label",
-                    chartArea: {
-                        width: '80%',
-                    },
-                    legend: {
-                        position: "top",
-                        textStyle: { fontSize: 12 },
-                        alignment: "start",
-                        maxLines: props.length,
-                    },
-                    backgroundColor: 'rgb(243, 243, 243)',
-                    pieStartAngle: 50,
-                    pieHole: 0.5,
-                    // is3D: true,
-                    colors: props.colors,
-                    enableInteractivity: true,
-                }}
-            />
+            <div className={style.statBlock}>
+                <Doughnut data={doudata} />
+            </div>
         </div>
     );
 }
 
 const barColors = [
-    'color: rgb(226, 26, 26)',
-    'color: rgb(228, 110, 110)',
-    'color: rgb(210, 128, 45)',
-    'color: rgb(192, 123, 67)',
-    'color: rgb(202, 196, 111)',
-    'color: rgb(198, 201, 53)',
-    'color: rgb(188, 190, 37)',
-    'color: rgb(155, 210, 45)',
-    'color: rgb(116, 189, 67)',
-    'color: rgb(100, 210, 45)',
+    '#E21A1A',
+    '#E4802D',
+    '#D2802D',
+    '#D2802D',
+    '#CAC46F',
+    '#C6C935',
+    '#BCBE25',
+    '#9BD22D',
+    '#74BD43',
+    '#64D22D',
 ];
 
-const GoogleBar = (props) => {
+const ChartJSBar = (props) => {
+    let backgroundColors = [];
+    let hoverColor = [];
+    props.data.colors.forEach(color => {
+        backgroundColors.push(color + '77');
+        hoverColor.push(color + 'aa');
+    });
+    
+    const bardata = {
+        labels: props.data.labels,
+        datasets: [
+            {
+                label: '# of people',
+                backgroundColor: backgroundColors,
+                borderColor: props.data.colors,
+                borderWidth: 1,
+                hoverBorderWidth: 1,
+                hoverBackgroundColor: hoverColor,
+                // hoverBorderColor: '#fff',
+                data: props.data.data,
+            },
+        ],
+    };
+    const options = {
+        scales: {
+            yAxes: [{
+                ticks: {
+                    beginAtZero: true
+                }
+            }]
+        }
+    }
     return (
         <div>
             <div className={style.statTitle}>{props.title}</div>
-            <Chart
-                width={'100%'}
-                height={'55vh'}
-                chartType="ColumnChart"
-                loader={load}
-                data={props.data}
-                options={{
-                    chartArea: { width: '82%' },
-                    vAxis: {
-                        // title: "# of people",
-                        format: 'short',
-                    },
-                    hAxis: {
-                        title: 'Scores',
-                    },
-                    legend: {
-                        position: 'none',
-                    },
-                    animation: {
-                        duration: 500,
-                        startup: true,
-                    },
-                    dataOpacity: 0.85,
-                    backgroundColor: 'rgb(243, 243, 243)',
-                    bar: { groupWidth: '70%' },
-                }}
-            />
+            <div className={style.statBlock}>
+                <Bar data={bardata} options={options} />
+            </div>
         </div>
     );
-}
+};
 
 class MediaStatistic extends React.Component {
     constructor(props) {
@@ -688,61 +681,86 @@ class MediaStatistic extends React.Component {
             let scoreList = this.props.stats.scoreDistribution;
             let statusList = this.props.stats.statusDistribution;
 
+            let pieData = null;
             let statusData = [];
             let statusColor = [];
+            let statusHoverColor = [];
+            let statusLabel = [];
             let statusError = false;
             if (statusList.length !== 0) {
-                statusData.push(["Status", "Number of People"]);
                 statusList.forEach(status => {
-                    statusData.push([status.status, status.amount]);
-                    if (status.status === "CURRENT")
-                        statusColor.push('#63b4ee');
-                    else if (status.status === "COMPLETED")
-                        statusColor.push('#7ae487');
-                    else if (status.status === "PLANNING")
-                        statusColor.push('#ac84fe');
-                    else if (status.status === "DROPPED")
-                        statusColor.push('#ff839c');
-                    else if (status.status === "PAUSED")
-                        statusColor.push('#feb168');
-                    else if (status.status === 'REPEATING')
-                        statusColor.push('#73cccc');
-                    else // others
-                        statusColor.push('#d1d1d1');
+                    statusData.push(status.amount);
+                    if (status.status === "CURRENT") {
+                        statusLabel.push('Current');
+                        statusColor.push('#63b4eebb');
+                        statusHoverColor.push('#63b4ee');
+                    }
+                    else if (status.status === "COMPLETED") {
+                        statusLabel.push('Completed');
+                        statusColor.push('#7ae487bb');
+                        statusHoverColor.push('#7ae487');
+                    } 
+                    else if (status.status === "PLANNING") {
+                        statusLabel.push('Planning');
+                        statusColor.push('#ac84febb');
+                        statusHoverColor.push('#ac84fe');
+                    }
+                    else if (status.status === "DROPPED") {
+                        statusLabel.push('Dropped');
+                        statusColor.push('#ff839cbb');
+                        statusHoverColor.push('#ff839c');
+                    }
+                    else if (status.status === "PAUSED") {
+                        statusLabel.push('Paused');
+                        statusColor.push('#feb168bb');
+                        statusHoverColor.push('#feb168');
+                    }           
+                    else if (status.status === 'REPEATING') {
+                        statusLabel.push('Repeating');
+                        statusColor.push('#73ccccbb');
+                        statusHoverColor.push('#73cccc');
+                    } 
+                    else {
+                        statusLabel.push('Others');
+                        statusColor.push('#d1d1d1bb');
+                        statusHoverColor.push('#d1d1d1');
+                    }
                 });
+                pieData = {
+                    data: statusData,
+                    labels: statusLabel,
+                    colors: statusColor,
+                    hoverColors: statusHoverColor,
+                }
             } else {
                 statusError = true;
             }
 
+            let barData = null;
+            let scoreLabel = [];
             let scoreData = [];
+            let scoreColor = [];
             let scoreError = false;
             if (scoreList.length !== 0) {
-                scoreData.push([
-                    "Scores",
-                    "Number of People",
-                    { role: 'style' },
-                    { role: 'annotation' },
-                ]);
-                let i = 0;
-                scoreList.forEach(score => {
-                    scoreData.push([
-                        score.score.toString(),
-                        score.amount,
-                        barColors[i],
-                        score.score.toString(),
-                    ]);
-                    ++i;
+                scoreList.forEach((score) => {
+                    let colorIndex = (score.score - 10) / 10;
+                    scoreData.push(score.amount);
+                    scoreLabel.push(score.score.toString());
+                    scoreColor.push(barColors[colorIndex]);
                 });
+                barData = {
+                    data: scoreData,
+                    labels: scoreLabel,
+                    colors: scoreColor,
+                }
             } else {
                 scoreError = true;
             }
 
             this.setState({
-                pieData: statusData,
-                pieLength: statusList.length,
-                pieColors: statusColor,
+                pieData: pieData,
                 pieError: statusError,
-                barData: scoreData,
+                barData: barData,
                 barError: scoreError
             });
         }
@@ -752,11 +770,9 @@ class MediaStatistic extends React.Component {
         if (!this.state.pieError) {
             this.setState({
                 pie: (
-                    <GooglePie
+                    <ChartJSDoughnut
                         data={this.state.pieData}
-                        length={this.state.pieLength}
                         title="Status Distribution"
-                        colors={this.state.pieColors}
                     />
                 )
             });
@@ -764,13 +780,13 @@ class MediaStatistic extends React.Component {
         if (!this.state.barError) {
             this.setState({
                 bar: (
-                    <GoogleBar
+                    <ChartJSBar
                         data={this.state.barData}
                         title="Score Distribution"
                     />
                 ),
             });
-        }
+        } 
     }
 
     render() {
