@@ -27,10 +27,10 @@ class Navbar extends React.Component {
 
     handleEnterSearch = (e) => {
         if (e.keyCode === 13) {
-            if (e.target.value !== "") {
+            if (this.state.searchId !== "") {
                 // window.location.href = "/search/" + e.target.value;
                 this.props.history.push({
-                    pathname: '/search/' + e.target.value,
+                    pathname: '/search/' + this.state.searchId,
                 });
             }
         }
@@ -100,9 +100,12 @@ class Navbar extends React.Component {
                             className={style.sidebarSearch}
                             icon={
                                 <Icon
+                                    tabIndex='0'
+                                    title="search"
                                     name="search"
                                     link
                                     onClick={this.handleClickSearch}
+                                    onKeyUp={this.handleEnterSearch}
                                 />
                             }
                             placeholder="Search..."
@@ -203,11 +206,11 @@ class Navbar extends React.Component {
                                 <span>Anime Dashboard</span>
                             </Link>
                             <Menu.Item
-                                as='button'
+                                as="button"
                                 className={style.menuLink}
                                 onClick={this.handleToggle}
                             >
-                                <Icon name="sidebar" size="big"></Icon>
+                                <Icon name="sidebar"></Icon>
                             </Menu.Item>
                             <Menu.Menu
                                 position="right"
@@ -261,9 +264,12 @@ class Navbar extends React.Component {
                                     <Input
                                         icon={
                                             <Icon
+                                                title="search"
+                                                tabIndex="0"
                                                 name="search"
                                                 link
                                                 onClick={this.handleClickSearch}
+                                                onKeyUp={this.handleEnterSearch}
                                             />
                                         }
                                         placeholder="Search..."

@@ -96,10 +96,13 @@
         transition: all 0.25s;
         margin-right: 0.2em;
     }
-    .filterTagIcon:hover {
+    .filterTagIcon:hover, .filterTagIcon:focus {
         color: rgb(218, 67, 67);
         opacity: 1;
+        outline: none;
     }
+
+
 
     .applyBtn {
         transition: all 0.5s;

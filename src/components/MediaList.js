@@ -309,17 +309,17 @@ class OneMedia extends React.Component {
                 ? 'home-anime-block'
                 : 'anime-block'
             : 'anime-block';
-        let animeImgBlock = location
-            ? location === 'home'
-                ? 'anime-img-block'
-                : `anime-img-block ${this.state.show ? 'lazy-show' : 'lazy-hide'}`
-            : `anime-img-block ${this.state.show ? 'lazy-show' : 'lazy-hide'}`;
+        // let animeImgBlock = location
+        //     ? location === 'home'
+        //         ? 'anime-img-block'
+        //         : `anime-img-block ${this.state.show ? 'lazy-show' : 'lazy-hide'}`
+        //     : `anime-img-block ${this.state.show ? 'lazy-show' : 'lazy-hide'}`;
         var mylabel = label ? label : null;
 
         return (
             <div  className={location != 'home' && 'anime-wrapper'}>
-                <div key={id} className={locStyle} id={id}>
-                    <div  className={'anime-img-block'}>
+                <div key={id} className={locStyle} id={id} role='a' tabIndex='0' onKeyUp={this.handlePress}>
+                    <div className={'anime-img-block'}>
                         {location !== 'home' ?
                             <img id={id} src={img} alt={alt} onClick={click} className={`anime-img ${this.state.show ? 'lazy-show' : 'lazy-hide'}`} onLoad={this.handleOnload}></img>
                             :
@@ -331,7 +331,6 @@ class OneMedia extends React.Component {
                                 className={'anime-img'}
                                 threshold={100}
                                 effect="myblur"
-                                tabIndex="0"
                             />
                         }   
                     </div>
@@ -423,7 +422,7 @@ class MediaFilterBar extends React.Component {
             filterSeasonYear: this.filterSeasonYear,
             filterSort: this.filterSort,
         });
-    }
+    };
 
     UNSAFE_componentWillMount = () => {
         this.handleInitial();
@@ -470,7 +469,7 @@ class MediaFilterBar extends React.Component {
     handleSearch = (e) => {
         this.filterSearch = e.target.value;
         this.setState({ filterSearch: e.target.value });
-    }
+    };
 
     applyFilter = () => {
         this.config.type = this.filterType;
@@ -554,6 +553,11 @@ class MediaFilterBar extends React.Component {
             }
             this.applyFilter();
         }
+    };
+    handleCloseTagKeyup = (e) => {
+        if (e.keyCode == 13) {
+            this.handleCloseTag(e);
+        }
     }
 
     addTag = (id, text) => {
@@ -569,9 +573,12 @@ class MediaFilterBar extends React.Component {
                 <Icon name="tags" />
                 <span>{text}</span>
                 <Icon
+                    title='remove'
+                    tabIndex="0"
                     name="close"
                     className={style.filterTagIcon}
                     onClick={this.handleCloseTag}
+                    onKeyUp={this.handleCloseTagKeyup}
                 />
             </Label>
         );
@@ -590,7 +597,6 @@ class MediaFilterBar extends React.Component {
                                     icon="search"
                                     iconPosition="left"
                                     placeholder="Search By Title ..."
-
                                     disabled={this.initialSearchDisabled}
                                     onChange={this.handleSearch}
                                     onKeyUp={this.keyupFilter}
@@ -599,6 +605,7 @@ class MediaFilterBar extends React.Component {
                                 />
                                 <div className={style.filterBtnBlock}>
                                     <Button
+                                        title='open filter bar'
                                         size="small"
                                         icon
                                         // labelPosition="left"

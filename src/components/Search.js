@@ -2,15 +2,13 @@ import React from 'react';
 import { useRouteMatch, Switch, Route } from 'react-router-dom';
 import Navbar from "./Navbar";
 import MediaList from "./MediaList";
-import { Container } from "semantic-ui-react";
-
 
 function Search(props) {
     let match = useRouteMatch();
     // console.log(props);
     return (
         <Switch>
-            <Route path={`${match.path}/:id`} render={(props) => <SearchResult {...props} />} >
+            <Route path={`${match.path}/:id`} render={(props) => <SearchResultPage {...props} />} >
             </Route>
             <Route path={match.path} render={(props) => <SearchDefaultPage {...props} />}>
             </Route>
@@ -18,7 +16,7 @@ function Search(props) {
     );
 }
 
-class SearchResult extends React.Component {
+class SearchResultPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -50,9 +48,7 @@ class SearchResult extends React.Component {
     render() {
         return (
             <Navbar search={this.state.id} {...this.props}>
-                <Container>
-                    <MediaList type="search" searchKey={this.state.id} config={this.DefaultConfig} />
-                </Container>
+                <MediaList type="search" searchKey={this.state.id} config={this.DefaultConfig} />
             </Navbar>
         );
     }

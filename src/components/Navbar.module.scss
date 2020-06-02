@@ -38,6 +38,10 @@
     }
     .headerLogo {
         margin-right: 1.5em;
+        transition: all 0.5s;
+    }
+    .headerLogo:hover {
+        transform: scale3d(1.1, 1.1, 1);
     }
 
     .search {
@@ -49,7 +53,9 @@
 
     .menuLink {
         display: none;
+        cursor: pointer;
         align-self: center;
+        outline: none;
         margin: 0;
         padding: 0.7em 0.7em;
         border-radius: 50%;
@@ -62,6 +68,7 @@
     }
     .menuLink > i {
         margin: 0;
+        font-size: 1.25em;
     }
 
     @media (max-width: 900px) {
@@ -76,9 +83,12 @@
         }
     }
 
-    @media (max-width: 550px) {
+    @media (max-width: 560px) {
         .header {
             font-size: 18px;
+        }
+        .topMenu {
+            padding: 5px;
         }
     }
 
@@ -132,26 +142,22 @@
         right: 2em;
         z-index: 5;
         padding: 5px;
-        -webkit-transition: opacity 0.8s;
-        -moz-transition: opacity 0.8s;
-        transition: opacity 0.8s;
-    }
-
-    .topBlockVisible {
-        opacity: 1;
     }
 
     .topBtn {
+        margin: 0;
         font-size: 1.4em;
-        background-color: rgba(240, 240, 240, 0.918);
-        color: rgba(29, 29, 29, 0.774);
+        // background-color: rgba(209, 209, 209, 0.842);
+        background-color: rgba(0, 0, 0, 0.74);
+        color: rgba(202, 202, 202, 0.7);
         -webkit-transition: all 0.5s;
         -moz-transition: all 0.5s;
         transition: all 0.5s;
     }
-    .topBtn:hover {
-        background-color: rgb(0, 0, 0);
-        color: rgb(255, 255, 255);
+    .topBtn:hover, .topBtn:focus {
+        // background-color: #f32234;
+        background-color: rgb(255, 255, 255);
+        color: rgb(29, 29, 29);
     }
 }
 

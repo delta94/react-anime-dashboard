@@ -8,6 +8,7 @@ import style from "./MediaModal.module.scss";
 import './MediaModal.css';
 import { ErrorBox } from "./Error";
 import { LazyLoadImage } from 'react-lazy-load-image-component';
+import { Doughnut, Line } from 'react-chartjs-2';
 
 /**
  * A single media box for displaying information for a single media
@@ -29,6 +30,11 @@ class MediaModal extends React.Component {
 
     handleReadMore = () => {
         this.setState({ readMore: !this.state.readMore });
+    }
+    handleReadMoreKeyup = (e) => {
+        if (e.keyCode == 13) {
+            this.handleReadMore();
+        }
     }
 
     toggleInformation = () => {
@@ -250,7 +256,7 @@ class MediaModal extends React.Component {
                                                     {firstDescription}
                                                     {ReadMoreText}
                                                     {showReadmore ? (
-                                                        <span onClick={this.handleReadMore} className={style.descriptionReadmore}>
+                                                        <span tabIndex='0' onKeyUp={this.handleReadMoreKeyup} onClick={this.handleReadMore} className={style.descriptionReadmore}>
                                                             {this.state.readMore
                                                                 ? 'Read Less >>>'
                                                                 : '... Read More >>>'}
@@ -764,7 +770,7 @@ class MediaStatistic extends React.Component {
                     />
                 ),
             });
-        } 
+        }
     }
 
     render() {

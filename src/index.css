@@ -163,13 +163,14 @@ body {
 }
 
 .anime-block {
-    /* position: relative;
+    position: relative;
     display: block;
-    height: 100%; */
+    height: 100%;
     background-color: rgb(240, 240, 240);
+    outline-color: rgb(233, 233, 233);
     border-radius: 5px;
     overflow: hidden;
-    box-shadow: 0px 0px 0px 0px #adadad41;
+    box-shadow: 0px 0px 10px 0px #adadad41;
     transition: all 0.5s ease-in-out; 
     animation: mediaList 1s ease-out;
     /* animation: fadeIn 2.1s ease-out; */
@@ -243,6 +244,7 @@ body {
     font-size: 0.85em;
     text-align: center;
     padding: 0.1em 0.8em;
+    letter-spacing: 0.045em;
     text-overflow: ellipsis;
     white-space: nowrap;
     overflow-x: hidden;
@@ -276,13 +278,17 @@ body {
 .footer-img {
     font-size: .78rem;
     width: 4em;
+    transition: transform 0.5s;
+}
+.footer-img:hover {
+    transform: scale(1.1);
 }
 
 .footer-text {
     margin-top: 0.2em;
     color: rgb(156, 156, 156);
     font-size: 0.95em;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.05em;
 }
 
 /********************** Semantic-ui override **********************/
