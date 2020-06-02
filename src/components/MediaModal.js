@@ -2,8 +2,8 @@ import React from "react";
 import AnimeQuery from "./AnimeQuery";
 import paragraph from "../images/paragraph.png";
 import { getName } from 'country-list';
-import { Chart } from "react-google-charts";
-import {Container, Button, Modal, Image, Icon, Label, Loader, Segment, Dimmer, Grid, Rating, Transition, Table } from "semantic-ui-react";
+// import { Chart } from "react-google-charts";
+import { Button, Modal, Image, Icon, Label, Loader, Segment, Dimmer, Grid, Rating, Transition, Table } from "semantic-ui-react";
 import style from "./MediaModal.module.scss";
 import './MediaModal.css';
 import { ErrorBox } from "./Error";
@@ -32,7 +32,7 @@ class MediaModal extends React.Component {
         this.setState({ readMore: !this.state.readMore });
     }
     handleReadMoreKeyup = (e) => {
-        if (e.keyCode == 13) {
+        if (e.keyCode === 13) {
             this.handleReadMore();
         }
     }
@@ -885,7 +885,7 @@ class CharacterList extends React.Component {
                     // <Grid doubling columns={3}>
                     //     {this.state.content}
                     // </Grid>
-                    <Grid container doubling columns='3'>
+                    <Grid doubling columns='3'>
                         {this.state.content}
                     </Grid>
 

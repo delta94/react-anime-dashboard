@@ -1,7 +1,6 @@
 import React from "react";
 import Navbar from "./Navbar";
 import MediaList from './MediaList';
-import { Container } from "semantic-ui-react";
 
 class Manga extends React.Component {
     constructor(props) {

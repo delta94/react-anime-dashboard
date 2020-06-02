@@ -155,7 +155,8 @@ body {
     grid-template-columns: repeat(auto-fill,minmax(150px,1fr));
     gap: 1.2em 1em;
     justify-content: center;
-    /* margin: 0 15px; */
+    /* margin-bottom: 1em; */
+    padding-bottom: 3em;
 }
 
 .anime-wrapper {
@@ -168,9 +169,10 @@ body {
     height: 100%;
     background-color: rgb(240, 240, 240);
     outline-color: rgb(233, 233, 233);
+    /* outline: none; */
     border-radius: 5px;
     overflow: hidden;
-    box-shadow: 0px 0px 10px 0px #adadad41;
+    /* box-shadow: 0px 0px 10px 0px #adadad41; */
     transition: all 0.5s ease-in-out; 
     animation: mediaList 1s ease-out;
     /* animation: fadeIn 2.1s ease-out; */
@@ -182,6 +184,7 @@ body {
     max-width: 210px;
     margin: 0 auto;
     background-color: rgb(240, 240, 240);
+    outline: none;
     border-radius: 5px;
     overflow: hidden;
     /* box-shadow: 0px 0px 5px 1px #adadad41; */
@@ -203,12 +206,6 @@ body {
     object-fit: cover;
     transition: opacity 0.6s;
 }
-/* .lazy-hide > .anime-img {
-    opacity: 0;
-}
-.lazy-show > .anime-img {
-    opacity: 1;
-} */
 .lazy-hide {
     opacity: 0;
 }
@@ -216,7 +213,7 @@ body {
     opacity: 1;
 }
 
-.anime-block:hover, .home-anime-block:hover {
+.anime-block:hover, .home-anime-block:hover, .home-anime-block:focus {
     box-shadow: 0px 0px 20px 1px #adadad59;
 }
 /* home page anime block hover effect */
@@ -226,10 +223,10 @@ body {
 .home-anime-block .anime-img {
     transition: 1000ms ease-out;
 }
-.home-anime-block:hover > .anime-img-block {
+.home-anime-block:hover > .anime-img-block, .home-anime-block:focus > .anime-img-block {
     opacity: 0.85;
 }
-.home-anime-block:hover > .anime-img-block .anime-img {
+.home-anime-block:hover > .anime-img-block .anime-img, .home-anime-block:focus > .anime-img-block .anime-img {
     transform: scale3d(1.1, 1.1, 1);
 }
 /* media list anime block hover effect */

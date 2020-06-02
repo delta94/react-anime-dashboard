@@ -168,8 +168,7 @@ class Navbar extends React.Component {
                         id="outer-nav"
                         inverted
                         className={
-                            this.state.active === 'home' ||
-                            this.state.active === 'error'
+                            this.state.active === 'home'
                                 ? this.state.reachScrollHeight
                                     ? style.fixedNav + ' ' + style.bottomMenu
                                     : style.fixedNav + ' ' + style.transparent
@@ -182,8 +181,7 @@ class Navbar extends React.Component {
                             pointing
                             secondary
                             className={
-                                this.state.active === 'home' ||
-                                this.state.active === 'error'
+                                this.state.active === 'home'
                                     ? this.state.reachScrollHeight
                                         ? style.wholeMenu +
                                           ' ' +

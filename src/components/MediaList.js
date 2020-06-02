@@ -149,9 +149,11 @@ class MediaList extends React.Component {
         });
 
         this.setState({
-            content: (resetFlag ? result : this.state.content.concat(result)),
+            error: false,
+            content: resetFlag ? result : this.state.content.concat(result),
             currentPage: res.data.Page.pageInfo.currentPage,
             hasNext: res.data.Page.pageInfo.hasNextPage,
+            resultNum: res.data.Page.pageInfo.total,
             loading: false,
         });
     }
@@ -165,6 +167,7 @@ class MediaList extends React.Component {
             errorTitle: (errTitle ? errTitle : this.state.errorTitle),
             errorMessage: (errMessage ? errMessage : this.state.errorMessage),
             loading: false,
+            showLoadMore: false,
         });
     }
 
@@ -193,7 +196,7 @@ class MediaList extends React.Component {
             .catch(err => this.handleError(err));
         } else {
             this.addLoadMore(false, false);
-            console.log("The End!");
+            console.log("The End");
         }
     };
 
@@ -203,11 +206,16 @@ class MediaList extends React.Component {
             this.setState({ loading: true });
             AnimeQuery.getCustomMedia(50, 1, this.config)
                 .then((res) => {
-                    this.handleResult(res, true);
-                    this.addLoadMore(true, false);
-                    this.setState({
-                        resultNum: res.data.Page.pageInfo.total,
-                    });
+                    if (res.data.Page.pageInfo.total !== 0) {
+                        this.handleResult(res, true);
+                        if (res.data.Page.pageInfo.hasNextPage === true) {
+                            this.addLoadMore(true, false);
+                        } else {
+                            this.setState({ showLoadMore: false });
+                        }
+                    } else {
+                        this.handleError('no result', 'No result found', ' ');
+                    }
                 })
                 .catch((err) => this.handleError(err));
         }
@@ -317,35 +325,33 @@ class OneMedia extends React.Component {
         var mylabel = label ? label : null;
 
         return (
-            <div  className={location != 'home' && 'anime-wrapper'}>
-                <div key={id} className={locStyle} id={id} role='a' tabIndex='0' onKeyUp={this.handlePress}>
-                    <div className={'anime-img-block'}>
-                        {location !== 'home' ?
-                            <img id={id} src={img} alt={alt} onClick={click} className={`anime-img ${this.state.show ? 'lazy-show' : 'lazy-hide'}`} onLoad={this.handleOnload}></img>
-                            :
-                            <LazyLoadImage
-                                id={id}
-                                src={img}
-                                alt={alt}
-                                onClick={click}
-                                className={'anime-img'}
-                                threshold={100}
-                                effect="myblur"
-                            />
-                        }   
-                    </div>
-                    <div className="anime-title">
-                        <span id={id} onClick={click} title={firstTitle}>
-                            {firstTitle}
-                        </span>
-                    </div>
-                    <div className="anime-title">
-                        <span id={id} onClick={click} title={secondTitle}>
-                            {secondTitle}
-                        </span>
-                    </div>
-                    {mylabel}
+            <div key={id} className={locStyle} id={id} role='button' tabIndex='0' onKeyUp={this.handlePress}>
+                <div className={'anime-img-block'}>
+                    {location !== 'home' ?
+                        <img id={id} src={img} alt={alt} onClick={click} className={`anime-img ${this.state.show ? 'lazy-show' : 'lazy-hide'}`} onLoad={this.handleOnload}></img>
+                        :
+                        <LazyLoadImage
+                            id={id}
+                            src={img}
+                            alt={alt}
+                            onClick={click}
+                            className={'anime-img'}
+                            threshold={100}
+                            effect="myblur"
+                        />
+                    }
                 </div>
+                <div className="anime-title">
+                    <span id={id} onClick={click} title={firstTitle}>
+                        {firstTitle}
+                    </span>
+                </div>
+                <div className="anime-title">
+                    <span id={id} onClick={click} title={secondTitle}>
+                        {secondTitle}
+                    </span>
+                </div>
+                {mylabel}
             </div>
         );
     }
@@ -479,6 +485,7 @@ class MediaFilterBar extends React.Component {
         this.config.search = this.filterSearch;
         this.props.sendConfig(this.config);
         this.updateFilterTags();
+        window.scrollTo(0, 0);
         // this.handleClose();
     };
 
@@ -555,7 +562,7 @@ class MediaFilterBar extends React.Component {
         }
     };
     handleCloseTagKeyup = (e) => {
-        if (e.keyCode == 13) {
+        if (e.keyCode === 13) {
             this.handleCloseTag(e);
         }
     }
@@ -623,7 +630,7 @@ class MediaFilterBar extends React.Component {
                     <Grid.Row className={style.resultRow}>
                         <Grid.Column width="16">
                             <div className={style.resultNumText}>
-                                Showing total of {this.props.resultNum} results
+                                > Showing total of {this.props.resultNum} results
                                 {this.props.searchKey &&
                                     ` for "${this.props.searchKey}"`}
                             </div>
